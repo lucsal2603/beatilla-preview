@@ -1009,14 +1009,28 @@
         content: "";
         position: absolute; left: 0; right: 0;
         bottom: calc(100% - 4px); /* 4px DENTRO Esperienze: saldatura senza spazi */
-        height: 50px;
+        height: 64px;
         pointer-events: none;
-        background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20600%2072'%3E%3Cpath%20fill='%23FAF8F4'%20d='M0,48A27,27%200%200%201%2054,48A17,17%200%200%201%2088,48A38,38%200%200%201%20164,48A21,21%200%200%201%20206,48A44,44%200%200%201%20294,48A15,15%200%200%201%20324,48A34,34%200%200%201%20392,48A23,23%200%200%201%20438,48A41,41%200%200%201%20520,48A20,20%200%200%201%20560,48A20,20%200%200%201%20600,48L600,72L0,72Z'/%3E%3Cpath%20fill='none'%20stroke='%231A1A18'%20stroke-width='2.5'%20d='M0,48A27,27%200%200%201%2054,48A17,17%200%200%201%2088,48A38,38%200%200%201%20164,48A21,21%200%200%201%20206,48A44,44%200%200%201%20294,48A15,15%200%200%201%20324,48A34,34%200%200%201%20392,48A23,23%200%200%201%20438,48A41,41%200%200%201%20520,48A20,20%200%200%201%20560,48A20,20%200%200%201%20600,48'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='100'%20cy='22'%20r='5'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='275'%20cy='14'%20r='6'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='455'%20cy='20'%20r='4'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='585'%20cy='27'%20r='4'/%3E%3C/svg%3E") repeat-x bottom;
-        background-size: auto 100%;
+        /* fila di nuvole su baseline ad ARCO (collina): centro più alto,
+           bordi più bassi — curva leggera, né piatta né esagerata */
+        background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%2084'%20preserveAspectRatio='none'%3E%3Cpath%20fill='%23FAF8F4'%20d='M0,54A30,30%200%200%201%2057,44A30,30%200%200%201%20114,36A30,30%200%200%201%20171,31A18,18%200%200%201%20200,30A18,18%200%200%201%20229,31A30,30%200%200%201%20286,36A30,30%200%200%201%20343,44A30,30%200%200%201%20400,54L400,84L0,84Z'/%3E%3Cpath%20fill='none'%20stroke='%231A1A18'%20stroke-width='2.5'%20d='M0,54A30,30%200%200%201%2057,44A30,30%200%200%201%20114,36A30,30%200%200%201%20171,31A18,18%200%200%201%20200,30A18,18%200%200%201%20229,31A30,30%200%200%201%20286,36A30,30%200%200%201%20343,44A30,30%200%200%201%20400,54'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='115'%20cy='18'%20r='5'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='200'%20cy='12'%20r='6'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='285'%20cy='18'%20r='5'/%3E%3C/svg%3E") no-repeat bottom;
+        background-size: 100% 100%;
       }
       /* col rialzo attivo (classe aggiunta da JS): Esperienze si arrampica sul
          loop fino a coprirne METÀ, poi restano agganciati e scorrono insieme */
       .curtain--rise + .exp { margin-top: -50svh; background: var(--bg); }
+
+      /* fine SERVIZI: stesso schizzo col bordo nero, ma CAPOVOLTO — festoni
+         crema che pendono verso il basso, gobbe rivolte in giù */
+      .services { position: relative; }
+      .services::after {
+        content: "";
+        position: absolute; left: 0; right: 0;
+        top: calc(100% - 4px); /* 4px dentro Servizi: saldatura senza spazi */
+        height: 50px; z-index: 2; pointer-events: none;
+        background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20600%2072'%3E%3Cpath%20fill='%23FAF8F4'%20d='M0,24A27,27%200%200%200%2054,24A17,17%200%200%200%2088,24A38,38%200%200%200%20164,24A21,21%200%200%200%20206,24A44,44%200%200%200%20294,24A15,15%200%200%200%20324,24A34,34%200%200%200%20392,24A23,23%200%200%200%20438,24A41,41%200%200%200%20520,24A20,20%200%200%200%20560,24A20,20%200%200%200%20600,24L600,0L0,0Z'/%3E%3Cpath%20fill='none'%20stroke='%231A1A18'%20stroke-width='2.5'%20d='M0,24A27,27%200%200%200%2054,24A17,17%200%200%200%2088,24A38,38%200%200%200%20164,24A21,21%200%200%200%20206,24A44,44%200%200%200%20294,24A15,15%200%200%200%20324,24A34,34%200%200%200%20392,24A23,23%200%200%200%20438,24A41,41%200%200%200%20520,24A20,20%200%200%200%20560,24A20,20%200%200%200%20600,24'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='100'%20cy='50'%20r='5'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='275'%20cy='58'%20r='6'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='455'%20cy='52'%20r='4'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='585'%20cy='45'%20r='4'/%3E%3C/svg%3E") repeat-x top;
+        background-size: auto 100%;
+      }
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }

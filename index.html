@@ -632,8 +632,9 @@
     }
     .link-more span { transition: transform .35s var(--ease); }
     .link-more:hover span { transform: translateX(6px); }
-    /* Pallini del rullino camere: esistono solo su telefono */
+    /* Pallini del rullino camere e polaroid fluttuanti: esistono solo su telefono */
     .rooms__dots { display: none; }
+    .float-photo { display: none; }
 
     /* ============================================================
        6. HORIZONTAL SCROLL GALLERY
@@ -965,25 +966,22 @@
       .visit__grid { grid-template-columns: 1fr; }
       .stats__grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .stats__divider { display: none; }
-      /* La vita in campagna: pin + scrub orizzontale anche su telefono.
-         Scendendo, le foto scorrono in orizzontale fino all'ultima; poi il
-         Ristorante sale dal basso a coprire la galleria (.gallery--cover). */
-      .gallery__track { gap: 1rem; }
-      .gallery__item { width: 64vw; max-width: 250px; margin: 0; }
-      .gallery__item .img-slot { width: 100%; height: auto; aspect-ratio: 2 / 3; }
-      .gallery--cover + .dining { margin-top: -100svh; position: relative; z-index: 5; background: var(--bg); }
-      /* bordo alto "a nuvola" del Ristorante che sale a coprire la galleria:
-         gobbe semicircolari di larghezze diverse, stesso crema del fondo */
-      .gallery--cover + .dining::before {
-        content: "";
-        position: absolute;
-        left: 0; right: 0;
-        bottom: calc(100% - 1px);
-        height: 40px;
-        pointer-events: none;
-        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 60'%3E%3Cpath fill='%23FAF8F4' d='M0%2044A32%2032%200%200%201%2064%2044A40%2040%200%200%201%20144%2044A24%2024%200%200%201%20192%2044A36%2036%200%200%201%20264%2044A28%2028%200%200%201%20320%2044A40%2040%200%200%201%20400%2044A26%2026%200%200%201%20452%2044A44%2044%200%200%201%20540%2044A30%2030%200%200%201%20600%2044L600%2060L0%2060Z'/%3E%3C/svg%3E") repeat-x bottom;
-        background-size: auto 100%;
+      /* La vita in campagna: su telefono la galleria a striscia sparisce —
+         le sue 5 foto diventano polaroid fluttuanti sparse negli spazi vuoti
+         del sito (ai confini tra le sezioni, mai sopra i testi) */
+      .gallery { display: none; }
+      .rooms, .stats, .workshop, .gethere { position: relative; }
+      .float-photo {
+        display: block; position: absolute; z-index: 2;
+        height: auto; pointer-events: none;
+        border: 4px solid var(--white);
+        box-shadow: 0 12px 26px rgba(26, 26, 24, .2);
       }
+      .float-photo--1 { top: -46px; right: -16px; width: 112px; rotate: 5deg; }   /* cavallo · sopra il motto */
+      .float-photo--2 { bottom: -40px; left: -18px; width: 120px; rotate: -6deg; } /* daino · fine camere */
+      .float-photo--3 { top: -44px; right: 14px; width: 104px; rotate: 4deg; }     /* giardino · confine ristorante/numeri */
+      .float-photo--4 { top: -48px; left: -14px; width: 122px; rotate: -5deg; }    /* corte di sera · confine servizi/workshop */
+      .float-photo--5 { top: -44px; right: -12px; width: 110px; rotate: 6deg; z-index: 6; } /* scritta Beatilla · angolo mappa */
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }
@@ -1131,11 +1129,6 @@
       .gallery__track { animation: none !important; transform: none !important; }
       .gallery__pin { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     }
-    /* Reduce + telefono: galleria come semplice striscia manuale, senza pin */
-    @media (prefers-reduced-motion: reduce) and (max-width: 768px) {
-      .gallery__pin { position: static; height: auto; padding-block: 1.5rem; display: block; }
-      .gallery__track { width: max-content; }
-    }
   </style>
 </head>
 <body>
@@ -1234,6 +1227,7 @@
           della nostra storia. La nostra missione è farvi sentire a casa &mdash; e regalarvi un sorriso.
         </p>
       </div>
+      <img class="float-photo float-photo--1" data-speed="0.35" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     </section>
 
     <!-- ===================== 5. CAMERE ===================== -->
@@ -1363,6 +1357,7 @@
 
         <div class="rooms__dots" id="roomsDots"></div>
       </div>
+      <img class="float-photo float-photo--2" data-speed="-0.3" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     </section>
 
     <!-- ===================== 6. HORIZONTAL SCROLL GALLERY ===================== -->
@@ -1448,6 +1443,7 @@
           </div>
         </div>
       </div>
+      <img class="float-photo float-photo--3" data-speed="0.45" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     </section>
 
     <!-- ===================== 9. ESPERIENZE ===================== -->
@@ -1601,6 +1597,7 @@
           <a class="link-more" href="https://www.lucabornoffi.com" target="_blank" rel="noopener">Scopri il suo lavoro <span>&rarr;</span></a>
         </div>
       </div>
+      <img class="float-photo float-photo--4" data-speed="0.3" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     </section>
 
     <!-- ===================== 10. IMMAGINE FULL-BLEED ===================== -->
@@ -1851,6 +1848,7 @@
           </div>
         </div>
       </div>
+      <img class="float-photo float-photo--5" data-speed="-0.35" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     </section>
 
     <!-- ===================== 12b. FAQ (BOZZA — non pubblicata) ===================== -->
@@ -1943,10 +1941,11 @@
      [scroll] Image break parallax : [data-parallax] yPercent -18 -> 18 scrub     — ScrollTrigger scrub
      [scroll] Room image slide     : [data-room-img] x from ±viewport + clip      — ScrollTrigger, on enter
      [scroll] Room text fade-up    : [data-room-text] y:40->0 opacity (staggered) — ScrollTrigger, on enter
-     [scroll] Horizontal gallery   : #galleryTrack x translate, section pinned    — ScrollTrigger scrub:1 (desktop + mobile;
-                                     su mobile a fine corsa il Ristorante sale
-                                     LENTO a coprire la galleria, con bordo a
-                                     nuvola e inerzia scrub — .gallery--cover)
+     [scroll] Horizontal gallery   : #galleryTrack x translate, section pinned    — ScrollTrigger scrub:1 (solo desktop;
+                                     su telefono la galleria è nascosta)
+     [scroll] Foto fluttuanti      : .float-photo — le 5 foto della galleria      — ScrollTrigger scrub (solo telefono)
+                                     sparse ai confini tra sezioni, parallax
+                                     a velocità/direzioni diverse, mai sui testi
      [scroll] Dining image clip    : [data-clip-up] clip-path bottom reveal       — ScrollTrigger, on enter
      [scroll] Stats count-up       : [data-count] 0 -> target value               — ScrollTrigger, on enter
      [scroll] Experience cards     : [data-card] stagger fade-up via batch()      — ScrollTrigger.batch, 0.15s stagger
@@ -2285,21 +2284,12 @@
     const pin = document.getElementById('galleryPin');
     const gallerySection = document.getElementById('gallery');
     const galleryHead = gallerySection ? gallerySection.querySelector('.gallery__head') : null;
-    if (track && pin && gallerySection && !(prefersReduced && isMobile())) {
-      const mobileGallery = isMobile();
-      /* Su telefono, a fine corsa la sezione dopo (Ristorante) sale a COPRIRE la
-         galleria rimasta bloccata: un viewport extra di altezza qui + margine
-         negativo sul Ristorante (classe .gallery--cover, vedi CSS). */
-      if (mobileGallery) gallerySection.classList.add('gallery--cover');
+    if (track && pin && gallerySection && !isMobile()) {
       const getScrollX = () => Math.max(0, track.scrollWidth - pin.clientWidth);
-      /* La "nuvola" (Ristorante) sale piano: la risalita di 1 viewport è spalmata
-         su COVER_K viewport di scroll (≈ metà velocità del dito) */
-      const COVER_K = 1.8;
-      const coverExtra = () => (mobileGallery ? Math.round(pin.offsetHeight * COVER_K) : 0);
       /* Allunga la sezione quel tanto che serve per far scorrere la striscia mentre è "stuck" */
       const sizeSection = () => {
         const headH = galleryHead ? galleryHead.offsetHeight : 0;
-        gallerySection.style.height = (headH + pin.offsetHeight + getScrollX() + coverExtra()) + 'px';
+        gallerySection.style.height = (headH + pin.offsetHeight + getScrollX()) + 'px';
       };
       sizeSection();
       /* Reimposta l'altezza ad ogni ricalcolo, PRIMA che ScrollTrigger misuri le posizioni */
@@ -2322,27 +2312,18 @@
         }
       });
 
-      /* SALITA LENTA DELLA NUVOLA (solo telefono): il flusso porterebbe il
-         Ristorante su a velocità piena; questa y contraria (da -0.8·viewport a 0)
-         la spalma su tutta la zona di copertura → sale a ~metà velocità, e lo
-         scrub morbido le dà l'inerzia da nuvola. */
-      if (mobileGallery) {
-        const dining = document.querySelector('.dining');
-        if (dining) {
-          gsap.fromTo(dining,
-            { y: () => -Math.round(pin.offsetHeight * (COVER_K - 1)) },
-            {
-              y: 0, ease: 'none',
-              scrollTrigger: {
-                trigger: gallerySection,
-                start: () => slideStart() + getScrollX(),
-                end: () => slideStart() + getScrollX() + Math.round(pin.offsetHeight * COVER_K),
-                scrub: 1.2,
-                invalidateOnRefresh: true
-              }
-            });
-        }
-      }
+    }
+
+    /* ---------- FOTO FLUTTUANTI (telefono): le 5 foto della galleria sparse
+       negli spazi vuoti, parallax a velocità e direzioni diverse ---------- */
+    if (isMobile() && !prefersReduced) {
+      gsap.utils.toArray('.float-photo').forEach((ph) => {
+        const speed = parseFloat(ph.getAttribute('data-speed') || '0.3');
+        gsap.to(ph, {
+          yPercent: -110 * speed, ease: 'none',
+          scrollTrigger: { trigger: ph.parentElement, start: 'top bottom', end: 'bottom top', scrub: true }
+        });
+      });
     }
 
     /* ---------- RISTORANTE: image clip reveal from bottom + text ---------- */

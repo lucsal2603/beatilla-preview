@@ -973,17 +973,27 @@
       .intro, .rooms, .stats, .workshop, .gethere { position: relative; }
       .float-photo {
         display: block; position: absolute; z-index: 2;
-        height: auto; pointer-events: none;
-        border: 4px solid var(--white);
-        box-shadow: 0 12px 26px rgba(26, 26, 24, .2);
+        pointer-events: none;
+        /* contorno a schizzo di pittura (come la macchia dietro la scritta
+           "Beatilla" sul muro): filo bianco che segue la macchia + ombra */
+        filter: drop-shadow(0 1.5px 0 var(--white)) drop-shadow(0 -1.5px 0 var(--white))
+                drop-shadow(1.5px 0 0 var(--white)) drop-shadow(-1.5px 0 0 var(--white))
+                drop-shadow(0 10px 14px rgba(26, 26, 24, .3));
+      }
+      .float-photo > img {
+        display: block; width: 100%; height: auto;
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20200%20150'%3E%3Cpath%20fill='%23fff'%20d='M25,70C20,48,38,30,62,26C78,12,102,10,118,22C138,12,165,20,172,38C190,44,196,62,186,76C196,92,186,112,166,116C158,132,132,140,112,132C94,144,66,140,54,126C32,126,16,108,22,92C12,84,14,76,25,70Z'/%3E%3Ccircle%20fill='%23fff'%20cx='13'%20cy='42'%20r='6'/%3E%3Ccircle%20fill='%23fff'%20cx='188'%20cy='103'%20r='5'/%3E%3Ccircle%20fill='%23fff'%20cx='173'%20cy='18'%20r='4'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20200%20150'%3E%3Cpath%20fill='%23fff'%20d='M25,70C20,48,38,30,62,26C78,12,102,10,118,22C138,12,165,20,172,38C190,44,196,62,186,76C196,92,186,112,166,116C158,132,132,140,112,132C94,144,66,140,54,126C32,126,16,108,22,92C12,84,14,76,25,70Z'/%3E%3Ccircle%20fill='%23fff'%20cx='13'%20cy='42'%20r='6'/%3E%3Ccircle%20fill='%23fff'%20cx='188'%20cy='103'%20r='5'/%3E%3Ccircle%20fill='%23fff'%20cx='173'%20cy='18'%20r='4'/%3E%3C/svg%3E");
+        -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
       }
       /* cavallo · ancorato a fine "Chi siamo" (il motto ha overflow:hidden e
          taglierebbe la parte che sporge), sconfina in basso sulla foto del motto */
-      .float-photo--1 { bottom: -52px; right: -14px; width: 112px; rotate: 5deg; }
-      .float-photo--2 { bottom: -40px; left: -18px; width: 120px; rotate: -6deg; } /* daino · fine camere */
-      .float-photo--3 { top: -44px; right: 14px; width: 104px; rotate: 4deg; }     /* giardino · confine ristorante/numeri */
-      .float-photo--4 { top: -48px; left: -14px; width: 122px; rotate: -5deg; }    /* corte di sera · confine servizi/workshop */
-      .float-photo--5 { top: -44px; right: -12px; width: 110px; rotate: 6deg; z-index: 6; } /* scritta Beatilla · angolo mappa */
+      .float-photo--1 { bottom: -56px; right: -16px; width: 128px; rotate: 5deg; }
+      .float-photo--2 { bottom: -44px; left: -20px; width: 136px; rotate: -6deg; } /* daino · fine camere */
+      .float-photo--3 { top: -48px; right: 10px; width: 118px; rotate: 4deg; }     /* giardino · confine ristorante/numeri */
+      .float-photo--4 { top: -52px; left: -16px; width: 138px; rotate: -5deg; }    /* corte di sera · confine servizi/workshop */
+      .float-photo--5 { top: -48px; right: -14px; width: 126px; rotate: 6deg; z-index: 6; } /* scritta Beatilla · angolo mappa */
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }
@@ -1213,7 +1223,7 @@
           Mantova a Peschiera — con la speranza di regalarvi un sorriso.
         </p>
       </div>
-      <img class="float-photo float-photo--1" data-speed="0.35" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <span class="float-photo float-photo--1" data-speed="0.35" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 4. FULL-BLEED IMAGE BREAK ===================== -->
@@ -1359,7 +1369,7 @@
 
         <div class="rooms__dots" id="roomsDots"></div>
       </div>
-      <img class="float-photo float-photo--2" data-speed="-0.3" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <span class="float-photo float-photo--2" data-speed="-0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 6. HORIZONTAL SCROLL GALLERY ===================== -->
@@ -1445,7 +1455,7 @@
           </div>
         </div>
       </div>
-      <img class="float-photo float-photo--3" data-speed="0.45" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <span class="float-photo float-photo--3" data-speed="0.45" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 9. ESPERIENZE ===================== -->
@@ -1599,7 +1609,7 @@
           <a class="link-more" href="https://www.lucabornoffi.com" target="_blank" rel="noopener">Scopri il suo lavoro <span>&rarr;</span></a>
         </div>
       </div>
-      <img class="float-photo float-photo--4" data-speed="0.3" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <span class="float-photo float-photo--4" data-speed="0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 10. IMMAGINE FULL-BLEED ===================== -->
@@ -1850,7 +1860,7 @@
           </div>
         </div>
       </div>
-      <img class="float-photo float-photo--5" data-speed="-0.35" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <span class="float-photo float-photo--5" data-speed="-0.35" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 12b. FAQ (BOZZA — non pubblicata) ===================== -->

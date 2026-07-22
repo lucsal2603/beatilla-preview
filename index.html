@@ -632,9 +632,9 @@
     }
     .link-more span { transition: transform .35s var(--ease); }
     .link-more:hover span { transform: translateX(6px); }
-    /* Pallini del rullino camere e polaroid fluttuanti: esistono solo su telefono */
+    /* Pallini del rullino camere e sipario foto: esistono solo su telefono */
     .rooms__dots { display: none; }
-    .float-photo { display: none; }
+    .curtain { display: none; }
 
     /* ============================================================
        6. HORIZONTAL SCROLL GALLERY
@@ -970,40 +970,29 @@
          le sue 5 foto diventano polaroid fluttuanti sparse negli spazi vuoti
          del sito (ai confini tra le sezioni, mai sopra i testi) */
       .gallery { display: none; }
-      .intro, .dining, .gethere { position: relative; overflow-x: clip; }
-      .exp__card:first-child { position: relative; }
-      /* cintura di sicurezza: su iOS gli elementi ruotati che sporgono possono
-         creare una striscia bianca laterale — qui si tronca tutto al bordo */
+      /* cintura di sicurezza: mai striscia bianca laterale su iOS */
       html, body { overflow-x: clip; }
-      .float-photo {
-        display: block; position: absolute; z-index: 2;
-        pointer-events: none;
-        /* contorno a schizzo di pittura (come la macchia dietro la scritta
-           "Beatilla" sul muro): filo bianco che segue la macchia + ombra */
-        filter: drop-shadow(0 1.5px 0 var(--white)) drop-shadow(0 -1.5px 0 var(--white))
-                drop-shadow(1.5px 0 0 var(--white)) drop-shadow(-1.5px 0 0 var(--white))
-                drop-shadow(0 10px 14px rgba(26, 26, 24, .3));
-      }
-      .float-photo > img {
-        display: block; width: 100%; height: auto;
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20200%20150'%3E%3Cpath%20fill='%23fff'%20d='M25,70C20,48,38,30,62,26C78,12,102,10,118,22C138,12,165,20,172,38C190,44,196,62,186,76C196,92,186,112,166,116C158,132,132,140,112,132C94,144,66,140,54,126C32,126,16,108,22,92C12,84,14,76,25,70Z'/%3E%3Ccircle%20fill='%23fff'%20cx='13'%20cy='42'%20r='6'/%3E%3Ccircle%20fill='%23fff'%20cx='188'%20cy='103'%20r='5'/%3E%3Ccircle%20fill='%23fff'%20cx='173'%20cy='18'%20r='4'/%3E%3C/svg%3E");
-        mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20200%20150'%3E%3Cpath%20fill='%23fff'%20d='M25,70C20,48,38,30,62,26C78,12,102,10,118,22C138,12,165,20,172,38C190,44,196,62,186,76C196,92,186,112,166,116C158,132,132,140,112,132C94,144,66,140,54,126C32,126,16,108,22,92C12,84,14,76,25,70Z'/%3E%3Ccircle%20fill='%23fff'%20cx='13'%20cy='42'%20r='6'/%3E%3Ccircle%20fill='%23fff'%20cx='188'%20cy='103'%20r='5'/%3E%3Ccircle%20fill='%23fff'%20cx='173'%20cy='18'%20r='4'/%3E%3C/svg%3E");
-        -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-        -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
-      }
-      /* posizioni sparse — mai sopra i testi */
-      .float-photo--1 { bottom: -58px; left: 16%; width: 124px; rotate: 4deg; animation-duration: 5.6s; }             /* cavallo · sul bordo del motto, fuori centro */
-      .float-photo--2 { top: 112px; right: 10px; width: 118px; rotate: -6deg; animation-duration: 6.4s; animation-delay: -2.1s; } /* daino · sulla foto de "La cucina del territorio", destra */
-      .float-photo--3 { top: -22px; left: 4px; width: 112px; rotate: 4deg; animation-duration: 5s; animation-delay: -1.3s; }      /* giardino · angolo alto-sinistro della prima card Esperienze */
-      .float-photo--4 { bottom: 12px; right: 10px; width: 106px; rotate: -5deg; animation-duration: 7s; animation-delay: -3.4s; } /* corte di sera · DENTRO la foto grande, basso a destra */
-      .float-photo--5 { top: 96px; left: 12px; width: 122px; rotate: 6deg; z-index: 6; animation-duration: 6s; animation-delay: -.8s; } /* scritta Beatilla · sulla mappa, lato sinistro a metà */
 
-      /* fluttuazione continua, dolce e fuori sincrono (si somma al parallax) */
-      @keyframes float-drift {
-        0%, 100% { translate: 0 0; }
-        50% { translate: 0 -9px; }
+      /* ---------- SIPARIO FOTO (prima di Esperienze) ----------
+         Due colonne di foto che scorrono in versi opposti, unite da una
+         fessura di luce; scrollando si ingrandiscono verso lo schermo e
+         poi si aprono come due ante, svelando Esperienze che sta dietro. */
+      .curtain { display: block; position: relative; background: var(--bg); }
+      .curtain__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; z-index: 10; }
+      .curtain__inner { position: absolute; inset: 0; display: flex; will-change: transform; }
+      .curtain__col { position: relative; flex: 1; overflow: hidden; will-change: transform; }
+      .curtain__track { display: flex; flex-direction: column; gap: 6px; will-change: transform; }
+      .curtain__track img { display: block; width: 100%; height: 36svh; object-fit: cover; }
+      .curtain__col--left { margin-right: 3px; }
+      .curtain__seam {
+        position: absolute; left: 50%; top: 0; bottom: 0;
+        width: 3px; margin-left: -1.5px; z-index: 3; pointer-events: none;
+        background: linear-gradient(180deg, transparent, rgba(255, 244, 214, .95) 22%, #ffedc2 50%, rgba(255, 244, 214, .95) 78%, transparent);
+        box-shadow: 0 0 22px 6px rgba(255, 233, 180, .55);
       }
-      .float-photo { animation: float-drift 5.5s ease-in-out infinite; }
+      /* Esperienze sale DIETRO le ante che si aprono (stessa meccanica della
+         vecchia copertura): un viewport di sovrapposizione + fondo opaco */
+      .curtain--armed + .exp { margin-top: -100svh; background: var(--bg); }
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }
@@ -1145,7 +1134,7 @@
       html { scroll-behavior: auto; }
       .hero__scroll svg { animation: none; }
       .rooms--roll .room { transform: none; }
-      .float-photo { animation: none; }
+      .curtain { display: none !important; }
       .hero__media { transform: scale(1) !important; }
       .hero__video { display: none; }
       /* Niente scrub: la striscia si scorre a mano */
@@ -1234,7 +1223,6 @@
           Mantova a Peschiera — con la speranza di regalarvi un sorriso.
         </p>
       </div>
-      <span class="float-photo float-photo--1" data-speed="0.35" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 4. FULL-BLEED IMAGE BREAK ===================== -->
@@ -1443,7 +1431,6 @@
           </div>
         </div>
       </div>
-      <span class="float-photo float-photo--2" data-speed="-0.25" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 8. STATS BAR ===================== -->
@@ -1468,6 +1455,53 @@
       </div>
     </section>
 
+    <!-- ===================== 8b. SIPARIO FOTO (solo telefono) ===================== -->
+    <section class="curtain" id="curtain" aria-hidden="true">
+      <div class="curtain__pin">
+        <div class="curtain__inner">
+          <div class="curtain__col curtain__col--left">
+            <div class="curtain__track">
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <div class="curtain__col curtain__col--right">
+            <div class="curtain__track">
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <div class="curtain__seam"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== 9. ESPERIENZE ===================== -->
     <section class="exp" id="esperienze">
       <div class="container">
@@ -1480,7 +1514,6 @@
             <div class="img-slot">
               <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10014.jpg" alt="Ospiti rilassati in giardino tra le luci della sera, con un calice di vino" data-img-parallax loading="lazy" decoding="async" />
             </div>
-            <span class="float-photo float-photo--3" data-speed="0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" /></span>
             <span class="label cat">Al tramonto</span>
             <h3>Aperitivo in corte</h3>
           </article>
@@ -1627,7 +1660,6 @@
       <div class="img-slot">
         <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/beatilla.jpg" alt="La scritta Beatilla dipinta a mano sul muro della cascina" data-img-parallax />
       </div>
-      <span class="float-photo float-photo--4" data-speed="0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 11. TESTIMONIALS ===================== -->
@@ -1871,7 +1903,6 @@
           </div>
         </div>
       </div>
-      <span class="float-photo float-photo--5" data-speed="-0.35" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10013.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 12b. FAQ (BOZZA — non pubblicata) ===================== -->
@@ -1966,9 +1997,10 @@
      [scroll] Room text fade-up    : [data-room-text] y:40->0 opacity (staggered) — ScrollTrigger, on enter
      [scroll] Horizontal gallery   : #galleryTrack x translate, section pinned    — ScrollTrigger scrub:1 (solo desktop;
                                      su telefono la galleria è nascosta)
-     [scroll] Foto fluttuanti      : .float-photo — le 5 foto della galleria      — ScrollTrigger scrub (solo telefono)
-                                     sparse ai confini tra sezioni, parallax
-                                     a velocità/direzioni diverse, mai sui testi
+     [scroll] Sipario foto         : #curtain — due colonne di foto in versi      — ScrollTrigger scrub + pin (solo telefono)
+                                     opposti con fessura di luce; zoom verso lo
+                                     schermo, poi le ante si aprono e svelano
+                                     Esperienze che sale da dietro
      [scroll] Dining image clip    : [data-clip-up] clip-path bottom reveal       — ScrollTrigger, on enter
      [scroll] Stats count-up       : [data-count] 0 -> target value               — ScrollTrigger, on enter
      [scroll] Experience cards     : [data-card] stagger fade-up via batch()      — ScrollTrigger.batch, 0.15s stagger
@@ -2337,16 +2369,49 @@
 
     }
 
-    /* ---------- FOTO FLUTTUANTI (telefono): le 5 foto della galleria sparse
-       negli spazi vuoti, parallax a velocità e direzioni diverse ---------- */
+    /* ---------- SIPARIO FOTO (telefono): colonne opposte → zoom → apertura ----------
+       Fase 1: le due colonne scorrono in versi opposti e tutto si ingrandisce
+       verso lo schermo (con la fessura di luce che si accende).
+       Fase 2: le ante si aprono e svelano Esperienze, che sale da dietro
+       (margine negativo sull'.exp — vedi .curtain--armed nel CSS). */
     if (isMobile() && !prefersReduced) {
-      gsap.utils.toArray('.float-photo').forEach((ph) => {
-        const speed = parseFloat(ph.getAttribute('data-speed') || '0.3');
-        gsap.to(ph, {
-          yPercent: -110 * speed, ease: 'none',
-          scrollTrigger: { trigger: ph.parentElement, start: 'top bottom', end: 'bottom top', scrub: true }
+      const curtain = document.getElementById('curtain');
+      if (curtain) {
+        const pinEl = curtain.querySelector('.curtain__pin');
+        const inner = curtain.querySelector('.curtain__inner');
+        const colL = curtain.querySelector('.curtain__col--left');
+        const colR = curtain.querySelector('.curtain__col--right');
+        const trkL = colL.querySelector('.curtain__track');
+        const trkR = colR.querySelector('.curtain__track');
+        const seam = curtain.querySelector('.curtain__seam');
+        curtain.classList.add('curtain--armed');
+
+        /* 2.2 viewport di scroll guidano la sequenza (+1 resta sotto le ante per Esperienze) */
+        const sizeCurtain = () => { curtain.style.height = Math.round(pinEl.offsetHeight * 3.2) + 'px'; };
+        sizeCurtain();
+        ScrollTrigger.addEventListener('refreshInit', sizeCurtain);
+
+        const curtainStart = () => Math.round(curtain.getBoundingClientRect().top + window.scrollY);
+        const curtainDist = () => Math.round(pinEl.offsetHeight * 2.2);
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: curtain,
+            start: () => curtainStart(),
+            end: () => curtainStart() + curtainDist(),
+            scrub: 0.6,
+            invalidateOnRefresh: true
+          }
         });
-      });
+        tl.fromTo(trkL, { yPercent: 0 }, { yPercent: -16, duration: 0.55 }, 0)
+          .fromTo(trkR, { yPercent: -16 }, { yPercent: 0, duration: 0.55 }, 0)
+          .fromTo(inner, { scale: 0.88 }, { scale: 1.16, ease: 'power1.in', duration: 0.55 }, 0)
+          .fromTo(seam, { opacity: 0.45 }, { opacity: 1, duration: 0.55 }, 0)
+          .to(seam, { opacity: 0, duration: 0.06 }, 0.58)
+          .to(colL, { xPercent: -106, ease: 'power1.inOut', duration: 0.4 }, 0.6)
+          .to(colR, { xPercent: 106, ease: 'power1.inOut', duration: 0.4 }, 0.6);
+      }
     }
 
     /* ---------- RISTORANTE: image clip reveal from bottom + text ---------- */

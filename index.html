@@ -972,6 +972,18 @@
       .gallery__item { width: 64vw; max-width: 250px; margin: 0; }
       .gallery__item .img-slot { width: 100%; height: auto; aspect-ratio: 2 / 3; }
       .gallery--cover + .dining { margin-top: -100svh; position: relative; z-index: 5; background: var(--bg); }
+      /* bordo alto "a nuvola" del Ristorante che sale a coprire la galleria:
+         gobbe semicircolari di larghezze diverse, stesso crema del fondo */
+      .gallery--cover + .dining::before {
+        content: "";
+        position: absolute;
+        left: 0; right: 0;
+        bottom: calc(100% - 1px);
+        height: 40px;
+        pointer-events: none;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 60'%3E%3Cpath fill='%23FAF8F4' d='M0%2044A32%2032%200%200%201%2064%2044A40%2040%200%200%201%20144%2044A24%2024%200%200%201%20192%2044A36%2036%200%200%201%20264%2044A28%2028%200%200%201%20320%2044A40%2040%200%200%201%20400%2044A26%2026%200%200%201%20452%2044A44%2044%200%200%201%20540%2044A30%2030%200%200%201%20600%2044L600%2060L0%2060Z'/%3E%3C/svg%3E") repeat-x bottom;
+        background-size: auto 100%;
+      }
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }

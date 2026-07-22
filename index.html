@@ -974,11 +974,11 @@
       html, body { overflow-x: clip; }
 
       /* ---------- SIPARIO FOTO (prima di Esperienze) ----------
-         Due colonne di foto che scorrono in versi opposti, unite da una
-         fessura di luce; scrollando si ingrandiscono verso lo schermo e
-         poi si aprono come due ante, svelando Esperienze che sta dietro. */
+         Due colonne di foto che scorrono DA SOLE all'infinito, in versi
+         opposti, con la fessura di luce fissa al centro. Nessun aggancio
+         allo scroll: la pagina ci scorre attraverso normalmente. */
       .curtain { display: block; position: relative; background: var(--bg); }
-      .curtain__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; z-index: 10; }
+      .curtain__pin { position: relative; height: 100svh; overflow: hidden; }
       .curtain__inner { position: absolute; inset: 0; display: flex; will-change: transform; }
       .curtain__col { position: relative; flex: 1; overflow: hidden; will-change: transform; }
       /* niente gap flex: il distacco è un margine su OGNI foto, così un set
@@ -992,9 +992,6 @@
         background: linear-gradient(180deg, transparent, rgba(255, 244, 214, .95) 22%, #ffedc2 50%, rgba(255, 244, 214, .95) 78%, transparent);
         box-shadow: 0 0 22px 6px rgba(255, 233, 180, .55);
       }
-      /* Esperienze sale DIETRO le ante che si aprono (stessa meccanica della
-         vecchia copertura): un viewport di sovrapposizione + fondo opaco */
-      .curtain--armed + .exp { margin-top: -100svh; background: var(--bg); }
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }
@@ -2001,10 +1998,8 @@
                                      su telefono la galleria è nascosta)
      [auto]   Sipario marquee      : #curtain — le due colonne scorrono DA SOLE   — tween infiniti (solo telefono)
                                      all'infinito, sx su e dx giù, loop senza
-                                     stacchi (1 set = 1/3 striscia)
-     [scroll] Sipario apertura     : scrollando le colonne si separano sempre     — ScrollTrigger scrub + pin (solo telefono)
-                                     di più, lineare da subito, e pian piano
-                                     dietro compare Esperienze; mai di scatto
+                                     stacchi (1 set = 1/3 striscia); fessura di
+                                     luce fissa; nessun aggancio allo scroll
      [scroll] Dining image clip    : [data-clip-up] clip-path bottom reveal       — ScrollTrigger, on enter
      [scroll] Stats count-up       : [data-count] 0 -> target value               — ScrollTrigger, on enter
      [scroll] Experience cards     : [data-card] stagger fade-up via batch()      — ScrollTrigger.batch, 0.15s stagger
@@ -2373,78 +2368,23 @@
 
     }
 
-    /* ---------- SIPARIO FOTO (telefono): colonne opposte → zoom → apertura ----------
-       Fase 1: le due colonne scorrono in versi opposti e tutto si ingrandisce
-       verso lo schermo (con la fessura di luce che si accende).
-       Fase 2: le ante si aprono e svelano Esperienze, che sale da dietro
-       (margine negativo sull'.exp — vedi .curtain--armed nel CSS). */
+    /* ---------- SIPARIO FOTO (telefono): due colonne che scorrono DA SOLE ----------
+       Solo marquee infinito: sinistra in su, destra in giù, fessura di luce
+       fissa al centro. Nessuna animazione legata allo scroll: la pagina ci
+       scorre attraverso normalmente ed Esperienze arriva sotto come sempre.
+       Un set di 5 foto = 1/3 esatto della striscia → loop senza stacchi.
+       In pausa quando la sezione è fuori schermo. */
     if (isMobile() && !prefersReduced) {
       const curtain = document.getElementById('curtain');
       if (curtain) {
-        const pinEl = curtain.querySelector('.curtain__pin');
-        const inner = curtain.querySelector('.curtain__inner');
-        const colL = curtain.querySelector('.curtain__col--left');
-        const colR = curtain.querySelector('.curtain__col--right');
-        const trkL = colL.querySelector('.curtain__track');
-        const trkR = colR.querySelector('.curtain__track');
-        const seam = curtain.querySelector('.curtain__seam');
-        curtain.classList.add('curtain--armed');
-
-        /* MARQUEE INFINITO: le colonne scorrono da sole, sempre — sinistra in
-           su, destra in giù. Un set di 5 foto = 1/3 esatto della striscia,
-           quindi il loop riparte senza stacchi. In pausa quando fuori schermo. */
+        const trkL = curtain.querySelector('.curtain__col--left .curtain__track');
+        const trkR = curtain.querySelector('.curtain__col--right .curtain__track');
         const marqL = gsap.to(trkL, { yPercent: -100 / 3, duration: 26, ease: 'none', repeat: -1 });
         const marqR = gsap.fromTo(trkR, { yPercent: -100 / 3 }, { yPercent: 0, duration: 26, ease: 'none', repeat: -1 });
         ScrollTrigger.create({
           trigger: curtain, start: 'top bottom', end: 'bottom top',
           onToggle: (self) => { marqL.paused(!self.isActive); marqR.paused(!self.isActive); }
         });
-
-        /* 2 viewport di scroll: apertura nei primi 0.65 + zona di ATTESA
-           (nulla si muove) prima che la pagina riprenda a scorrere normale */
-        const sizeCurtain = () => { curtain.style.height = Math.round(pinEl.offsetHeight * 3.0) + 'px'; };
-        sizeCurtain();
-        ScrollTrigger.addEventListener('refreshInit', sizeCurtain);
-
-        const curtainStart = () => Math.round(curtain.getBoundingClientRect().top + window.scrollY);
-        const curtainDist = () => Math.round(pinEl.offsetHeight * 2.0);
-
-        /* APERTURA GRADUALE: legata solo allo scroll, lineare da subito — le
-           colonne si separano sempre di più (dentro continuano a scorrere da
-           sole). Mai di scatto. */
-        const tl = gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: curtain,
-            start: () => curtainStart(),
-            end: () => curtainStart() + curtainDist(),
-            scrub: 0.6,
-            invalidateOnRefresh: true
-          }
-        });
-        tl.fromTo(colL, { xPercent: 0 }, { xPercent: -101, duration: 0.65 }, 0)
-          .fromTo(colR, { xPercent: 0 }, { xPercent: 101, duration: 0.65 }, 0)
-          .fromTo(inner, { scale: 1 }, { scale: 1.1, duration: 0.65 }, 0)
-          .fromTo(seam, { opacity: 0.9 }, { opacity: 0, duration: 0.25 }, 0);
-        /* dal 65% in poi: attesa — tutto fermo per ~mezza schermata di scroll */
-
-        /* ESPERIENZE INCHIODATA DIETRO: trigger separato SENZA smoothing
-           (scrub esatto 1:1 con lo scroll) — il contro-movimento annulla la
-           risalita del flusso in ogni istante, quindi il tag non si muove mai,
-           né durante l'apertura né durante l'attesa. */
-        const expSec = document.querySelector('.exp');
-        if (expSec) {
-          gsap.fromTo(expSec, { y: () => -curtainDist() }, {
-            y: 0, ease: 'none',
-            scrollTrigger: {
-              trigger: curtain,
-              start: () => curtainStart(),
-              end: () => curtainStart() + curtainDist(),
-              scrub: true,
-              invalidateOnRefresh: true
-            }
-          });
-        }
       }
     }
 

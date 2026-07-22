@@ -1060,11 +1060,12 @@
       .rooms--roll .room.is-active { opacity: 1; transform: none; }
       .rooms__dots { display: flex; justify-content: center; gap: .5rem; margin-top: .2rem; }
       .rooms__dot {
-        width: 8px; height: 8px; border-radius: 50%;
+        width: 8px; height: 8px; border-radius: 999px;
         border: 1px solid var(--accent); background: transparent; padding: 0;
-        transition: background .3s var(--ease), transform .3s var(--ease);
+        transition: width .35s var(--ease), background .3s var(--ease);
       }
-      .rooms__dot.active { background: var(--accent); transform: scale(1.2); }
+      /* il pallino della camera in vista si allunga a pillola */
+      .rooms__dot.active { width: 26px; background: var(--accent); }
 
       /* Ristorante */
       .dining__text p { font-size: .98rem; line-height: 1.65; }

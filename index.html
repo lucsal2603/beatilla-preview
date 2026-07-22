@@ -970,14 +970,16 @@
          le sue 5 foto diventano polaroid fluttuanti sparse negli spazi vuoti
          del sito (ai confini tra le sezioni, mai sopra i testi) */
       .gallery { display: none; }
-      .rooms, .stats, .workshop, .gethere { position: relative; }
+      .intro, .rooms, .stats, .workshop, .gethere { position: relative; }
       .float-photo {
         display: block; position: absolute; z-index: 2;
         height: auto; pointer-events: none;
         border: 4px solid var(--white);
         box-shadow: 0 12px 26px rgba(26, 26, 24, .2);
       }
-      .float-photo--1 { top: -46px; right: -16px; width: 112px; rotate: 5deg; }   /* cavallo · sopra il motto */
+      /* cavallo · ancorato a fine "Chi siamo" (il motto ha overflow:hidden e
+         taglierebbe la parte che sporge), sconfina in basso sulla foto del motto */
+      .float-photo--1 { bottom: -52px; right: -14px; width: 112px; rotate: 5deg; }
       .float-photo--2 { bottom: -40px; left: -18px; width: 120px; rotate: -6deg; } /* daino · fine camere */
       .float-photo--3 { top: -44px; right: 14px; width: 104px; rotate: 4deg; }     /* giardino · confine ristorante/numeri */
       .float-photo--4 { top: -48px; left: -14px; width: 122px; rotate: -5deg; }    /* corte di sera · confine servizi/workshop */
@@ -1211,6 +1213,7 @@
           Mantova a Peschiera — con la speranza di regalarvi un sorriso.
         </p>
       </div>
+      <img class="float-photo float-photo--1" data-speed="0.35" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     </section>
 
     <!-- ===================== 4. FULL-BLEED IMAGE BREAK ===================== -->
@@ -1227,7 +1230,6 @@
           della nostra storia. La nostra missione è farvi sentire a casa &mdash; e regalarvi un sorriso.
         </p>
       </div>
-      <img class="float-photo float-photo--1" data-speed="0.35" src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10012.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
     </section>
 
     <!-- ===================== 5. CAMERE ===================== -->

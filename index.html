@@ -2400,13 +2400,14 @@
           onToggle: (self) => { marqL.paused(!self.isActive); marqR.paused(!self.isActive); }
         });
 
-        /* 1.6 viewport di scroll guidano l'apertura (+1 resta dietro per Esperienze) */
-        const sizeCurtain = () => { curtain.style.height = Math.round(pinEl.offsetHeight * 2.6) + 'px'; };
+        /* 2 viewport di scroll: apertura nei primi 0.65 + zona di ATTESA
+           (nulla si muove) prima che la pagina riprenda a scorrere normale */
+        const sizeCurtain = () => { curtain.style.height = Math.round(pinEl.offsetHeight * 3.0) + 'px'; };
         sizeCurtain();
         ScrollTrigger.addEventListener('refreshInit', sizeCurtain);
 
         const curtainStart = () => Math.round(curtain.getBoundingClientRect().top + window.scrollY);
-        const curtainDist = () => Math.round(pinEl.offsetHeight * 1.6);
+        const curtainDist = () => Math.round(pinEl.offsetHeight * 2.0);
 
         /* APERTURA GRADUALE: legata solo allo scroll, lineare da subito — le
            colonne si separano sempre di più (dentro continuano a scorrere da
@@ -2421,17 +2422,28 @@
             invalidateOnRefresh: true
           }
         });
-        tl.fromTo(colL, { xPercent: 0 }, { xPercent: -101, duration: 1 }, 0)
-          .fromTo(colR, { xPercent: 0 }, { xPercent: 101, duration: 1 }, 0)
-          .fromTo(inner, { scale: 1 }, { scale: 1.1, duration: 1 }, 0)
-          .fromTo(seam, { opacity: 0.9 }, { opacity: 0, duration: 0.4 }, 0);
+        tl.fromTo(colL, { xPercent: 0 }, { xPercent: -101, duration: 0.65 }, 0)
+          .fromTo(colR, { xPercent: 0 }, { xPercent: 101, duration: 0.65 }, 0)
+          .fromTo(inner, { scale: 1 }, { scale: 1.1, duration: 0.65 }, 0)
+          .fromTo(seam, { opacity: 0.9 }, { opacity: 0, duration: 0.25 }, 0);
+        /* dal 65% in poi: attesa — tutto fermo per ~mezza schermata di scroll */
 
-        /* ESPERIENZE È GIÀ LÌ: contro-movimento che la tiene ferma a inizio
-           schermo dietro il sipario per tutta l'apertura — così anche con uno
-           spiraglio minimo si vede subito il tag sotto, fermo al suo posto. */
+        /* ESPERIENZE INCHIODATA DIETRO: trigger separato SENZA smoothing
+           (scrub esatto 1:1 con lo scroll) — il contro-movimento annulla la
+           risalita del flusso in ogni istante, quindi il tag non si muove mai,
+           né durante l'apertura né durante l'attesa. */
         const expSec = document.querySelector('.exp');
         if (expSec) {
-          tl.fromTo(expSec, { y: () => -curtainDist() }, { y: 0, duration: 1 }, 0);
+          gsap.fromTo(expSec, { y: () => -curtainDist() }, {
+            y: 0, ease: 'none',
+            scrollTrigger: {
+              trigger: curtain,
+              start: () => curtainStart(),
+              end: () => curtainStart() + curtainDist(),
+              scrub: true,
+              invalidateOnRefresh: true
+            }
+          });
         }
       }
     }
@@ -2672,8 +2684,17 @@
     const toTop = () => { if (lenis) lenis.scrollTo(0, { immediate: true, force: true }); else window.scrollTo(0, 0); };
     window.addEventListener('load', () => { ScrollTrigger.refresh(); toTop(); });
     window.addEventListener('pageshow', toTop);
+    /* PERF telefono: prima OGNI immagine lazy caricata scatenava un
+       ScrollTrigger.refresh() completo (decine di ricalcoli pesanti proprio
+       mentre si scrolla → pagina che si "blocca"). Ora i caricamenti vengono
+       raggruppati in UN solo refresh, quando sono fermi da 300ms. */
+    let imgRefreshT;
+    const queueImgRefresh = () => {
+      clearTimeout(imgRefreshT);
+      imgRefreshT = setTimeout(() => ScrollTrigger.refresh(), 300);
+    };
     document.querySelectorAll('img').forEach((img) => {
-      if (!img.complete) img.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+      if (!img.complete) img.addEventListener('load', queueImgRefresh, { once: true });
     });
     /* I font (Cormorant/Jost) caricano in "swap": quando arrivano cambiano l'altezza dei titoli
        e spostano tutte le sezioni. Senza questo refresh il pin della galleria resta calcolato

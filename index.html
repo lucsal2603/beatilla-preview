@@ -632,6 +632,8 @@
     }
     .link-more span { transition: transform .35s var(--ease); }
     .link-more:hover span { transform: translateX(6px); }
+    /* Pallini del rullino camere: esistono solo su telefono */
+    .rooms__dots { display: none; }
 
     /* ============================================================
        6. HORIZONTAL SCROLL GALLERY
@@ -1015,12 +1017,54 @@
       .break { height: 62vh; min-height: 400px; }
       .break__sub { font-size: .98rem; line-height: 1.6; margin-top: 1.4rem; }
 
-      /* Camere: foto e testi più raccolti, meno vuoto tra una camera e l'altra */
-      .room { margin-bottom: 3.4rem; gap: 1.2rem; }
-      .rooms__head { margin-bottom: 2.4rem; }
-      .room__num { font-size: 1.05rem; }
-      .room__title { font-size: 1.8rem; margin: .4rem 0 .8rem; }
-      .room__desc { font-size: .95rem; line-height: 1.6; margin-bottom: 1rem; }
+      /* ---------- CAMERE: rullino orizzontale swipabile (stile rullino foto) ----------
+         Niente più 8 camere impilate: una striscia con scroll-snap, si trascina col dito.
+         Foto TUTTE della stessa misura (4:3, cover). */
+      .rooms__head { margin-bottom: 1.8rem; }
+      .rooms__track {
+        display: flex; gap: .9rem;
+        overflow-x: auto; -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        margin-inline: calc(-1 * var(--gutter));
+        padding: .3rem var(--gutter) 1.2rem;
+      }
+      .rooms__track::-webkit-scrollbar { display: none; }
+      .room {
+        flex: 0 0 82vw; max-width: 360px;
+        margin: 0; display: flex; flex-direction: column; gap: .95rem;
+        scroll-snap-align: center;
+      }
+      /* foto uniformi: stesso riquadro per tutte, ritaglio cover */
+      .room__media { width: 100%; }
+      .rooms .room__media .img-slot {
+        aspect-ratio: 4 / 3;
+        background: linear-gradient(135deg, var(--img-1) 0%, var(--img-2) 100%);
+      }
+      .rooms .room__media .img-slot > img,
+      .rooms .room__media .img-slot > img[data-img-parallax] {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+      }
+      .room__text { display: flex; flex-direction: column; flex: 1; }
+      .room__text .link-more { margin-top: auto; }
+      .room__num { font-size: 1rem; }
+      .room__title { font-size: 1.45rem; margin: .3rem 0 .6rem; }
+      .room__desc {
+        font-size: .92rem; line-height: 1.55; margin-bottom: .9rem;
+        display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+      }
+      /* card "a fuoco": quella centrata piena, le altre soft (classe aggiunta da JS) */
+      .rooms--roll .room { opacity: .55; transform: scale(.96); transition: opacity .45s var(--ease), transform .45s var(--ease); }
+      .rooms--roll .room.is-active { opacity: 1; transform: none; }
+      .rooms__dots { display: flex; justify-content: center; gap: .5rem; margin-top: .2rem; }
+      .rooms__dot {
+        width: 8px; height: 8px; border-radius: 50%;
+        border: 1px solid var(--accent); background: transparent; padding: 0;
+        transition: background .3s var(--ease), transform .3s var(--ease);
+      }
+      .rooms__dot.active { background: var(--accent); transform: scale(1.2); }
 
       /* Ristorante */
       .dining__text p { font-size: .98rem; line-height: 1.65; }
@@ -1067,6 +1111,7 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .hero__scroll svg { animation: none; }
+      .rooms--roll .room { transform: none; }
       .hero__media { transform: scale(1) !important; }
       .hero__video { display: none; }
       /* Niente loop automatico: la striscia si scorre a mano */
@@ -1181,6 +1226,9 @@
           <h2 data-words>Le nostre camere</h2>
         </div>
 
+        <!-- Su telefono diventa un rullino orizzontale (scroll-snap); su desktop è trasparente -->
+        <div class="rooms__track" id="roomsTrack">
+
         <article class="room room--a">
           <div class="room__media">
             <div class="img-slot" data-room-img="left">
@@ -1292,6 +1340,10 @@
             <a class="link-more" href="https://wubook.net/nneb/bk/?ep=efbd0f20&board=bb&o=2.0.0.0&c=EUR&lang=it" target="_blank" rel="noopener">Scopri <span>&rarr;</span></a>
           </div>
         </article>
+
+        </div><!-- /rooms__track -->
+
+        <div class="rooms__dots" id="roomsDots"></div>
       </div>
     </section>
 
@@ -1884,7 +1936,9 @@
      [feel]   Lenis smooth scroll  : inertia sul wheel + ancore fluide            — sincronizzato con ScrollTrigger
      [load]   Nav slide-down       : .nav scende dall'alto al load                — on page load
      [scroll] Hero exit parallax   : .hero__inner sale e sfuma uscendo            — ScrollTrigger scrub
-     [scroll] Room clip reveal     : [data-room-img] clip laterale + zoom foto    — ScrollTrigger, on enter
+     [scroll] Room clip reveal     : [data-room-img] clip laterale + zoom foto    — ScrollTrigger, on enter (solo desktop)
+     [touch]  Camere rullino       : su telefono striscia swipabile scroll-snap,  — nativo + IntersectionObserver
+                                     card a fuoco al centro, pallini di posizione
      [scroll] Workshop/video clip  : img-slot svelati con clip verticale + zoom   — ScrollTrigger, on enter
      [scroll] Stats dividers       : linee che crescono + label a salire          — ScrollTrigger, on enter
      [scroll] Service icon pop     : .service__icon scale con back.out            — ScrollTrigger.batch
@@ -2098,29 +2152,76 @@
       });
     });
 
-    /* ---------- CAMERE: foto svelata con clip laterale + zoom, testo a cascata ----------
-       Funziona anche su telefono: solo transform/clip, una volta sola, niente scrub. */
-    gsap.utils.toArray('.room').forEach((room) => {
-      const img = room.querySelector('[data-room-img]');
-      const photo = img.querySelector('img');
-      const text = room.querySelector('[data-room-text]');
-      const dir = img.getAttribute('data-room-img') === 'right' ? 1 : -1;
-      const bits = text.querySelectorAll('.room__num, .room__title, .room__desc, .link-more');
+    /* ---------- CAMERE ----------
+       Telefono: rullino orizzontale swipabile — card a fuoco quando centrata + pallini.
+       Desktop: foto svelata con clip laterale + zoom, testo a cascata (come prima). */
+    if (isMobile()) {
+      (() => {
+        const rooms = document.querySelector('.rooms');
+        const track = document.getElementById('roomsTrack');
+        const dotsWrap = document.getElementById('roomsDots');
+        if (!rooms || !track || !dotsWrap) return;
+        rooms.classList.add('rooms--roll');
+        const cards = Array.from(track.querySelectorAll('.room'));
 
-      const tl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        scrollTrigger: { trigger: room, start: 'top 75%' }
+        /* ingresso della striscia da destra quando la sezione entra */
+        if (!prefersReduced) {
+          gsap.from(track, {
+            x: 60, opacity: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: rooms, start: 'top 78%' }
+          });
+        }
+
+        /* pallini: uno per camera, tap per saltare a quella camera */
+        const dots = cards.map((card, i) => {
+          const d = document.createElement('button');
+          d.type = 'button';
+          d.className = 'rooms__dot';
+          d.setAttribute('aria-label', 'Vai alla camera ' + (i + 1));
+          d.addEventListener('click', () => {
+            track.scrollTo({
+              left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2,
+              behavior: prefersReduced ? 'auto' : 'smooth'
+            });
+          });
+          dotsWrap.appendChild(d);
+          return d;
+        });
+
+        /* card "a fuoco" quando occupa il centro del rullino */
+        const setActive = (i) => {
+          cards.forEach((c, j) => c.classList.toggle('is-active', j === i));
+          dots.forEach((d, j) => d.classList.toggle('active', j === i));
+        };
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) setActive(cards.indexOf(en.target)); });
+        }, { root: track, threshold: 0.6 });
+        cards.forEach((c) => io.observe(c));
+        setActive(0);
+      })();
+    } else {
+      gsap.utils.toArray('.room').forEach((room) => {
+        const img = room.querySelector('[data-room-img]');
+        const photo = img.querySelector('img');
+        const text = room.querySelector('[data-room-text]');
+        const dir = img.getAttribute('data-room-img') === 'right' ? 1 : -1;
+        const bits = text.querySelectorAll('.room__num, .room__title, .room__desc, .link-more');
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'power3.out' },
+          scrollTrigger: { trigger: room, start: 'top 75%' }
+        });
+        if (prefersReduced) {
+          tl.from([img, text], { opacity: 0, duration: 0.8, stagger: 0.15 });
+        } else {
+          tl.fromTo(img,
+              { clipPath: dir < 0 ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)', xPercent: dir * 9 },
+              { clipPath: 'inset(0 0% 0 0%)', xPercent: 0, duration: 1.15, ease: 'power4.inOut' })
+            .fromTo(photo, { scale: 1.14 }, { scale: 1, duration: 1.4 }, '<')
+            .from(bits, { y: 28, opacity: 0, duration: 0.75, stagger: 0.09 }, '-=.75');
+        }
       });
-      if (prefersReduced) {
-        tl.from([img, text], { opacity: 0, duration: 0.8, stagger: 0.15 });
-      } else {
-        tl.fromTo(img,
-            { clipPath: dir < 0 ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)', xPercent: dir * (isMobile() ? 5 : 9) },
-            { clipPath: 'inset(0 0% 0 0%)', xPercent: 0, duration: 1.15, ease: 'power4.inOut' })
-          .fromTo(photo, { scale: 1.14 }, { scale: 1, duration: 1.4 }, '<')
-          .from(bits, { y: 28, opacity: 0, duration: 0.75, stagger: 0.09 }, '-=.75');
-      }
-    });
+    }
 
     /* ---------- HORIZONTAL SCROLL GALLERY (desktop only) ----------
        Il pin è gestito da CSS position:sticky (vedi .gallery__pin), così la striscia

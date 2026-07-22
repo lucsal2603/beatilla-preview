@@ -992,6 +992,9 @@
         background: linear-gradient(180deg, transparent, rgba(255, 244, 214, .95) 22%, #ffedc2 50%, rgba(255, 244, 214, .95) 78%, transparent);
         box-shadow: 0 0 22px 6px rgba(255, 233, 180, .55);
       }
+      /* Esperienze ATTACCATA alla banda del loop: niente filo di distacco
+         sotto, e uno spessore scuro a marcare il confine */
+      .curtain + .exp { margin-top: -2px; border-top: 10px solid var(--text); }
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }

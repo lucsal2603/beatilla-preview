@@ -746,6 +746,17 @@
       padding-top: clamp(2.6rem, 6vh, 4.5rem);
       border-top: 1px solid rgba(26,26,24,.12);
       max-width: 64ch; margin-inline: auto; text-align: center;
+      position: relative; z-index: 0;
+    }
+    /* schizzo acquerello (i "Circles of Life" di Bornoffi) dietro tutto il
+       blocco dell'artista: titoletto, citazione, descrizione e link */
+    .workshop__artist::before {
+      content: "";
+      position: absolute; z-index: -1;
+      left: 50%; top: 52%; transform: translate(-50%, -50%);
+      width: min(118%, 600px); aspect-ratio: 760 / 950;
+      background: url("sketch-artist.png") center/contain no-repeat;
+      opacity: .5; pointer-events: none;
     }
     .workshop__artist .label { justify-content: center; }
     .workshop__quote {

@@ -648,11 +648,6 @@
     .gallery__track { display: flex; gap: 2rem; padding-inline: var(--gutter); will-change: transform; }
     .gallery__item { flex: 0 0 auto; width: 400px; }
     .gallery__item .img-slot { width: 400px; height: 600px; }
-    /* Loop continuo della striscia su mobile (lo scorrimento esatto è --marquee-shift, calcolato in JS) */
-    @keyframes gallery-marquee {
-      from { transform: translateX(0); }
-      to { transform: translateX(calc(-1 * var(--marquee-shift, 50%))); }
-    }
     .gallery__cap { margin-top: 1rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .22em; color: var(--accent); }
 
     /* ============================================================
@@ -970,13 +965,13 @@
       .visit__grid { grid-template-columns: 1fr; }
       .stats__grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .stats__divider { display: none; }
-      /* horizontal gallery -> vertical stack */
-      /* La vita in campagna: striscia che scorre in loop invece di impilare le foto in verticale */
-      .gallery__pin { position: static; height: auto; display: block; padding-block: 1.5rem; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scrollbar-width: none; }
-      .gallery__pin::-webkit-scrollbar { display: none; }
-      .gallery__track { flex-direction: row; width: max-content; transform: none; padding-inline: 0; gap: 1rem; align-items: flex-start; }
-      .gallery__item { width: 60vw; max-width: 240px; margin: 0; }
+      /* La vita in campagna: pin + scrub orizzontale anche su telefono.
+         Scendendo, le foto scorrono in orizzontale fino all'ultima; poi il
+         Ristorante sale dal basso a coprire la galleria (.gallery--cover). */
+      .gallery__track { gap: 1rem; }
+      .gallery__item { width: 64vw; max-width: 250px; margin: 0; }
       .gallery__item .img-slot { width: 100%; height: auto; aspect-ratio: 2 / 3; }
+      .gallery--cover + .dining { margin-top: -100svh; position: relative; z-index: 5; background: var(--bg); }
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }
@@ -1115,9 +1110,14 @@
       .rooms--roll .room { transform: none; }
       .hero__media { transform: scale(1) !important; }
       .hero__video { display: none; }
-      /* Niente loop automatico: la striscia si scorre a mano */
+      /* Niente scrub: la striscia si scorre a mano */
       .gallery__track { animation: none !important; transform: none !important; }
       .gallery__pin { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
+    /* Reduce + telefono: galleria come semplice striscia manuale, senza pin */
+    @media (prefers-reduced-motion: reduce) and (max-width: 768px) {
+      .gallery__pin { position: static; height: auto; padding-block: 1.5rem; display: block; }
+      .gallery__track { width: max-content; }
     }
   </style>
 </head>
@@ -1926,7 +1926,9 @@
      [scroll] Image break parallax : [data-parallax] yPercent -18 -> 18 scrub     — ScrollTrigger scrub
      [scroll] Room image slide     : [data-room-img] x from ±viewport + clip      — ScrollTrigger, on enter
      [scroll] Room text fade-up    : [data-room-text] y:40->0 opacity (staggered) — ScrollTrigger, on enter
-     [scroll] Horizontal gallery   : #galleryTrack x translate, section pinned    — ScrollTrigger scrub:1 (desktop only)
+     [scroll] Horizontal gallery   : #galleryTrack x translate, section pinned    — ScrollTrigger scrub:1 (desktop + mobile;
+                                     su mobile a fine corsa il Ristorante sale
+                                     a coprire la galleria — .gallery--cover)
      [scroll] Dining image clip    : [data-clip-up] clip-path bottom reveal       — ScrollTrigger, on enter
      [scroll] Stats count-up       : [data-count] 0 -> target value               — ScrollTrigger, on enter
      [scroll] Experience cards     : [data-card] stagger fade-up via batch()      — ScrollTrigger.batch, 0.15s stagger
@@ -1956,8 +1958,7 @@
      [auto]   Testimonials rotate  : .testi__item crossfade every 4s              — setInterval (pausable)
      ----------------------------------------------------------------------------
      Notes: prefers-reduced-motion disables transforms/parallax/Ken Burns and
-     reveals content statically. Horizontal scroll is replaced by a vertical
-     stack on viewports < 768px.
+     reveals content statically (galleria: striscia manuale senza pin).
      ============================================================================ */
 
   (function () {
@@ -2266,12 +2267,18 @@
     const pin = document.getElementById('galleryPin');
     const gallerySection = document.getElementById('gallery');
     const galleryHead = gallerySection ? gallerySection.querySelector('.gallery__head') : null;
-    if (track && pin && gallerySection && !isMobile()) {
+    if (track && pin && gallerySection && !(prefersReduced && isMobile())) {
+      const mobileGallery = isMobile();
+      /* Su telefono, a fine corsa la sezione dopo (Ristorante) sale a COPRIRE la
+         galleria rimasta bloccata: un viewport extra di altezza qui + margine
+         negativo sul Ristorante (classe .gallery--cover, vedi CSS). */
+      if (mobileGallery) gallerySection.classList.add('gallery--cover');
       const getScrollX = () => Math.max(0, track.scrollWidth - pin.clientWidth);
+      const coverExtra = () => (mobileGallery ? pin.offsetHeight : 0);
       /* Allunga la sezione quel tanto che serve per far scorrere la striscia mentre è "stuck" */
       const sizeSection = () => {
         const headH = galleryHead ? galleryHead.offsetHeight : 0;
-        gallerySection.style.height = (headH + pin.offsetHeight + getScrollX()) + 'px';
+        gallerySection.style.height = (headH + pin.offsetHeight + getScrollX() + coverExtra()) + 'px';
       };
       sizeSection();
       /* Reimposta l'altezza ad ogni ricalcolo, PRIMA che ScrollTrigger misuri le posizioni */
@@ -2293,56 +2300,6 @@
           invalidateOnRefresh: true
         }
       });
-    } else if (track && pin && isMobile() && !prefersReduced) {
-      /* MOBILE: striscia che scorre da sola MA che si può anche trascinare/scorrere a dito.
-         Uso lo scroll nativo del contenitore (.gallery__pin): triplico le foto (un set prima,
-         gli originali, un set dopo) così il loop è infinito in entrambe le direzioni; un rAF
-         incrementa scrollLeft per il movimento automatico, che si mette in pausa appena tocchi. */
-      const originals = Array.from(track.children);
-      const firstOriginal = originals[0];
-      originals.forEach((it) => { const c = it.cloneNode(true); c.setAttribute('aria-hidden', 'true'); track.appendChild(c); });        // set dopo
-      originals.forEach((it) => { const c = it.cloneNode(true); c.setAttribute('aria-hidden', 'true'); track.insertBefore(c, firstOriginal); }); // set prima
-
-      let setWidth = 0, userTouched = false;
-      const measure = () => {
-        const w = firstOriginal.offsetLeft - track.children[0].offsetLeft;
-        if (w > 0) { setWidth = w; if (!userTouched) pin.scrollLeft = setWidth; } // parti sugli originali; ricentra finché l'utente non interviene (font/immagini cambiano le misure)
-      };
-      measure();
-      window.addEventListener('resize', measure);
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-
-      /* Riporta lo scroll dentro l'intervallo centrale: loop senza stacchi, sia auto sia a dito */
-      const wrap = () => {
-        if (setWidth <= 0) return;
-        if (pin.scrollLeft >= setWidth * 2) pin.scrollLeft -= setWidth;
-        else if (pin.scrollLeft < setWidth) pin.scrollLeft += setWidth;
-      };
-      pin.addEventListener('scroll', wrap, { passive: true });
-
-      /* Pausa l'auto-scroll SOLO se l'utente interagisce in orizzontale con la galleria;
-         lo scroll verticale della pagina (sopra la galleria) non deve fermare l'animazione. */
-      let paused = false, resumeT;
-      const pauseAuto = () => { userTouched = true; paused = true; clearTimeout(resumeT); resumeT = setTimeout(() => { paused = false; }, 2000); };
-      let tsx = 0, tsy = 0, dir = 0; // dir: 0 indeciso, 1 orizzontale, -1 verticale
-      pin.addEventListener('touchstart', (e) => { const t = e.touches[0]; tsx = t.clientX; tsy = t.clientY; dir = 0; }, { passive: true });
-      pin.addEventListener('touchmove', (e) => {
-        if (dir === 1) { pauseAuto(); return; }
-        if (dir === -1) return; // gesto verticale: è scroll di pagina, non fermare l'animazione
-        const t = e.touches[0]; const dx = Math.abs(t.clientX - tsx), dy = Math.abs(t.clientY - tsy);
-        if (dx > 8 || dy > 8) { dir = dx > dy ? 1 : -1; if (dir === 1) pauseAuto(); }
-      }, { passive: true });
-      pin.addEventListener('wheel', (e) => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) pauseAuto(); }, { passive: true }); // solo trackpad/scroll orizzontale
-
-      const SPEED = 0.45; // px per frame: scorrimento lento e riposante
-      const tick = () => {
-        if (!paused && setWidth > 0) {
-          pin.scrollLeft += SPEED;
-          if (pin.scrollLeft >= setWidth * 2) pin.scrollLeft -= setWidth;
-        }
-        requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
     }
 
     /* ---------- RISTORANTE: image clip reveal from bottom + text ---------- */
@@ -2550,7 +2507,7 @@
       });
     });
 
-    /* ---------- GALLERY IMAGE DRIFT (solo desktop: su mobile c'è il marquee) ---------- */
+    /* ---------- GALLERY IMAGE DRIFT (solo desktop: su mobile basta lo scrub del pin) ---------- */
     if (!prefersReduced && !isMobile()) {
       gsap.utils.toArray('.gallery__item img').forEach((img) => {
         gsap.fromTo(img, { scale: 1.12 }, {

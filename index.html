@@ -970,7 +970,8 @@
          le sue 5 foto diventano polaroid fluttuanti sparse negli spazi vuoti
          del sito (ai confini tra le sezioni, mai sopra i testi) */
       .gallery { display: none; }
-      .intro, .rooms, .stats, .gethere { position: relative; overflow-x: clip; }
+      .intro, .dining, .gethere { position: relative; overflow-x: clip; }
+      .exp__card:first-child { position: relative; }
       /* cintura di sicurezza: su iOS gli elementi ruotati che sporgono possono
          creare una striscia bianca laterale — qui si tronca tutto al bordo */
       html, body { overflow-x: clip; }
@@ -990,12 +991,19 @@
         -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
         -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
       }
-      /* posizioni sparse: centro, basso, lati diversi — mai sopra i testi */
-      .float-photo--1 { bottom: -58px; left: calc(50% - 62px); width: 124px; rotate: 4deg; }  /* cavallo · AL CENTRO, a cavallo del bordo del motto */
-      .float-photo--2 { bottom: -58px; left: 10px; width: 136px; rotate: -6deg; }             /* daino · in basso a sinistra, fine camere */
-      .float-photo--3 { bottom: -38px; left: 16px; width: 118px; rotate: 4deg; }              /* giardino · in basso a sinistra dei numeri */
-      .float-photo--4 { bottom: 12px; right: 10px; width: 106px; rotate: -5deg; }             /* corte di sera · DENTRO la foto grande, basso a destra */
-      .float-photo--5 { top: 96px; left: 12px; width: 122px; rotate: 6deg; z-index: 6; }      /* scritta Beatilla · sulla mappa, lato sinistro a metà */
+      /* posizioni sparse — mai sopra i testi */
+      .float-photo--1 { bottom: -58px; left: 16%; width: 124px; rotate: 4deg; animation-duration: 5.6s; }             /* cavallo · sul bordo del motto, fuori centro */
+      .float-photo--2 { top: 112px; right: 10px; width: 118px; rotate: -6deg; animation-duration: 6.4s; animation-delay: -2.1s; } /* daino · sulla foto de "La cucina del territorio", destra */
+      .float-photo--3 { top: -22px; left: 4px; width: 112px; rotate: 4deg; animation-duration: 5s; animation-delay: -1.3s; }      /* giardino · angolo alto-sinistro della prima card Esperienze */
+      .float-photo--4 { bottom: 12px; right: 10px; width: 106px; rotate: -5deg; animation-duration: 7s; animation-delay: -3.4s; } /* corte di sera · DENTRO la foto grande, basso a destra */
+      .float-photo--5 { top: 96px; left: 12px; width: 122px; rotate: 6deg; z-index: 6; animation-duration: 6s; animation-delay: -.8s; } /* scritta Beatilla · sulla mappa, lato sinistro a metà */
+
+      /* fluttuazione continua, dolce e fuori sincrono (si somma al parallax) */
+      @keyframes float-drift {
+        0%, 100% { translate: 0 0; }
+        50% { translate: 0 -9px; }
+      }
+      .float-photo { animation: float-drift 5.5s ease-in-out infinite; }
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }
@@ -1137,6 +1145,7 @@
       html { scroll-behavior: auto; }
       .hero__scroll svg { animation: none; }
       .rooms--roll .room { transform: none; }
+      .float-photo { animation: none; }
       .hero__media { transform: scale(1) !important; }
       .hero__video { display: none; }
       /* Niente scrub: la striscia si scorre a mano */
@@ -1371,7 +1380,6 @@
 
         <div class="rooms__dots" id="roomsDots"></div>
       </div>
-      <span class="float-photo float-photo--2" data-speed="-0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 6. HORIZONTAL SCROLL GALLERY ===================== -->
@@ -1435,6 +1443,7 @@
           </div>
         </div>
       </div>
+      <span class="float-photo float-photo--2" data-speed="-0.25" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10010.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 8. STATS BAR ===================== -->
@@ -1457,7 +1466,6 @@
           </div>
         </div>
       </div>
-      <span class="float-photo float-photo--3" data-speed="0.45" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 9. ESPERIENZE ===================== -->
@@ -1472,6 +1480,7 @@
             <div class="img-slot">
               <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10014.jpg" alt="Ospiti rilassati in giardino tra le luci della sera, con un calice di vino" data-img-parallax loading="lazy" decoding="async" />
             </div>
+            <span class="float-photo float-photo--3" data-speed="0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10017.jpg" alt="" loading="lazy" decoding="async" /></span>
             <span class="label cat">Al tramonto</span>
             <h3>Aperitivo in corte</h3>
           </article>

@@ -1940,7 +1940,8 @@
      [scroll] Room text fade-up    : [data-room-text] y:40->0 opacity (staggered) — ScrollTrigger, on enter
      [scroll] Horizontal gallery   : #galleryTrack x translate, section pinned    — ScrollTrigger scrub:1 (desktop + mobile;
                                      su mobile a fine corsa il Ristorante sale
-                                     a coprire la galleria — .gallery--cover)
+                                     LENTO a coprire la galleria, con bordo a
+                                     nuvola e inerzia scrub — .gallery--cover)
      [scroll] Dining image clip    : [data-clip-up] clip-path bottom reveal       — ScrollTrigger, on enter
      [scroll] Stats count-up       : [data-count] 0 -> target value               — ScrollTrigger, on enter
      [scroll] Experience cards     : [data-card] stagger fade-up via batch()      — ScrollTrigger.batch, 0.15s stagger
@@ -2286,7 +2287,10 @@
          negativo sul Ristorante (classe .gallery--cover, vedi CSS). */
       if (mobileGallery) gallerySection.classList.add('gallery--cover');
       const getScrollX = () => Math.max(0, track.scrollWidth - pin.clientWidth);
-      const coverExtra = () => (mobileGallery ? pin.offsetHeight : 0);
+      /* La "nuvola" (Ristorante) sale piano: la risalita di 1 viewport è spalmata
+         su COVER_K viewport di scroll (≈ metà velocità del dito) */
+      const COVER_K = 1.8;
+      const coverExtra = () => (mobileGallery ? Math.round(pin.offsetHeight * COVER_K) : 0);
       /* Allunga la sezione quel tanto che serve per far scorrere la striscia mentre è "stuck" */
       const sizeSection = () => {
         const headH = galleryHead ? galleryHead.offsetHeight : 0;
@@ -2312,6 +2316,28 @@
           invalidateOnRefresh: true
         }
       });
+
+      /* SALITA LENTA DELLA NUVOLA (solo telefono): il flusso porterebbe il
+         Ristorante su a velocità piena; questa y contraria (da -0.8·viewport a 0)
+         la spalma su tutta la zona di copertura → sale a ~metà velocità, e lo
+         scrub morbido le dà l'inerzia da nuvola. */
+      if (mobileGallery) {
+        const dining = document.querySelector('.dining');
+        if (dining) {
+          gsap.fromTo(dining,
+            { y: () => -Math.round(pin.offsetHeight * (COVER_K - 1)) },
+            {
+              y: 0, ease: 'none',
+              scrollTrigger: {
+                trigger: gallerySection,
+                start: () => slideStart() + getScrollX(),
+                end: () => slideStart() + getScrollX() + Math.round(pin.offsetHeight * COVER_K),
+                scrub: 1.2,
+                invalidateOnRefresh: true
+              }
+            });
+        }
+      }
     }
 
     /* ---------- RISTORANTE: image clip reveal from bottom + text ---------- */

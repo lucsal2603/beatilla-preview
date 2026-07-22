@@ -2410,7 +2410,7 @@
 
         /* APERTURA GRADUALE: legata solo allo scroll, lineare da subito — le
            colonne si separano sempre di più (dentro continuano a scorrere da
-           sole) e pian piano sotto compare Esperienze. Mai di scatto. */
+           sole). Mai di scatto. */
         const tl = gsap.timeline({
           defaults: { ease: 'none' },
           scrollTrigger: {
@@ -2425,6 +2425,14 @@
           .fromTo(colR, { xPercent: 0 }, { xPercent: 101, duration: 1 }, 0)
           .fromTo(inner, { scale: 1 }, { scale: 1.1, duration: 1 }, 0)
           .fromTo(seam, { opacity: 0.9 }, { opacity: 0, duration: 0.4 }, 0);
+
+        /* ESPERIENZE È GIÀ LÌ: contro-movimento che la tiene ferma a inizio
+           schermo dietro il sipario per tutta l'apertura — così anche con uno
+           spiraglio minimo si vede subito il tag sotto, fermo al suo posto. */
+        const expSec = document.querySelector('.exp');
+        if (expSec) {
+          tl.fromTo(expSec, { y: () => -curtainDist() }, { y: 0, duration: 1 }, 0);
+        }
       }
     }
 

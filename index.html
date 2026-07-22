@@ -970,7 +970,10 @@
          le sue 5 foto diventano polaroid fluttuanti sparse negli spazi vuoti
          del sito (ai confini tra le sezioni, mai sopra i testi) */
       .gallery { display: none; }
-      .intro, .rooms, .stats, .workshop, .gethere { position: relative; }
+      .intro, .rooms, .stats, .gethere { position: relative; overflow-x: clip; }
+      /* cintura di sicurezza: su iOS gli elementi ruotati che sporgono possono
+         creare una striscia bianca laterale — qui si tronca tutto al bordo */
+      html, body { overflow-x: clip; }
       .float-photo {
         display: block; position: absolute; z-index: 2;
         pointer-events: none;
@@ -987,13 +990,12 @@
         -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
         -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
       }
-      /* cavallo · ancorato a fine "Chi siamo" (il motto ha overflow:hidden e
-         taglierebbe la parte che sporge), sconfina in basso sulla foto del motto */
-      .float-photo--1 { bottom: -56px; right: -16px; width: 128px; rotate: 5deg; }
-      .float-photo--2 { bottom: -44px; left: -20px; width: 136px; rotate: -6deg; } /* daino · fine camere */
-      .float-photo--3 { top: -48px; right: 10px; width: 118px; rotate: 4deg; }     /* giardino · confine ristorante/numeri */
-      .float-photo--4 { top: -52px; left: -16px; width: 138px; rotate: -5deg; }    /* corte di sera · confine servizi/workshop */
-      .float-photo--5 { top: -48px; right: -14px; width: 126px; rotate: 6deg; z-index: 6; } /* scritta Beatilla · angolo mappa */
+      /* posizioni sparse: centro, basso, lati diversi — mai sopra i testi */
+      .float-photo--1 { bottom: -58px; left: calc(50% - 62px); width: 124px; rotate: 4deg; }  /* cavallo · AL CENTRO, a cavallo del bordo del motto */
+      .float-photo--2 { bottom: -58px; left: -20px; width: 136px; rotate: -6deg; }            /* daino · in basso a sinistra, fine camere */
+      .float-photo--3 { bottom: -38px; left: 16px; width: 118px; rotate: 4deg; }              /* giardino · in basso a sinistra dei numeri */
+      .float-photo--4 { bottom: 12px; right: 10px; width: 106px; rotate: -5deg; }             /* corte di sera · DENTRO la foto grande, basso a destra */
+      .float-photo--5 { top: 96px; left: -16px; width: 122px; rotate: 6deg; z-index: 6; }     /* scritta Beatilla · sulla mappa, lato sinistro a metà */
       /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
       .video { height: auto; min-height: 0; }
       .video .img-slot { position: static; }
@@ -1609,7 +1611,6 @@
           <a class="link-more" href="https://www.lucabornoffi.com" target="_blank" rel="noopener">Scopri il suo lavoro <span>&rarr;</span></a>
         </div>
       </div>
-      <span class="float-photo float-photo--4" data-speed="0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 10. IMMAGINE FULL-BLEED ===================== -->
@@ -1617,6 +1618,7 @@
       <div class="img-slot">
         <img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/beatilla.jpg" alt="La scritta Beatilla dipinta a mano sul muro della cascina" data-img-parallax />
       </div>
+      <span class="float-photo float-photo--4" data-speed="0.3" aria-hidden="true"><img src="Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10015.jpg" alt="" loading="lazy" decoding="async" /></span>
     </section>
 
     <!-- ===================== 11. TESTIMONIALS ===================== -->

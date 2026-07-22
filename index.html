@@ -1939,7 +1939,8 @@
      [scroll] Hero exit parallax   : .hero__inner sale e sfuma uscendo            — ScrollTrigger scrub
      [scroll] Room clip reveal     : [data-room-img] clip laterale + zoom foto    — ScrollTrigger, on enter (solo desktop)
      [touch]  Camere rullino       : su telefono striscia swipabile scroll-snap,  — nativo + IntersectionObserver
-                                     card a fuoco al centro, pallini di posizione
+                                     card a fuoco, pallini a pillola, loop
+                                     infinito (cloni ai bordi + teletrasporto)
      [scroll] Workshop/video clip  : img-slot svelati con clip verticale + zoom   — ScrollTrigger, on enter
      [scroll] Stats dividers       : linee che crescono + label a salire          — ScrollTrigger, on enter
      [scroll] Service icon pop     : .service__icon scale con back.out            — ScrollTrigger.batch
@@ -2163,7 +2164,28 @@
         const dotsWrap = document.getElementById('roomsDots');
         if (!rooms || !track || !dotsWrap) return;
         rooms.classList.add('rooms--roll');
-        const cards = Array.from(track.querySelectorAll('.room'));
+        const realCards = Array.from(track.querySelectorAll('.room'));
+        const N = realCards.length;
+
+        /* LOOP CIRCOLARE: clono l'ultima camera in testa e la prima in coda.
+           Quando lo scroll si ferma su un clone, salto senza animazione sulla
+           gemella vera (identica → il salto è invisibile). Così dal primo si
+           torna all'ultimo andando a sinistra, e viceversa. */
+        const cloneLast = realCards[N - 1].cloneNode(true);
+        const cloneFirst = realCards[0].cloneNode(true);
+        [cloneLast, cloneFirst].forEach((c) => { c.setAttribute('aria-hidden', 'true'); c.classList.add('room--clone'); });
+        track.insertBefore(cloneLast, realCards[0]);
+        track.appendChild(cloneFirst);
+        const allCards = [cloneLast, ...realCards, cloneFirst];
+        const realIndexOf = (el) => el === cloneLast ? N - 1 : el === cloneFirst ? 0 : realCards.indexOf(el);
+
+        const centerOf = (el) => el.offsetLeft - (track.clientWidth - el.offsetWidth) / 2;
+        const goTo = (el, smooth) => track.scrollTo({ left: centerOf(el), behavior: smooth && !prefersReduced ? 'smooth' : 'auto' });
+
+        /* si parte dalla prima camera VERA (subito dopo il clone in testa) */
+        goTo(realCards[0], false);
+        window.addEventListener('load', () => { if (!track.dataset.touched) goTo(realCards[0], false); }, { once: true });
+        track.addEventListener('touchstart', () => { track.dataset.touched = '1'; }, { once: true, passive: true });
 
         /* ingresso della striscia da destra quando la sezione entra */
         if (!prefersReduced) {
@@ -2173,32 +2195,44 @@
           });
         }
 
-        /* pallini: uno per camera, tap per saltare a quella camera */
-        const dots = cards.map((card, i) => {
+        /* pallini: uno per camera VERA, tap per saltare a quella camera */
+        const dots = realCards.map((card, i) => {
           const d = document.createElement('button');
           d.type = 'button';
           d.className = 'rooms__dot';
           d.setAttribute('aria-label', 'Vai alla camera ' + (i + 1));
-          d.addEventListener('click', () => {
-            track.scrollTo({
-              left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2,
-              behavior: prefersReduced ? 'auto' : 'smooth'
-            });
-          });
+          d.addEventListener('click', () => goTo(card, true));
           dotsWrap.appendChild(d);
           return d;
         });
 
-        /* card "a fuoco" quando occupa il centro del rullino */
-        const setActive = (i) => {
-          cards.forEach((c, j) => c.classList.toggle('is-active', j === i));
+        /* card "a fuoco" quando occupa il centro del rullino (cloni compresi) */
+        const setActive = (el) => {
+          const i = realIndexOf(el);
+          allCards.forEach((c) => c.classList.toggle('is-active', c === el));
           dots.forEach((d, j) => d.classList.toggle('active', j === i));
         };
         const io = new IntersectionObserver((entries) => {
-          entries.forEach((en) => { if (en.isIntersecting) setActive(cards.indexOf(en.target)); });
+          entries.forEach((en) => { if (en.isIntersecting) setActive(en.target); });
         }, { root: track, threshold: 0.6 });
-        cards.forEach((c) => io.observe(c));
-        setActive(0);
+        allCards.forEach((c) => io.observe(c));
+        setActive(realCards[0]);
+
+        /* a scroll fermo: se siamo su un clone, teletrasporto sulla gemella vera */
+        let settleT;
+        track.addEventListener('scroll', () => {
+          clearTimeout(settleT);
+          settleT = setTimeout(() => {
+            const center = track.scrollLeft + track.clientWidth / 2;
+            let best = null, bd = Infinity;
+            allCards.forEach((c) => {
+              const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
+              if (d < bd) { bd = d; best = c; }
+            });
+            if (best === cloneLast) goTo(realCards[N - 1], false);
+            else if (best === cloneFirst) goTo(realCards[0], false);
+          }, 140);
+        }, { passive: true });
       })();
     } else {
       gsap.utils.toArray('.room').forEach((room) => {

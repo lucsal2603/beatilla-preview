@@ -947,8 +947,9 @@ html { overflow-x: clip; }
 .olive--7 { top: -58px; left: 50%; translate: -50% 0; width: 54px; rotate: 90deg; opacity: .65; }
 /* FAQ: sale dall'angolo basso-destro */
 .olive--8 { bottom: -28px; right: -26px; width: 84px; rotate: -32deg; opacity: .7; }
-/* Footer (scuro): bordo sinistro */
-.olive--9 { top: 10px; left: -22px; width: 76px; rotate: 152deg; opacity: .85; }
+/* Footer (scuro): bordo sinistro — ancorato in basso (come olive--21) così
+   cresce verso l'alto e non sporge sotto il footer allungando la pagina */
+.olive--9 { bottom: 8px; left: -22px; width: 76px; rotate: 152deg; opacity: .85; }
 
 @media (max-width: 768px) {
   .olive--1 { width: 62px; top: -20px; left: -20px; }

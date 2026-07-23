@@ -917,3 +917,46 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
   .gallery__pin { position: static; height: auto; }
   .gallery__track { animation: none !important; transform: none !important; overflow-x: auto; -webkit-overflow-scrolling: touch; flex: none; padding-bottom: 2rem; }
 }
+
+/* ============================================================
+   RAMOSCELLI D'ULIVO — decorazioni sparse per tutto il sito
+   ============================================================ */
+.olive {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+/* le sporgenze dei rami non devono mai allargare la pagina */
+html { overflow-x: clip; }
+.intro, .rooms, .dining, .stats, .services, .workshop, .testi, .faq, .footer { position: relative; }
+
+/* Chi siamo: pende dall'angolo alto-sinistro */
+.olive--1 { top: -30px; left: -30px; width: 96px; rotate: 205deg; opacity: .8; }
+/* Camere: fa capolino dal bordo destro, all'altezza del titolo */
+.olive--2 { top: 96px; right: -30px; width: 88px; rotate: -145deg; opacity: .75; }
+/* Ristorante: sale dall'angolo basso-sinistro */
+.olive--3 { bottom: -34px; left: -26px; width: 92px; rotate: 28deg; opacity: .8; }
+/* Numeri (fondo scuro): pende dal bordo alto, sul nero risalta */
+.olive--4 { top: -22px; right: 30px; width: 84px; rotate: 168deg; opacity: .9; }
+/* Servizi: spunta dal bordo sinistro a metà sezione */
+.olive--5 { top: 44%; left: -30px; width: 86px; rotate: 115deg; opacity: .7; }
+/* Art Workshop: angolo alto-destro */
+.olive--6 { top: 20px; right: -28px; width: 90px; rotate: -160deg; opacity: .75; }
+/* Ospiti: rametto disteso, da parte a parte sopra il titoletto */
+.olive--7 { top: -58px; left: 50%; translate: -50% 0; width: 54px; rotate: 90deg; opacity: .65; }
+/* FAQ: sale dall'angolo basso-destro */
+.olive--8 { bottom: -28px; right: -26px; width: 84px; rotate: -32deg; opacity: .7; }
+/* Footer (scuro): bordo sinistro */
+.olive--9 { top: 10px; left: -22px; width: 76px; rotate: 152deg; opacity: .85; }
+
+@media (max-width: 768px) {
+  .olive--1 { width: 62px; top: -20px; left: -20px; }
+  .olive--2 { width: 58px; top: 78px; right: -20px; }
+  .olive--3 { width: 60px; bottom: -24px; left: -18px; }
+  .olive--4 { width: 56px; right: 14px; top: -16px; }
+  .olive--5, .olive--8 { display: none; } /* su telefono lì ci sono già gli schizzi */
+  .olive--6 { width: 60px; right: -18px; top: 14px; }
+  .olive--7 { width: 40px; top: -44px; }
+  .olive--9 { width: 52px; }
+}

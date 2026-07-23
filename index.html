@@ -640,15 +640,16 @@
        6. HORIZONTAL SCROLL GALLERY
        ============================================================ */
     .gallery { position: relative; }
-    .gallery__head { padding: var(--section-y) var(--gutter) 0; text-align: center; }
+    /* Il titolo "Frammenti / La vita in campagna" sta DENTRO il pin, così resta
+       a schermo mentre le foto scorrono in orizzontale. Il pin è una colonna:
+       titolo in alto + striscia foto centrata nello spazio rimanente. Le foto
+       sono limitate in altezza perché immagine + didascalia stiano nello schermo. */
+    .gallery__pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; flex-direction: column; overflow: hidden; }
+    .gallery__head { flex: none; padding: clamp(1.8rem, 5vh, 3.4rem) var(--gutter) 0; text-align: center; }
     .gallery__head h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-top: 1rem; }
-    /* Pin nativo con position:sticky: resta agganciato DENTRO la sezione galleria,
-       quindi non può mai sovrapporsi alle Camere. L'altezza extra della sezione
-       (per lo scroll orizzontale) viene impostata via JS. */
-    .gallery__pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; align-items: center; overflow: hidden; }
-    .gallery__track { display: flex; gap: 2rem; padding-inline: var(--gutter); will-change: transform; }
-    .gallery__item { flex: 0 0 auto; width: 400px; }
-    .gallery__item .img-slot { width: 400px; height: 600px; }
+    .gallery__track { flex: 1; display: flex; align-items: center; gap: 2rem; padding-inline: var(--gutter); will-change: transform; }
+    .gallery__item { flex: 0 0 auto; }
+    .gallery__item .img-slot { height: min(600px, calc(100svh - 250px)); aspect-ratio: 2 / 3; width: auto; }
     .gallery__cap { margin-top: 1rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .22em; color: var(--accent); }
 
     /* ============================================================
@@ -1186,9 +1187,10 @@
       .curtain { display: none !important; }
       .hero__media { transform: scale(1) !important; }
       .hero__video { display: none; }
-      /* Niente scrub: la striscia si scorre a mano */
-      .gallery__track { animation: none !important; transform: none !important; }
-      .gallery__pin { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      /* Niente scrub: pin sbloccato, la striscia si scorre a mano (titolo sopra) */
+      .gallery { height: auto !important; }
+      .gallery__pin { position: static; height: auto; }
+      .gallery__track { animation: none !important; transform: none !important; overflow-x: auto; -webkit-overflow-scrolling: touch; flex: none; padding-bottom: 2rem; }
     }
   </style>
 </head>
@@ -1421,11 +1423,11 @@
 
     <!-- ===================== 6. HORIZONTAL SCROLL GALLERY ===================== -->
     <section class="gallery" id="gallery">
-      <div class="gallery__head" data-fade>
-        <p class="label">Frammenti</p>
-        <h2 data-words>La vita in campagna</h2>
-      </div>
       <div class="gallery__pin" id="galleryPin">
+        <div class="gallery__head" data-fade>
+          <p class="label">Frammenti</p>
+          <h2 data-words>La vita in campagna</h2>
+        </div>
         <div class="gallery__track" id="galleryTrack">
           <figure class="gallery__item">
             <div class="img-slot">
@@ -2388,22 +2390,20 @@
     const pin = document.getElementById('galleryPin');
     const gallerySection = document.getElementById('gallery');
     const galleryHead = gallerySection ? gallerySection.querySelector('.gallery__head') : null;
-    if (track && pin && gallerySection && !isMobile()) {
+    if (track && pin && gallerySection && !isMobile() && !prefersReduced) {
       const getScrollX = () => Math.max(0, track.scrollWidth - pin.clientWidth);
-      /* Allunga la sezione quel tanto che serve per far scorrere la striscia mentre è "stuck" */
+      /* Titolo dentro il pin: l'altezza extra della sezione (per lo scroll
+         orizzontale mentre è agganciata) è solo la larghezza da scorrere. */
       const sizeSection = () => {
-        const headH = galleryHead ? galleryHead.offsetHeight : 0;
-        gallerySection.style.height = (headH + pin.offsetHeight + getScrollX()) + 'px';
+        gallerySection.style.height = (pin.offsetHeight + getScrollX()) + 'px';
       };
       sizeSection();
       /* Reimposta l'altezza ad ogni ricalcolo, PRIMA che ScrollTrigger misuri le posizioni */
       ScrollTrigger.addEventListener('refreshInit', sizeSection);
 
-      /* Lo scroll orizzontale è ancorato alla SEZIONE (non al pin sticky: ScrollTrigger
-         misura male gli elementi sticky). start = quando il pin si aggancia; end = +larghezza
-         da scorrere. Così la striscia scorre esattamente mentre la sezione è "stuck". */
-      const headH = () => (galleryHead ? galleryHead.offsetHeight : 0);
-      const slideStart = () => Math.round(gallerySection.getBoundingClientRect().top + window.scrollY + headH());
+      /* Lo scroll orizzontale è ancorato alla SEZIONE. start = quando il pin si
+         aggancia (top sezione = top schermo); end = +larghezza da scorrere. */
+      const slideStart = () => Math.round(gallerySection.getBoundingClientRect().top + window.scrollY);
       const slide = gsap.fromTo(track, { x: 0 }, {
         x: () => -getScrollX(),
         ease: 'none',

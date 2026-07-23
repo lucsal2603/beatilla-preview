@@ -960,3 +960,30 @@ html { overflow-x: clip; }
   .olive--7 { width: 40px; top: -44px; }
   .olive--9 { width: 52px; }
 }
+
+/* --- seconda ondata di ramoscelli --- */
+.hero, .exp, .visit, .press, .gethere { position: relative; }
+.olive--10 { top: 84px; right: 18px; width: 92px; rotate: -150deg; opacity: .8; z-index: 4; }
+.olive--11 { bottom: 22px; right: 20px; width: 86px; rotate: -25deg; opacity: .85; z-index: 3; }
+.olive--12 { bottom: -26px; left: -28px; width: 84px; rotate: 40deg; opacity: .7; }
+.olive--13 { bottom: 60px; right: -30px; width: 88px; rotate: -118deg; opacity: .75; }
+.olive--14 { bottom: -26px; right: -26px; width: 82px; rotate: -38deg; opacity: .7; }
+.olive--15 { top: 24px; right: -28px; width: 88px; rotate: -160deg; opacity: .75; }
+.olive--16 { top: 30%; left: -30px; width: 86px; rotate: 120deg; opacity: .7; }
+.olive--17 { bottom: -26px; right: -24px; width: 88px; rotate: -30deg; opacity: .75; }
+.olive--18 { top: 18px; left: -28px; width: 88px; rotate: 155deg; opacity: .75; }
+.olive--19 { top: 46%; right: -30px; width: 84px; rotate: -115deg; opacity: .7; }
+.olive--20 { top: 47%; right: -24px; width: 86px; rotate: -140deg; opacity: .75; z-index: 3; }
+.olive--21 { bottom: 12px; right: -22px; width: 74px; rotate: -152deg; opacity: .85; }
+
+@media (max-width: 768px) {
+  .olive--10, .olive--16, .olive--17, .olive--19 { display: none; }
+  .olive--11 { width: 58px; bottom: 14px; right: 12px; }
+  .olive--12 { width: 56px; bottom: -18px; left: -18px; }
+  .olive--13 { width: 58px; bottom: -14px; right: -20px; }
+  .olive--14 { width: 54px; bottom: -18px; right: -18px; }
+  .olive--15 { width: 58px; top: 16px; right: -18px; }
+  .olive--18 { width: 58px; top: 12px; left: -18px; }
+  .olive--20 { width: 56px; top: 44%; right: -16px; }
+  .olive--21 { width: 50px; }
+}

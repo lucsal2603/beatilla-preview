@@ -927,7 +927,9 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
   user-select: none;
   z-index: 1;
 }
-/* le sporgenze dei rami non devono mai allargare la pagina */
+/* il clip sul body pittura ma non impedisce lo scroll orizzontale del viewport
+   (clip non crea scroll container); serve anche sull'<html> per bloccarlo.
+   Verificato: non aggiunge spazio verticale sotto il footer. */
 html { overflow-x: clip; }
 .intro, .rooms, .dining, .stats, .services, .workshop, .testi, .faq, .footer { position: relative; }
 

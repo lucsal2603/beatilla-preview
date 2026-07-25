@@ -480,8 +480,9 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 .workshop__artist::before {
   content: "";
   position: absolute; z-index: -1;
-  left: 50%; top: 52%; transform: translate(-50%, -50%);
-  width: min(118%, 600px); aspect-ratio: 760 / 950;
+  /* ancorato in alto: copre il titolo L'ARTISTA e tutta la descrizione */
+  left: 50%; top: 0; transform: translate(-50%, -2%);
+  width: min(145%, 680px); aspect-ratio: 760 / 950;
   background: url("sketch-artist.png") center/contain no-repeat;
   opacity: .5; pointer-events: none;
 }
@@ -1059,10 +1060,9 @@ html { overflow-x: clip; }
 .workshop__grid--reverse .workshop__text { position: relative; }
 .workshop__grid--reverse .workshop__text > :not(.residency-circles) { position: relative; z-index: 1; }
 .residency-circles {
-  /* ancorata in alto: abbraccia titolo e descrizione, non solo il centro del blocco */
-  position: absolute; left: 50%; top: 0; transform: translate(-50%, -4%);
-  width: min(150%, 720px); max-width: none; height: auto;
-  opacity: .45; pointer-events: none; z-index: 0;
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(115%, 620px); height: auto;
+  opacity: .4; pointer-events: none; z-index: 0;
 }
 
 /* Esperienze: 4 card */

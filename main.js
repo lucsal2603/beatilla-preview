@@ -630,29 +630,7 @@
       ScrollTrigger.create({ trigger: stroke, start: 'top 85%', once: true, onEnter: () => tl.play() });
     }
 
-    /* ---------- ART RESIDENCY: CERCHI CHE SI DISEGNANO ----------
-       Il cerchio dorato si "crea" partendo dall'alto: un fronte scende
-       lungo il lato destro e uno lungo il sinistro, in simmetria, fino
-       a chiudersi in basso (maschera conica animata). */
-    const cerchi = document.querySelector('.residency-circles');
-    const conicOK = typeof CSS !== 'undefined' && (
-      CSS.supports('mask-image', 'conic-gradient(#000 0deg, transparent 1deg)') ||
-      CSS.supports('-webkit-mask-image', 'conic-gradient(#000 0deg, transparent 1deg)'));
-    if (cerchi && conicOK && !prefersReduced) {
-      const cs = { a: 0 };
-      const disegna = () => {
-        const m = cs.a >= 179.9 ? 'none' :
-          `conic-gradient(#000 0deg, #000 ${cs.a}deg, rgba(0,0,0,0) ${cs.a}deg,` +
-          ` rgba(0,0,0,0) ${360 - cs.a}deg, #000 ${360 - cs.a}deg)`;
-        cerchi.style.webkitMaskImage = m;
-        cerchi.style.maskImage = m;
-      };
-      disegna(); /* parte invisibile */
-      ScrollTrigger.create({
-        trigger: cerchi.closest('.workshop__text'), start: 'top 78%', once: true,
-        onEnter: () => gsap.to(cs, { a: 180, duration: 2.4, ease: 'power1.inOut', onUpdate: disegna })
-      });
-    }
+    /* Il cerchio dorato dietro il testo della Residency resta fisso, senza animazione. */
 
     /* Recalculate on resize / after images load for pinned/scrub triggers.
        Dopo il refresh riporto sempre la pagina in cima: così un reload riparte dall'hero col video,

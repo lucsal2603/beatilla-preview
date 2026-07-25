@@ -602,6 +602,9 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
   background-size: 100% 100%;
   pointer-events: none;
 }
+/* Su schermi grandi l'arco saliva di 100px e copriva troppa foto: qui resta
+   più basso, sul telefono invece è già proporzionato e non cambia. */
+@media (min-width: 769px) { .testi::before { height: 62px; } }
 .testi .container { max-width: 820px; }
 /* Tutte le testimonianze impilate nella stessa cella grid: il riquadro prende l'altezza di quella
    più lunga, così la citazione non esce mai dal box e nome/città non si sovrappongono ai puntini */

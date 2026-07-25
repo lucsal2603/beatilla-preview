@@ -17,6 +17,10 @@
       if (v.readyState >= 2) play(); else v.addEventListener('canplay', play, { once: true });
     })();
 
+    /* Nessuna immagine si trascina fuori né apre il menu contestuale */
+    document.addEventListener('dragstart', (e) => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+    document.addEventListener('contextmenu', (e) => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+
     /* ---------- NAV: solid on scroll ---------- */
     const nav = document.getElementById('nav');
     const onScroll = () => {
@@ -591,13 +595,7 @@
           gsap.fromTo(extras, { y: 26, opacity: 0 },
             { y: 0, opacity: 1, duration: .8, ease: 'power2.out', stagger: .06, delay: .26, overwrite: true });
         } else {
-          /* mentre risale, la pagina risale con lei della stessa quantità:
-             quello che stavi guardando resta sotto gli occhi */
-          const target = Math.max(0, window.scrollY - salto);
-          if (window.scrollY > grid.getBoundingClientRect().top + window.scrollY) {
-            if (lenis) lenis.scrollTo(target, { duration: .95, offset: 0 });
-            else window.scrollTo({ top: target, behavior: 'smooth' });
-          }
+          /* la pagina resta dov'è: si chiude solo la tendina */
           tl.to(grid, { height: hPrima + rincorsa, duration: .26, ease: 'power2.out' })
             .to(grid, { height: hDopo, duration: .95, ease: 'power3.inOut' });
         }
@@ -614,10 +612,52 @@
       });
     });
 
-    /* ---------- SCROLL PROGRESS BAR ---------- */
-    gsap.to('#scrollProgress', {
-      scaleX: 1, ease: 'none',
-      scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.3 }
+    /* ---------- FAQ: apertura come la tendina dei servizi ----------
+       Stesso movimento: contraccolpo e poi corsa, in apertura e in chiusura.
+       Gestiamo noi il <details> per poterlo animare (il browser lo aprirebbe
+       e chiuderebbe di scatto). */
+    document.querySelectorAll('.faq__item').forEach((det) => {
+      const risposta = det.querySelector('.faq__a');
+      const domanda = det.querySelector('.faq__q');
+      if (!risposta || !domanda) return;
+      let inCorso = false;
+
+      const misura = () => { /* altezza reale della risposta, anche da chiusa */
+        const era = det.open;
+        if (!era) det.open = true;
+        risposta.style.height = 'auto';
+        const h = risposta.scrollHeight;
+        if (!era) det.open = false;
+        return h;
+      };
+
+      domanda.addEventListener('click', (e) => {
+        if (prefersReduced) return; /* niente animazione: comportamento nativo */
+        e.preventDefault();
+        if (inCorso) return;
+        const apre = !det.open;
+        inCorso = true;
+        risposta.style.overflow = 'hidden';
+
+        const piena = misura();
+        det.open = true; /* resta aperto per tutta l'animazione, anche in chiusura */
+        const da = apre ? 0 : piena;
+        const a = apre ? piena : 0;
+        const rincorsa = Math.min(16, piena * 0.06);
+        gsap.set(risposta, { height: da });
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            det.open = apre;
+            risposta.style.height = '';
+            risposta.style.overflow = '';
+            inCorso = false;
+            if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+          }
+        });
+        tl.to(risposta, { height: da + (apre ? -rincorsa : rincorsa), duration: .26, ease: 'power2.out' })
+          .to(risposta, { height: a, duration: .95, ease: apre ? 'power3.out' : 'power3.inOut' });
+      });
     });
 
     /* ---------- HEADING WORD REVEAL ---------- */
@@ -898,67 +938,77 @@
         });
       };
 
-      /* Presa: tienila premuta un istante, spostala, lanciala. Se il dito
-         parte subito senza pausa era uno scroll, e la pagina scorre normale. */
+      /* Presa: tienila premuta un istante, spostala, lanciala.
+         Le foglie NON intercettano i clic (resterebbero davanti a link e
+         bottoni): ascoltiamo la pressione sulla pagina e prendiamo la foglia
+         più vicina entro un raggio generoso, così è facile beccarle. */
       const ATTESA = 170, SOGLIA = 8;
-      const presa = (img) => {
-        img.addEventListener('pointerdown', (e) => {
-          const px = e.clientX, py = e.clientY;
-          let preso = false, offX = 0, offY = 0;
-          const scia = [{ x: px, y: py, t: e.timeStamp }];
-          const afferra = () => {
-            preso = true;
-            gsap.killTweensOf(img);
-            if (img.dati.arrivo) img.dati.arrivo.kill();
-            gsap.set(img, { opacity: 1 });
-            img.classList.add('presa');
-            try { img.setPointerCapture(e.pointerId); } catch (_) {}
-            offX = gsap.getProperty(img, 'x') - (px + window.scrollX);
-            offY = gsap.getProperty(img, 'y') - (py + window.scrollY);
-          };
-          const timer = setTimeout(afferra, ATTESA);
-          const muovi = (ev) => {
-            scia.push({ x: ev.clientX, y: ev.clientY, t: ev.timeStamp });
-            if (scia.length > 5) scia.shift();
-            if (!preso) {
-              if (Math.hypot(ev.clientX - px, ev.clientY - py) > SOGLIA) finisci();
-              return;
-            }
-            ev.preventDefault();
-            const w = img.offsetWidth, h = img.offsetHeight;
-            gsap.set(img, {
-              x: Math.max(0, Math.min((window.innerWidth || 375) - w, ev.clientX + window.scrollX + offX)),
-              y: Math.max(tetto(), Math.min(suolo() - h, ev.clientY + window.scrollY + offY))
-            });
-          };
-          const bloccaScroll = (ev) => { if (preso) ev.preventDefault(); };
-          const molla = () => { if (preso) lancia(img, scia); finisci(); };
-          function finisci() {
-            clearTimeout(timer);
-            preso = false;
-            img.classList.remove('presa');
-            window.removeEventListener('pointermove', muovi);
-            window.removeEventListener('pointerup', molla);
-            window.removeEventListener('pointercancel', molla);
-            window.removeEventListener('touchmove', bloccaScroll);
-          }
-          window.addEventListener('pointermove', muovi, { passive: false });
-          window.addEventListener('pointerup', molla);
-          window.addEventListener('pointercancel', molla);
-          window.addEventListener('touchmove', bloccaScroll, { passive: false });
+      const foglia_vicina = (x, y) => {
+        let scelta = null, minima = Infinity;
+        cielo.querySelectorAll('img').forEach((img) => {
+          const r = img.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > window.innerHeight) return; /* fuori schermo */
+          const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          const d = Math.hypot(x - cx, y - cy);
+          const raggio = Math.max(46, r.width * 0.95); /* zona di presa larga */
+          if (d < raggio && d < minima) { minima = d; scelta = img; }
         });
+        return scelta;
       };
+
+      document.addEventListener('pointerdown', (e) => {
+        const img = foglia_vicina(e.clientX, e.clientY);
+        if (!img) return;
+        const px = e.clientX, py = e.clientY;
+        let preso = false, offX = 0, offY = 0;
+        const scia = [{ x: px, y: py, t: e.timeStamp }];
+        const afferra = () => {
+          preso = true;
+          gsap.killTweensOf(img);
+          if (img.dati.arrivo) img.dati.arrivo.kill();
+          gsap.set(img, { opacity: 1 });
+          img.classList.add('presa');
+          /* la foglia non salta sotto il dito: mantiene la distanza che aveva */
+          offX = gsap.getProperty(img, 'x') - (px + window.scrollX);
+          offY = gsap.getProperty(img, 'y') - (py + window.scrollY);
+        };
+        const timer = setTimeout(afferra, ATTESA);
+        const muovi = (ev) => {
+          scia.push({ x: ev.clientX, y: ev.clientY, t: ev.timeStamp });
+          if (scia.length > 5) scia.shift();
+          if (!preso) {
+            if (Math.hypot(ev.clientX - px, ev.clientY - py) > SOGLIA) finisci();
+            return;
+          }
+          ev.preventDefault();
+          const w = img.offsetWidth, h = img.offsetHeight;
+          gsap.set(img, {
+            x: Math.max(0, Math.min((window.innerWidth || 375) - w, ev.clientX + window.scrollX + offX)),
+            y: Math.max(tetto(), Math.min(suolo() - h, ev.clientY + window.scrollY + offY))
+          });
+        };
+        const bloccaScroll = (ev) => { if (preso) ev.preventDefault(); };
+        const molla = () => { if (preso) lancia(img, scia); finisci(); };
+        function finisci() {
+          clearTimeout(timer);
+          preso = false;
+          img.classList.remove('presa');
+          window.removeEventListener('pointermove', muovi);
+          window.removeEventListener('pointerup', molla);
+          window.removeEventListener('pointercancel', molla);
+          window.removeEventListener('touchmove', bloccaScroll);
+        }
+        window.addEventListener('pointermove', muovi, { passive: false });
+        window.addEventListener('pointerup', molla);
+        window.addEventListener('pointercancel', molla);
+        window.addEventListener('touchmove', bloccaScroll, { passive: false });
+      }, { passive: true });
 
       const cadi = (partenzaY) => {
         const vw = window.innerWidth || screen.width || 375;
         const img = document.createElement('img');
         img.src = FOGLIE[(Math.random() * FOGLIE.length) | 0];
         img.alt = '';
-        /* intoccabile: niente drag nativo del browser né menu contestuale,
-           la foglia si può solo afferrare e lanciare */
-        img.draggable = false;
-        img.addEventListener('dragstart', (e) => e.preventDefault());
-        img.addEventListener('contextmenu', (e) => e.preventDefault());
         const size = 26 + Math.random() * 20;
         img.style.width = size + 'px';
         cielo.appendChild(img);
@@ -976,7 +1026,6 @@
         gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1, opacity: 0 });
         gsap.to(img, { opacity: 1, duration: .5, ease: 'none' }); /* ingresso morbido appena sotto la home */
         volo(img);
-        presa(img);
       };
 
       /* all'arrivo il cielo è già in moto: qualche foglia sparsa lungo la pagina,

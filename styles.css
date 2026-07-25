@@ -91,6 +91,14 @@ body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
   padding-inline: var(--gutter);
 }
 
+/* Nessuna immagine del sito è "prendibile": niente menu salva-immagine alla
+   pressione prolungata, niente trascinamento nativo, niente selezione. */
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none; -webkit-user-select: none;
+}
+
 /* ============================================================
    PLACEHOLDER IMAGE SLOTS
    ============================================================ */
@@ -120,14 +128,6 @@ body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
 /* Inner-image parallax needs vertical headroom so edges never gap */
 .img-slot > img[data-img-parallax] { height: 122%; top: -11%; }
 
-/* Scroll progress indicator */
-.scroll-progress {
-  position: fixed; top: 0; left: 0; z-index: 1100;
-  height: 2px; width: 100%;
-  background: var(--accent);
-  transform: scaleX(0); transform-origin: left;
-  will-change: transform;
-}
 
 /* Heading word reveal */
 .w-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-inline: .16em; margin-inline: -.16em; }
@@ -597,8 +597,8 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
    sulla foto. I 2px di sovrapposizione evitano il filo chiaro su iOS. */
 .testi::before {
   content: ""; position: absolute; left: -1px; right: -1px;
-  bottom: calc(100% - 2px); height: clamp(26px, 7vw, 48px);
-  background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%2040'%20preserveAspectRatio='none'%3E%3Cpath%20fill='%23FFFFFF'%20d='M0,40%20L0,37%20Q200,-13%20400,37%20L400,40%20Z'/%3E%3C/svg%3E") no-repeat center bottom;
+  bottom: calc(100% - 2px); height: clamp(54px, 15vw, 100px);
+  background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%2040'%20preserveAspectRatio='none'%3E%3Cpath%20fill='%23FFFFFF'%20d='M0,40%20L0,39%20Q200,-34%20400,39%20L400,40%20Z'/%3E%3C/svg%3E") no-repeat center bottom;
   background-size: 100% 100%;
   pointer-events: none;
 }
@@ -722,8 +722,9 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 .faq__icon::after { left: 50%; top: 0; width: 1.5px; height: 100%; transform: translateX(-50%); }
 .faq__item[open] .faq__icon::after { transform: translateX(-50%) scaleY(0); opacity: 0; }
 .faq__item:not([open]) .faq__a { display: none; }
+.faq__item[open] .faq__a { display: block; }
 .faq__a p { padding: 0 2.5rem 1.7rem 0; max-width: 66ch; line-height: 1.75; color: rgba(26,26,24,.72); }
-.faq__item[open] .faq__a { animation: faqReveal .45s var(--ease); }
+/* l'apertura è animata da main.js, come la tendina dei servizi */
 @keyframes faqReveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .faq__item[open] .faq__a { animation: none; } }
 .faq__cta { text-align: center; margin-top: clamp(2.5rem, 6vh, 4rem); }
@@ -1102,15 +1103,11 @@ html { overflow-x: clip; }
   position: absolute; top: 0; left: 0; will-change: transform;
   /* si possono afferrare al volo: il contenitore resta trasparente ai clic,
      solo la foglia risponde */
-  pointer-events: auto; cursor: grab;
-  /* intoccabili per il browser: niente menu "salva immagine" alla pressione
-     prolungata (che qui serve per afferrarle), niente trascinamento nativo,
-     niente selezione */
-  -webkit-touch-callout: none;
-  -webkit-user-drag: none;
-  user-select: none; -webkit-user-select: none;
+  /* niente pointer-events: la presa avviene per prossimità (vedi main.js),
+     così le foglie non si mettono mai davanti a link e bottoni */
+  pointer-events: none;
 }
-.leaves img.presa { cursor: grabbing; touch-action: none; }
+.leaves img.presa { touch-action: none; }
 
 /* Titolo Art Studio: la pennellata blu lo evidenzia da dietro,
    ancorata a sinistra e distesa su tutta la larghezza del titolo */

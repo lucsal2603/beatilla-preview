@@ -576,8 +576,8 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
    z-index:1 crea il contesto: così il mucchio (z -1) resta DIETRO al blocco
    nero, che gli copre la parte bassa — il nero comanda sul bordo. */
 .contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 70; /* sopra le foglie (60): le inghiotte quando ci passano dietro */ }
-.contact::before {
-  content: ""; position: absolute; left: 50%; top: 0;
+.leaf-pile {
+  position: absolute; left: 50%; top: 0;
   transform: translate(-50%, -55%); /* il 45% inferiore affonda dietro il nero */
   width: min(400px, 74vw); aspect-ratio: 760 / 298;
   background: url("img/mucchio-foglie.webp") center bottom / contain no-repeat;
@@ -1054,6 +1054,7 @@ html { overflow-x: clip; }
 }
 .workshop__stroke {
   position: absolute; left: -7%; top: 50%; transform: translateY(-50%);
+  opacity: .45; /* una mano più leggera: il titolo resta il protagonista */
   width: 116%; max-width: none; height: 140%;
   object-fit: fill; /* si adagia sulla riga come una passata di evidenziatore */
   pointer-events: none; z-index: 0;

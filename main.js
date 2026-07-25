@@ -716,6 +716,17 @@
                  : document.documentElement.scrollHeight;
       };
 
+      /* il mucchio reagisce a ogni foglia che ci finisce dentro: si assesta
+         appena, come un cumulo vero che riceve peso */
+      const mucchio = document.querySelector('.leaf-pile');
+      let scossa = null;
+      if (mucchio) {
+        gsap.set(mucchio, { xPercent: -50, yPercent: -55, x: 0, y: 0, transformOrigin: 'bottom center' });
+        scossa = gsap.timeline({ paused: true })
+          .to(mucchio, { scaleY: .972, scaleX: 1.016, duration: .14, ease: 'power2.out' })
+          .to(mucchio, { scaleY: 1, scaleX: 1, duration: .75, ease: 'elastic.out(1, .42)' });
+      }
+
       /* le foglie NON partono dalla cima assoluta della pagina: nascono
          appena SOTTO il bordo della home, così nessun pixel tocca mai
          la foto dell'hero, su qualunque telefono */
@@ -741,6 +752,8 @@
         const velocita = 150 + Math.random() * 70; /* px/s: né lenta né veloce */
         gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1, opacity: 0 });
         gsap.to(img, { opacity: 1, duration: .5, ease: 'none' }); /* ingresso morbido appena sotto la home */
+        /* quando tocca la cresta del mucchio, il mucchio si assesta */
+        if (scossa) gsap.delayedCall(Math.max(0, (suolo() - y0) / velocita), () => scossa.restart());
         gsap.to(img, {
           y: fine, duration: Math.max(1, (fine - y0) / velocita), ease: 'none',
           onComplete: () => { gsap.killTweensOf(img); img.remove(); } /* a quel punto è già coperta dal nero */

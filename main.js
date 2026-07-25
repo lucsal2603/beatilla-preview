@@ -3,10 +3,12 @@
     /* innerWidth può essere 0 in contesti di prerender/anteprima: fallback su screen.width */
     const isMobile = () => (window.innerWidth || screen.width || 1024) <= 768;
 
-    /* ---------- Hero video: load only on desktop (saves ~7MB on mobile) ---------- */
+    /* ---------- Hero video: anche su telefono ----------
+       La foto del cavallo resta come poster e si vede subito; il video
+       (7 MB) parte dopo, quando la pagina è già utilizzabile. */
     (() => {
       const v = document.querySelector('.hero__video video');
-      if (!v || isMobile() || prefersReduced) return;
+      if (!v || prefersReduced) return;
       const src = v.getAttribute('data-src');
       if (!src) return;
       v.setAttribute('src', src);

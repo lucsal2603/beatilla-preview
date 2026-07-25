@@ -1112,6 +1112,10 @@ html { overflow-x: clip; }
 /* Titolo Art Studio: la pennellata blu lo evidenzia da dietro,
    ancorata a sinistra e distesa su tutta la larghezza del titolo */
 .workshop__title-row { position: relative; display: block; width: fit-content; margin-inline: auto; }
+/* su schermo stretto l'etichetta sopra il titolo segue il titolo centrato */
+@media (max-width: 768px) {
+  .workshop__grid:first-of-type .workshop__text > .label { display: block; text-align: center; justify-content: center; }
+}
 .workshop__title-row h2 {
   position: relative; z-index: 1;
   /* nero pieno: stacca sia sul blu carico della pennellata sia sulla carta */

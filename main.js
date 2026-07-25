@@ -709,7 +709,8 @@
       cielo.className = 'leaves';
       cielo.setAttribute('aria-hidden', 'true');
       document.body.appendChild(cielo);
-      const MAX_FOGLIE = 14; /* tetto di sicurezza: mai più di così in volo */
+      /* su schermi larghi (tablet e su) c'è più cielo: tetto più alto */
+      const tettoFoglie = () => isMobile() ? 14 : 22;
 
       /* le foglie si fermano sul mucchio al bordo dei contatti, non oltre */
       const suolo = () => {
@@ -768,12 +769,16 @@
          come se cadessero da un po' */
       window.addEventListener('load', () => setTimeout(() => {
         const cima = tetto(), limite = suolo();
-        for (let i = 0; i < 6; i++) cadi(cima + Math.random() * Math.max(0, limite * .85 - cima));
+        const semi = isMobile() ? 6 : 10;
+        for (let i = 0; i < semi; i++) cadi(cima + Math.random() * Math.max(0, limite * .85 - cima));
       }, 400));
 
       const goccia = () => {
-        if (cielo.childElementCount < MAX_FOGLIE) cadi();
-        setTimeout(goccia, 2600 + Math.random() * 2800); /* ogni tot secondi */
+        if (cielo.childElementCount < tettoFoglie()) cadi();
+        const pausa = isMobile()
+          ? 2600 + Math.random() * 2800   /* telefono: cadenza di sempre */
+          : 1200 + Math.random() * 1300;  /* tablet e più grandi: più fitte */
+        setTimeout(goccia, pausa);
       };
       setTimeout(goccia, 1500);
     }

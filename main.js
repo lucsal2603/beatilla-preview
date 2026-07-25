@@ -632,6 +632,66 @@
 
     /* Il cerchio dorato dietro il testo della Residency resta fisso, senza animazione. */
 
+    /* ---------- FOGLIE CHE CADONO ----------
+       Ogni pochi secondi una foglia si stacca dalla CIMA della pagina e
+       scende oscillando fino al fondo del sito. Tutto in coordinate di
+       documento, non di schermo: anche se si sta leggendo a metà pagina,
+       le foglie partono comunque dall'inizio del sito e passano davanti
+       solo quando arrivano a quell'altezza. */
+    if (!prefersReduced) {
+      const FOGLIE = ['img/foglia-1.webp', 'img/foglia-2.webp', 'img/foglia-3.webp', 'img/foglia-4.webp', 'img/foglia-5.webp'];
+      const cielo = document.createElement('div');
+      cielo.className = 'leaves';
+      cielo.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(cielo);
+      const MAX_FOGLIE = 14; /* tetto di sicurezza: mai più di così in volo */
+
+      /* le foglie si fermano sul mucchio al bordo dei contatti, non oltre */
+      const suolo = () => {
+        const c = document.getElementById('prenota');
+        return c ? c.getBoundingClientRect().top + window.scrollY
+                 : document.documentElement.scrollHeight;
+      };
+
+      const cadi = (partenzaY) => {
+        const vw = window.innerWidth || screen.width || 375;
+        const img = document.createElement('img');
+        img.src = FOGLIE[(Math.random() * FOGLIE.length) | 0];
+        img.alt = '';
+        const size = 26 + Math.random() * 20;
+        img.style.width = size + 'px';
+        cielo.appendChild(img);
+        const amp = 26 + Math.random() * 40;   /* ampiezza dell'oscillazione */
+        const x0 = amp / 2 + Math.random() * Math.max(40, vw - amp - size * 2);
+        const fine = suolo() - size * .7;      /* atterra dentro il mucchio */
+        const y0 = partenzaY !== undefined ? partenzaY : -70;
+        const velocita = 150 + Math.random() * 70; /* px/s: né lenta né veloce */
+        gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1 });
+        gsap.to(img, {
+          y: fine, duration: Math.max(1, (fine - y0) / velocita), ease: 'none',
+          onComplete: () => {
+            gsap.killTweensOf(img);
+            gsap.to(img, { opacity: 0, duration: .8, onComplete: () => img.remove() });
+          }
+        });
+        gsap.to(img, { x: x0 + amp, duration: 1.7 + Math.random() * 1.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        gsap.to(img, { rotation: `+=${34 + Math.random() * 40}`, duration: 2.1 + Math.random() * 1.8, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+      };
+
+      /* all'arrivo il cielo è già in moto: qualche foglia sparsa lungo la pagina,
+         come se cadessero da un po' */
+      window.addEventListener('load', () => setTimeout(() => {
+        const limite = suolo();
+        for (let i = 0; i < 6; i++) cadi(Math.random() * limite * .8);
+      }, 400));
+
+      const goccia = () => {
+        if (cielo.childElementCount < MAX_FOGLIE) cadi();
+        setTimeout(goccia, 2600 + Math.random() * 2800); /* ogni tot secondi */
+      };
+      setTimeout(goccia, 1500);
+    }
+
     /* Recalculate on resize / after images load for pinned/scrub triggers.
        Dopo il refresh riporto sempre la pagina in cima: così un reload riparte dall'hero col video,
        non da metà pagina (es. le Camere). Gestisco anche il ritorno dalla bfcache con "pageshow". */

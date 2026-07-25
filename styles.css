@@ -524,7 +524,7 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 /* ============================================================
    11c. COSA VISITARE
    ============================================================ */
-.visit { padding-block: var(--section-y); background: var(--white); }
+.visit { padding-block: var(--section-y) calc(var(--section-y) + 110px); background: var(--white); }
 .visit__head { text-align: center; margin-bottom: clamp(2.4rem, 5vh, 3.6rem); }
 .visit__head h2 { font-size: clamp(2.4rem, 5.5vw, 4rem); margin-top: 1rem; }
 .visit__intro { max-width: 60ch; margin: 1.4rem auto 0; color: rgba(26,26,24,.72); line-height: 1.75; }
@@ -569,7 +569,16 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 /* ============================================================
    12. PRENOTA / CONTATTI
    ============================================================ */
-.contact { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+/* niente overflow:hidden qui: il mucchio di foglie sporge sopra il bordo
+   (lo scivolamento delle colonne è solo orizzontale, già bloccato da html) */
+.contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+.contact::before {
+  content: ""; position: absolute; left: 50%; bottom: calc(100% - 10px);
+  transform: translateX(-50%);
+  width: min(400px, 74vw); aspect-ratio: 760 / 302;
+  background: url("img/mucchio-foglie.webp") center bottom / contain no-repeat;
+  pointer-events: none; z-index: 65; /* sopra le foglie in volo: atterrano dietro il mucchio */
+}
 .contact__left { background: var(--text); color: var(--bg); padding: clamp(3.5rem, 8vw, 7rem) clamp(2rem, 5vw, 5rem); will-change: transform; }
 .contact__left h2 { font-size: clamp(2.6rem, 5vw, 4.2rem); margin: 1.2rem 0 2.4rem; }
 .contact__info { display: flex; flex-direction: column; gap: 1.4rem; }
@@ -1020,6 +1029,13 @@ html { overflow-x: clip; }
 @media (min-width: 981px) {
   .workshop__grid--reverse .workshop__media { order: -1; }
 }
+
+/* Foglie che cadono: il contenitore copre TUTTO il documento, le foglie
+   viaggiano in coordinate di pagina (si staccano dalla cima del sito,
+   non dalla parte visibile) e passano sopra i contenuti ma sotto navbar
+   e bottone Prenota */
+.leaves { position: absolute; top: 0; left: 0; width: 100%; height: 0; pointer-events: none; z-index: 60; }
+.leaves img { position: absolute; top: 0; left: 0; will-change: transform; }
 
 /* Titolo Art Studio: la pennellata blu lo evidenzia da dietro,
    ancorata a sinistra e distesa su tutta la larghezza del titolo */

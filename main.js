@@ -917,6 +917,11 @@
         const img = document.createElement('img');
         img.src = FOGLIE[(Math.random() * FOGLIE.length) | 0];
         img.alt = '';
+        /* intoccabile: niente drag nativo del browser né menu contestuale,
+           la foglia si può solo afferrare e lanciare */
+        img.draggable = false;
+        img.addEventListener('dragstart', (e) => e.preventDefault());
+        img.addEventListener('contextmenu', (e) => e.preventDefault());
         const size = 26 + Math.random() * 20;
         img.style.width = size + 'px';
         cielo.appendChild(img);

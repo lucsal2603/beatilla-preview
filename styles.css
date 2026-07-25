@@ -130,7 +130,7 @@ body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
 }
 
 /* Heading word reveal */
-.w-mask { display: inline-block; overflow: hidden; vertical-align: top; }
+.w-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-inline: .16em; margin-inline: -.16em; }
 .w-word { display: inline-block; will-change: transform; }
 
 /* ============================================================
@@ -271,7 +271,7 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
   letter-spacing: .005em;
   color: var(--white);
 }
-.hero__title .line { display: block; overflow: hidden; }
+.hero__title .line { display: block; overflow: hidden; padding-inline: .16em; margin-inline: -.16em; }
 .hero__title .word { display: inline-block; will-change: transform; }
 .hero__title .line:nth-child(2) { font-style: italic; font-weight: 400; }
 
@@ -302,7 +302,7 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 .intro__body a:hover { border-color: var(--accent); }
 
 /* Line-by-line clip reveal */
-.reveal-line { display: block; overflow: hidden; }
+.reveal-line { display: block; overflow: hidden; padding-inline: .16em; margin-inline: -.16em; }
 .reveal-line > span { display: block; will-change: transform; }
 
 /* ============================================================

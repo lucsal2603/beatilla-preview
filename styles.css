@@ -1034,6 +1034,9 @@ html { overflow-x: clip; }
   .workshop__grid--reverse .workshop__media { order: -1; }
 }
 
+/* Il nome della casa nel testo: bronzo caldo del sito, non corsivo */
+.nome { color: var(--accent); font-style: normal; font-weight: 500; }
+
 /* Foglie che cadono: il contenitore copre TUTTO il documento, le foglie
    viaggiano in coordinate di pagina (si staccano dalla cima del sito,
    non dalla parte visibile) e passano sopra i contenuti ma sotto navbar

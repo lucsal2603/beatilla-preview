@@ -586,6 +586,27 @@
       });
     }
 
+    /* ---------- OSPITI CHE RISALE SUL CAPPELLO ----------
+       Su telefono la foto del cappello è mostrata intera e occupa
+       parecchio schermo. Appena la si supera, la sezione Ospiti sale
+       più in fretta della pagina e si ferma coprendo solo la punta
+       inferiore della foto: si accorcia l'attesa senza tagliare l'immagine. */
+    const testi = document.querySelector('.testi');
+    const fascia = document.querySelector('.video');
+    if (testi && fascia && isMobile() && !prefersReduced) {
+      const risalita = () => Math.min(190, fascia.getBoundingClientRect().height * 0.22);
+      gsap.fromTo(testi, { y: 0 }, {
+        y: () => -risalita(), ease: 'none',
+        scrollTrigger: {
+          trigger: fascia,
+          start: 'bottom 92%',   /* quando la punta del cappello sta per uscire */
+          end: 'bottom 55%',     /* poco più in basso ha già coperto la punta */
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
     /* ---------- PULL-QUOTE REVEAL ---------- */
     gsap.utils.toArray('.pullquote').forEach((q) => {
       gsap.from(q, {

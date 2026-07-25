@@ -308,10 +308,23 @@
     const galleryHead = gallerySection ? gallerySection.querySelector('.gallery__head') : null;
     if (track && pin && gallerySection && !isMobile() && !prefersReduced) {
       const getScrollX = () => Math.max(0, track.scrollWidth - pin.clientWidth);
+      /* La corsa non finisce con l'ultima foto incollata al bordo destro:
+         prosegue finché il CENTRO dell'ultima foto coincide col centro dello
+         schermo. Misuro la geometria reale invece di fidarmi di scrollWidth
+         (che a seconda del motore ignora il padding finale). */
+      const corsa = () => {
+        const items = track.querySelectorAll('.gallery__item');
+        if (!items.length) return getScrollX();
+        const last = items[items.length - 1];
+        const x = gsap.getProperty(track, 'x') || 0;
+        const r = last.getBoundingClientRect();
+        const centroAZero = r.left - x + r.width / 2;
+        return Math.max(getScrollX(), Math.round(centroAZero - pin.clientWidth / 2));
+      };
       /* Titolo dentro il pin: l'altezza extra della sezione (per lo scroll
-         orizzontale mentre è agganciata) è solo la larghezza da scorrere. */
+         orizzontale mentre è agganciata) è la corsa da percorrere. */
       const sizeSection = () => {
-        gallerySection.style.height = (pin.offsetHeight + getScrollX()) + 'px';
+        gallerySection.style.height = (pin.offsetHeight + corsa()) + 'px';
       };
       sizeSection();
       /* Reimposta l'altezza ad ogni ricalcolo, PRIMA che ScrollTrigger misuri le posizioni */
@@ -321,12 +334,12 @@
          aggancia (top sezione = top schermo); end = +larghezza da scorrere. */
       const slideStart = () => Math.round(gallerySection.getBoundingClientRect().top + window.scrollY);
       const slide = gsap.fromTo(track, { x: 0 }, {
-        x: () => -getScrollX(),
+        x: () => -corsa(),
         ease: 'none',
         scrollTrigger: {
           trigger: gallerySection,
           start: () => slideStart(),
-          end: () => slideStart() + getScrollX(),
+          end: () => slideStart() + corsa(),
           scrub: 1,
           invalidateOnRefresh: true
         }
@@ -774,7 +787,9 @@
       }, 400));
 
       const goccia = () => {
-        if (cielo.childElementCount < tettoFoglie()) cadi();
+        /* a volte se ne staccano due o tre insieme, ognuna con la sua velocità */
+        const raffica = 1 + ((Math.random() * 2.4) | 0);
+        for (let i = 0; i < raffica && cielo.childElementCount < tettoFoglie(); i++) cadi();
         const pausa = isMobile()
           ? 2600 + Math.random() * 2800   /* telefono: cadenza di sempre */
           : 1200 + Math.random() * 1300;  /* tablet e più grandi: più fitte */

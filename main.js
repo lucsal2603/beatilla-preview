@@ -663,7 +663,7 @@
         cielo.appendChild(img);
         const amp = 26 + Math.random() * 40;   /* ampiezza dell'oscillazione */
         const x0 = amp / 2 + Math.random() * Math.max(40, vw - amp - size * 2);
-        const fine = suolo() - size * .7;      /* atterra dentro il mucchio */
+        const fine = suolo() - size * 1.3;     /* atterra sulla cresta del mucchio (il file ha una cornice di bagliore attorno al corpo) */
         const y0 = partenzaY !== undefined ? partenzaY : -70;
         const velocita = 150 + Math.random() * 70; /* px/s: né lenta né veloce */
         gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1 });

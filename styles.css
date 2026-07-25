@@ -570,14 +570,16 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
    12. PRENOTA / CONTATTI
    ============================================================ */
 /* niente overflow:hidden qui: il mucchio di foglie sporge sopra il bordo
-   (lo scivolamento delle colonne è solo orizzontale, già bloccato da html) */
-.contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+   (lo scivolamento delle colonne è solo orizzontale, già bloccato da html).
+   z-index:1 crea il contesto: così il mucchio (z -1) resta DIETRO al blocco
+   nero, che gli copre la parte bassa — il nero comanda sul bordo. */
+.contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 1; }
 .contact::before {
-  content: ""; position: absolute; left: 50%; bottom: calc(100% - 10px);
-  transform: translateX(-50%);
-  width: min(400px, 74vw); aspect-ratio: 760 / 302;
+  content: ""; position: absolute; left: 50%; top: 0;
+  transform: translate(-50%, -55%); /* il 45% inferiore affonda dietro il nero */
+  width: min(400px, 74vw); aspect-ratio: 760 / 298;
   background: url("img/mucchio-foglie.webp") center bottom / contain no-repeat;
-  pointer-events: none; z-index: 65; /* sopra le foglie in volo: atterrano dietro il mucchio */
+  pointer-events: none; z-index: -1;
 }
 .contact__left { background: var(--text); color: var(--bg); padding: clamp(3.5rem, 8vw, 7rem) clamp(2rem, 5vw, 5rem); will-change: transform; }
 .contact__left h2 { font-size: clamp(2.6rem, 5vw, 4.2rem); margin: 1.2rem 0 2.4rem; }

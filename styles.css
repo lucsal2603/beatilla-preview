@@ -1021,6 +1021,20 @@ html { overflow-x: clip; }
   .workshop__grid--reverse .workshop__media { order: -1; }
 }
 
+/* Titolo Art Studio con la pennellata blu a destra */
+.workshop__title-row { display: flex; align-items: center; gap: clamp(.9rem, 4vw, 1.8rem); }
+.workshop__title-row h2 { flex: 0 0 auto; }
+.workshop__stroke { flex: 0 1 auto; width: clamp(96px, 26vw, 200px); height: auto; pointer-events: none; }
+
+/* Art Residency: i cerchi dorati di Bornoffi dietro tutto il testo */
+.workshop__grid--reverse .workshop__text { position: relative; }
+.workshop__grid--reverse .workshop__text > :not(.residency-circles) { position: relative; z-index: 1; }
+.residency-circles {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(115%, 620px); height: auto;
+  opacity: .4; pointer-events: none; z-index: 0;
+}
+
 /* Esperienze: 4 card */
 @media (min-width: 981px) {
   .exp__grid { grid-template-columns: repeat(4, 1fr); }

@@ -601,6 +601,59 @@
       scrollTrigger: { trigger: '.footer', start: 'top 92%' }
     });
 
+    /* ---------- ART STUDIO: PENNELLATA BLU ----------
+       Appare come una vera verniciatura: tre mani successive.
+       Ogni mano è un fronte che attraversa l'immagine (destra, poi
+       ritorno, poi ancora destra) e ne aumenta la copertura di 1/3,
+       come passate di pennello che caricano il colore. */
+    const stroke = document.querySelector('.workshop__stroke');
+    if (stroke && !prefersReduced) {
+      const mani = [0, 1 / 3, 2 / 3, 1];
+      /* il fronte corre da -8 a 108 così a inizio mano la sfumatura
+         è tutta fuori dall'immagine e non lascia scie sul bordo */
+      const st = { mano: 0, x: -8 };
+      const dipingi = () => {
+        const versoDx = st.mano % 2 === 0;
+        const dietro = mani[st.mano + 1], davanti = mani[st.mano];
+        const m = `linear-gradient(${versoDx ? 90 : 270}deg,` +
+          ` rgba(0,0,0,${dietro}) ${st.x - 8}%,` +
+          ` rgba(0,0,0,${davanti}) ${st.x + 8}%)`;
+        stroke.style.webkitMaskImage = m;
+        stroke.style.maskImage = m;
+      };
+      dipingi(); /* parte invisibile */
+      const tl = gsap.timeline({ paused: true });
+      for (let c = 0; c < 3; c++) {
+        tl.set(st, { mano: c, x: -8 }, c === 0 ? 0 : '>+.14')
+          .to(st, { x: 108, duration: .6, ease: 'power2.inOut', onUpdate: dipingi });
+      }
+      ScrollTrigger.create({ trigger: stroke, start: 'top 85%', once: true, onEnter: () => tl.play() });
+    }
+
+    /* ---------- ART RESIDENCY: CERCHI CHE SI DISEGNANO ----------
+       Il cerchio dorato si "crea" partendo dall'alto: un fronte scende
+       lungo il lato destro e uno lungo il sinistro, in simmetria, fino
+       a chiudersi in basso (maschera conica animata). */
+    const cerchi = document.querySelector('.residency-circles');
+    const conicOK = typeof CSS !== 'undefined' && (
+      CSS.supports('mask-image', 'conic-gradient(#000 0deg, transparent 1deg)') ||
+      CSS.supports('-webkit-mask-image', 'conic-gradient(#000 0deg, transparent 1deg)'));
+    if (cerchi && conicOK && !prefersReduced) {
+      const cs = { a: 0 };
+      const disegna = () => {
+        const m = cs.a >= 179.9 ? 'none' :
+          `conic-gradient(#000 0deg, #000 ${cs.a}deg, rgba(0,0,0,0) ${cs.a}deg,` +
+          ` rgba(0,0,0,0) ${360 - cs.a}deg, #000 ${360 - cs.a}deg)`;
+        cerchi.style.webkitMaskImage = m;
+        cerchi.style.maskImage = m;
+      };
+      disegna(); /* parte invisibile */
+      ScrollTrigger.create({
+        trigger: cerchi.closest('.workshop__text'), start: 'top 78%', once: true,
+        onEnter: () => gsap.to(cs, { a: 180, duration: 2.4, ease: 'power1.inOut', onUpdate: disegna })
+      });
+    }
+
     /* Recalculate on resize / after images load for pinned/scrub triggers.
        Dopo il refresh riporto sempre la pagina in cima: così un reload riparte dall'hero col video,
        non da metà pagina (es. le Camere). Gestisco anche il ritorno dalla bfcache con "pageshow". */

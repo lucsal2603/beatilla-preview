@@ -323,7 +323,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <script>/* Evita il salto del pin orizzontale al ricaricamento: la pagina riparte sempre dall'alto */if('scrollRestoration' in history){history.scrollRestoration='manual';}</script>
@@ -781,7 +781,10 @@
         <div class="workshop__grid">
           <div class="workshop__text" data-fade>
             <p class="label">Esperienza d'arte</p>
-            <h2 data-words>Art Studio</h2>
+            <div class="workshop__title-row">
+              <h2 data-words>Art Studio</h2>
+              <img class="workshop__stroke" src="img/pennellata-blu.webp" alt="" aria-hidden="true" width="820" height="453" loading="lazy" decoding="async" />
+            </div>
             <h3 class="workshop__subtitle">Art Workshop</h3>
             <p>Dopo aver scoperto il percorso artistico dell'artista internazionale <a href="https://www.lucabornoffi.com" target="_blank" rel="noopener">Luca Bornoffi</a> e la filosofia della sua serie <em>Circles of Life</em>, vivrete un'esperienza immersiva tra tele, colori e materiali, creando un'opera unica che porterete con voi.</p>
             <p>Il workshop è aperto a tutti, anche a chi non ha mai dipinto. Più che imparare una tecnica, vivrete il piacere di esprimervi liberamente in un luogo dove arte e natura dialogano ogni giorno.</p>
@@ -803,6 +806,7 @@
             </div>
           </div>
           <div class="workshop__text" data-fade>
+            <img class="residency-circles" src="img/cerchi-oro.webp" alt="" aria-hidden="true" width="900" height="900" loading="lazy" decoding="async" />
             <h3 class="workshop__subtitle">Art Residency</h3>
             <p class="workshop__lead"><strong>More than an artist residency. A place to create, share and belong.</strong></p>
             <p>Beatilla Art Residency nasce per offrire ad artisti e professionisti creativi il tempo, lo spazio e la tranquillità necessari per sviluppare la propria ricerca artistica. Immersa nella campagna mantovana, è un luogo dove arte, natura ed eco-design convivono ogni giorno, trasformando la quotidianità in fonte d'ispirazione.</p>
@@ -1124,6 +1128,6 @@
   <!-- Lenis servito in locale: nessuna dipendenza da CDN esterni (ricordarsi di copiarlo nel repo al momento della pubblicazione) -->
   <script src="lenis.min.js"></script>
 
-  <script src="main.js"></script>
+  <script src="main.js?v=9"></script>
 </body>
 </html>

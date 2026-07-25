@@ -1046,8 +1046,8 @@ html { overflow-x: clip; }
 .workshop__title-row { position: relative; display: block; width: fit-content; margin-inline: auto; }
 .workshop__title-row h2 {
   position: relative; z-index: 1;
-  /* scritta chiara e piatta sopra la pittura: niente ombre né bordi */
-  color: var(--bg);
+  /* nero pieno: stacca sia sul blu carico della pennellata sia sulla carta */
+  color: var(--text);
 }
 .workshop__stroke {
   position: absolute; left: -7%; top: 50%; transform: translateY(-50%);

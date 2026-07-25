@@ -653,17 +653,25 @@
                  : document.documentElement.scrollHeight;
       };
 
+      /* altezza/larghezza di ciascun file: serve per fermarsi PRIMA del bordo nero
+         qualunque sia la forma della foglia (la n.3 è verticale: alta 2,5 volte la larghezza) */
+      const RAPPORTI = [96 / 129, 96 / 266, 96 / 38, 96 / 152, 96 / 165];
+
       const cadi = (partenzaY) => {
         const vw = window.innerWidth || screen.width || 375;
         const img = document.createElement('img');
-        img.src = FOGLIE[(Math.random() * FOGLIE.length) | 0];
+        const quale = (Math.random() * FOGLIE.length) | 0;
+        img.src = FOGLIE[quale];
         img.alt = '';
         const size = 26 + Math.random() * 20;
         img.style.width = size + 'px';
         cielo.appendChild(img);
+        const alt = size * RAPPORTI[quale];    /* altezza resa della foglia */
         const amp = 26 + Math.random() * 40;   /* ampiezza dell'oscillazione */
         const x0 = amp / 2 + Math.random() * Math.max(40, vw - amp - size * 2);
-        const fine = suolo() - size * 1.3;     /* atterra sulla cresta del mucchio (il file ha una cornice di bagliore attorno al corpo) */
+        /* fine corsa: il punto PIÙ BASSO della foglia (anche ruotata) resta
+           sopra il bordo del blocco nero, mai oltre */
+        const fine = suolo() - (alt / 2 + Math.hypot(size, alt) / 2 + 4);
         const y0 = partenzaY !== undefined ? partenzaY : -70;
         const velocita = 150 + Math.random() * 70; /* px/s: né lenta né veloce */
         gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1 });

@@ -722,8 +722,16 @@
       cielo.className = 'leaves';
       cielo.setAttribute('aria-hidden', 'true');
       document.body.appendChild(cielo);
-      /* su schermi larghi (tablet e su) c'è più cielo: tetto più alto */
-      const tettoFoglie = () => isMobile() ? 14 : 22;
+      /* Quante foglie tenere in volo. Va calcolato sulle SCHERMATE di pagina,
+         non a numero fisso: la pagina è alta ~18 schermi, quindi con un tetto
+         basso dopo un minuto le foglie vive erano tutte sparse in fondo e in
+         cima non ne nasceva più nessuna (sembrava che smettessero). */
+      const tettoFoglie = () => {
+        if (isMobile()) return 14; /* sul telefono la densità andava bene così */
+        const schermate = Math.max(1, document.documentElement.scrollHeight / (window.innerHeight || 812));
+        /* schermi grandi: ~2,5 foglie per schermata, con un tetto assoluto */
+        return Math.min(54, Math.round(schermate * 2.6));
+      };
 
       /* le foglie si fermano sul mucchio al bordo dei contatti, non oltre */
       const suolo = () => {
@@ -751,6 +759,95 @@
         return h ? h.getBoundingClientRect().bottom + window.scrollY + 6 : 0;
       };
 
+      /* Movimento naturale: caduta + oscillazione + rotazione. Sta in una
+         funzione a parte perché va ripreso anche dopo un lancio, partendo
+         dal punto in cui la foglia si è fermata. */
+      const volo = (img) => {
+        const d = img.dati;
+        const y = gsap.getProperty(img, 'y'), x = gsap.getProperty(img, 'x');
+        const fine = suolo() + 320; /* sparisce dietro il blocco nero */
+        if (y >= fine) { img.remove(); return; }
+        gsap.to(img, {
+          y: fine, duration: Math.max(.8, (fine - y) / d.v), ease: 'none',
+          onComplete: () => { gsap.killTweensOf(img); img.remove(); }
+        });
+        gsap.to(img, { x: x + d.amp, duration: d.durOsc, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        gsap.to(img, { rotation: `+=${d.giro}`, duration: d.durRot, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        /* quando tocca la cresta del mucchio, il mucchio si assesta */
+        if (scossa && y < suolo()) d.arrivo = gsap.delayedCall((suolo() - y) / d.v, () => scossa.restart());
+      };
+
+      /* Lancio: la foglia prosegue nella direzione della mano, frena da sola
+         e poi riprende a scendere come sempre. */
+      const lancia = (img, scia) => {
+        const a = scia[0], b = scia[scia.length - 1];
+        const dt = Math.max(20, b.t - a.t) / 1000;
+        const vx = (b.x - a.x) / dt, vy = (b.y - a.y) / dt; /* px/s */
+        const forza = Math.hypot(vx, vy);
+        if (forza < 140) { volo(img); return; } /* rilascio dolce: riprende subito */
+        const t = Math.min(1.2, forza / 1300);  /* più forte il lancio, più lunga la frenata */
+        const w = img.offsetWidth, h = img.offsetHeight;
+        const maxX = (window.innerWidth || 375) - w;
+        gsap.to(img, {
+          x: Math.max(0, Math.min(maxX, gsap.getProperty(img, 'x') + vx * t * .38)),
+          y: Math.max(tetto(), Math.min(suolo() - h, gsap.getProperty(img, 'y') + vy * t * .38)),
+          rotation: `+=${(vx >= 0 ? 1 : -1) * 170 * t}`,
+          duration: t, ease: 'power2.out',
+          onComplete: () => volo(img)
+        });
+      };
+
+      /* Presa: tienila premuta un istante, spostala, lanciala. Se il dito
+         parte subito senza pausa era uno scroll, e la pagina scorre normale. */
+      const ATTESA = 170, SOGLIA = 8;
+      const presa = (img) => {
+        img.addEventListener('pointerdown', (e) => {
+          const px = e.clientX, py = e.clientY;
+          let preso = false, offX = 0, offY = 0;
+          const scia = [{ x: px, y: py, t: e.timeStamp }];
+          const afferra = () => {
+            preso = true;
+            gsap.killTweensOf(img);
+            if (img.dati.arrivo) img.dati.arrivo.kill();
+            gsap.set(img, { opacity: 1 });
+            img.classList.add('presa');
+            try { img.setPointerCapture(e.pointerId); } catch (_) {}
+            offX = gsap.getProperty(img, 'x') - (px + window.scrollX);
+            offY = gsap.getProperty(img, 'y') - (py + window.scrollY);
+          };
+          const timer = setTimeout(afferra, ATTESA);
+          const muovi = (ev) => {
+            scia.push({ x: ev.clientX, y: ev.clientY, t: ev.timeStamp });
+            if (scia.length > 5) scia.shift();
+            if (!preso) {
+              if (Math.hypot(ev.clientX - px, ev.clientY - py) > SOGLIA) finisci();
+              return;
+            }
+            ev.preventDefault();
+            const w = img.offsetWidth, h = img.offsetHeight;
+            gsap.set(img, {
+              x: Math.max(0, Math.min((window.innerWidth || 375) - w, ev.clientX + window.scrollX + offX)),
+              y: Math.max(tetto(), Math.min(suolo() - h, ev.clientY + window.scrollY + offY))
+            });
+          };
+          const bloccaScroll = (ev) => { if (preso) ev.preventDefault(); };
+          const molla = () => { if (preso) lancia(img, scia); finisci(); };
+          function finisci() {
+            clearTimeout(timer);
+            preso = false;
+            img.classList.remove('presa');
+            window.removeEventListener('pointermove', muovi);
+            window.removeEventListener('pointerup', molla);
+            window.removeEventListener('pointercancel', molla);
+            window.removeEventListener('touchmove', bloccaScroll);
+          }
+          window.addEventListener('pointermove', muovi, { passive: false });
+          window.addEventListener('pointerup', molla);
+          window.addEventListener('pointercancel', molla);
+          window.addEventListener('touchmove', bloccaScroll, { passive: false });
+        });
+      };
+
       const cadi = (partenzaY) => {
         const vw = window.innerWidth || screen.width || 375;
         const img = document.createElement('img');
@@ -759,23 +856,21 @@
         const size = 26 + Math.random() * 20;
         img.style.width = size + 'px';
         cielo.appendChild(img);
-        const amp = 26 + Math.random() * 40;   /* ampiezza dell'oscillazione */
+        const amp = 26 + Math.random() * 40; /* ampiezza dell'oscillazione */
+        img.dati = {
+          v: 150 + Math.random() * 70,      /* px/s: né lenta né veloce */
+          amp: amp,
+          durOsc: 1.7 + Math.random() * 1.5,
+          durRot: 2.1 + Math.random() * 1.8,
+          giro: 34 + Math.random() * 40,
+          arrivo: null
+        };
         const x0 = amp / 2 + Math.random() * Math.max(40, vw - amp - size * 2);
-        /* la corsa finisce ben DENTRO il blocco nero (che ha z-index più alto
-           e quindi le copre): la foglia scivola dietro al bordo e sparisce lì */
-        const fine = suolo() + 320;
         const y0 = partenzaY !== undefined ? partenzaY : tetto();
-        const velocita = 150 + Math.random() * 70; /* px/s: né lenta né veloce */
         gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1, opacity: 0 });
         gsap.to(img, { opacity: 1, duration: .5, ease: 'none' }); /* ingresso morbido appena sotto la home */
-        /* quando tocca la cresta del mucchio, il mucchio si assesta */
-        if (scossa) gsap.delayedCall(Math.max(0, (suolo() - y0) / velocita), () => scossa.restart());
-        gsap.to(img, {
-          y: fine, duration: Math.max(1, (fine - y0) / velocita), ease: 'none',
-          onComplete: () => { gsap.killTweensOf(img); img.remove(); } /* a quel punto è già coperta dal nero */
-        });
-        gsap.to(img, { x: x0 + amp, duration: 1.7 + Math.random() * 1.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-        gsap.to(img, { rotation: `+=${34 + Math.random() * 40}`, duration: 2.1 + Math.random() * 1.8, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        volo(img);
+        presa(img);
       };
 
       /* all'arrivo il cielo è già in moto: qualche foglia sparsa lungo la pagina,
@@ -787,8 +882,9 @@
       }, 400));
 
       const goccia = () => {
-        /* a volte se ne staccano due o tre insieme, ognuna con la sua velocità */
-        const raffica = 1 + ((Math.random() * 2.4) | 0);
+        /* su schermi grandi a volte se ne staccano due o tre insieme, ognuna
+           con la sua velocità; sul telefono resta una alla volta come prima */
+        const raffica = isMobile() ? 1 : 1 + ((Math.random() * 2.4) | 0);
         for (let i = 0; i < raffica && cielo.childElementCount < tettoFoglie(); i++) cadi();
         const pausa = isMobile()
           ? 2600 + Math.random() * 2800   /* telefono: cadenza di sempre */

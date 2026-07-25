@@ -1051,7 +1051,13 @@ html { overflow-x: clip; }
    non dalla parte visibile) e passano sopra i contenuti ma sotto navbar
    e bottone Prenota */
 .leaves { position: absolute; top: 0; left: 0; width: 100%; height: 0; pointer-events: none; z-index: 60; }
-.leaves img { position: absolute; top: 0; left: 0; will-change: transform; }
+.leaves img {
+  position: absolute; top: 0; left: 0; will-change: transform;
+  /* si possono afferrare al volo: il contenitore resta trasparente ai clic,
+     solo la foglia risponde */
+  pointer-events: auto; cursor: grab;
+}
+.leaves img.presa { cursor: grabbing; touch-action: none; }
 
 /* Titolo Art Studio: la pennellata blu lo evidenzia da dietro,
    ancorata a sinistra e distesa su tutta la larghezza del titolo */

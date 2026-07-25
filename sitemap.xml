@@ -3,56 +3,56 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.agriturismobeatilla.it/</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10011.jpg</image:loc>
-      <image:caption>La cascina dell'Agriturismo Beatilla al tramonto, campagna di Mantova</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/frammenti-cascina.jpg</image:loc>
+      <image:caption>La cascina dell'Agriturismo Beatilla con la scritta dipinta a mano</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10019.jpg</image:loc>
-      <image:caption>La cascina di Beatilla immersa nel verde, Marmirolo (Mantova)</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/frammenti-animali.jpg</image:loc>
+      <image:caption>Un cavallo bianco al pascolo all'alba nella campagna di Beatilla</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/pomodoro/10004.jpg</image:loc>
+      <image:loc>https://www.agriturismobeatilla.it/img/alloggi-pomodoro.jpg</image:loc>
       <image:caption>Camera Pomodoro — camera d'autore dell'agriturismo</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/mandarino/10006.jpg</image:loc>
-      <image:caption>Camera Mandarino — camera d'autore dell'agriturismo</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/alloggi-mandarino.jpg</image:loc>
+      <image:caption>Camera Mandarino — luce, travi a vista e colori agrumati</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/lampone/10011.jpg</image:loc>
-      <image:caption>Suite Lampone — appartamento con angolo cottura</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/alloggi-lampone.jpg</image:loc>
+      <image:caption>Suite Lampone — appartamento indipendente con cucina</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/giallo_zucca/10009.jpg</image:loc>
-      <image:caption>Camera Giallo Zucca</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/alloggi-pallina.jpg</image:loc>
+      <image:caption>Appartamento Pallina — ambienti luminosi e opere di Luca Bornoffi</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/melanzana/10003.jpg</image:loc>
-      <image:caption>Camera Melanzana</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/alloggi-jahara.jpg</image:loc>
+      <image:caption>Loft Country Jahara — pietra, legno e soppalco</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/mela_verde/10008.jpg</image:loc>
-      <image:caption>Camera Mela Verde</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/esperienze-colazione.jpg</image:loc>
+      <image:caption>La colazione Breakfast Basket servita in camera</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/zucca/10003.jpg</image:loc>
-      <image:caption>Camera Zucca</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/esperienze-ristorante.jpg</image:loc>
+      <image:caption>La sala dell'Art Gallery Restaurant Corte Barco</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/country/10009.jpg</image:loc>
-      <image:caption>Loft Country — appartamento in stile rustico</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/esperienze-studio.jpg</image:loc>
+      <image:caption>Lo Studio Bornoffi durante un Art Workshop</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/10007.jpg</image:loc>
-      <image:caption>La sala del ristorante Corte Barco</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/arte-artista.jpg</image:loc>
+      <image:caption>L'artista Luca Bornoffi nel suo studio a Beatilla</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://www.agriturismobeatilla.it/Photogallery_Agriturismo_Art-Design_Mantova_per_Famiglie/beatilla.jpg</image:loc>
-      <image:caption>La scritta Beatilla dipinta sul muro della cascina</image:caption>
+      <image:loc>https://www.agriturismobeatilla.it/img/frammenti-staff.jpg</image:loc>
+      <image:caption>L'ospitalità Beatilla: lo staff con gli ospiti</image:caption>
     </image:image>
   </url>
 </urlset>

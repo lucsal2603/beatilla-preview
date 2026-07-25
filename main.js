@@ -512,14 +512,56 @@
       extras.forEach((s) => s.classList.add('service--extra'));
       grid.classList.add('is-collapsed');
       const label = btn.querySelector('.services__toggle-label');
+      let inCorso = false;
+      /* la tendina non scatta: prima un contraccolpo verso l'alto, poi scende.
+         In chiusura fa il movimento opposto e la pagina la segue, così non si
+         resta incastrati nella sezione successiva. */
       btn.addEventListener('click', () => {
-        const collapsed = grid.classList.toggle('is-collapsed');
-        btn.setAttribute('aria-expanded', String(!collapsed));
-        label.textContent = collapsed ? 'Tutti i servizi' : 'Mostra meno';
-        if (!collapsed && !prefersReduced) {
-          gsap.fromTo(extras, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', stagger: 0.05, overwrite: true });
+        if (inCorso) return;
+        const stavaChiusa = grid.classList.contains('is-collapsed');
+        btn.setAttribute('aria-expanded', String(stavaChiusa));
+        label.textContent = stavaChiusa ? 'Mostra meno' : 'Tutti i servizi';
+
+        if (prefersReduced) {
+          grid.classList.toggle('is-collapsed');
+          if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+          return;
         }
-        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+
+        const hPrima = grid.offsetHeight;
+        grid.classList.toggle('is-collapsed');
+        const hDopo = grid.offsetHeight;
+        const salto = Math.abs(hDopo - hPrima);
+        inCorso = true;
+        grid.style.overflow = 'hidden';
+        gsap.set(grid, { height: hPrima });
+
+        const fine = () => {
+          grid.style.height = '';
+          grid.style.overflow = '';
+          inCorso = false;
+          if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+        };
+
+        const tl = gsap.timeline({ onComplete: fine });
+        const rincorsa = Math.min(16, salto * 0.06); /* il contraccolpo */
+
+        if (stavaChiusa) {
+          tl.to(grid, { height: hPrima - rincorsa, duration: .17, ease: 'power2.out' })
+            .to(grid, { height: hDopo, duration: .62, ease: 'power3.out' });
+          gsap.fromTo(extras, { y: 26, opacity: 0 },
+            { y: 0, opacity: 1, duration: .55, ease: 'power2.out', stagger: .045, delay: .17, overwrite: true });
+        } else {
+          /* mentre risale, la pagina risale con lei della stessa quantità:
+             quello che stavi guardando resta sotto gli occhi */
+          const target = Math.max(0, window.scrollY - salto);
+          if (window.scrollY > grid.getBoundingClientRect().top + window.scrollY) {
+            if (lenis) lenis.scrollTo(target, { duration: .62 });
+            else window.scrollTo({ top: target, behavior: 'smooth' });
+          }
+          tl.to(grid, { height: hPrima + rincorsa, duration: .17, ease: 'power2.out' })
+            .to(grid, { height: hDopo, duration: .62, ease: 'power3.inOut' });
+        }
       });
     })();
 

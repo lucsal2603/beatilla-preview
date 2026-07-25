@@ -547,20 +547,20 @@
         const rincorsa = Math.min(16, salto * 0.06); /* il contraccolpo */
 
         if (stavaChiusa) {
-          tl.to(grid, { height: hPrima - rincorsa, duration: .17, ease: 'power2.out' })
-            .to(grid, { height: hDopo, duration: .62, ease: 'power3.out' });
+          tl.to(grid, { height: hPrima - rincorsa, duration: .26, ease: 'power2.out' })
+            .to(grid, { height: hDopo, duration: .95, ease: 'power3.out' });
           gsap.fromTo(extras, { y: 26, opacity: 0 },
-            { y: 0, opacity: 1, duration: .55, ease: 'power2.out', stagger: .045, delay: .17, overwrite: true });
+            { y: 0, opacity: 1, duration: .8, ease: 'power2.out', stagger: .06, delay: .26, overwrite: true });
         } else {
           /* mentre risale, la pagina risale con lei della stessa quantità:
              quello che stavi guardando resta sotto gli occhi */
           const target = Math.max(0, window.scrollY - salto);
           if (window.scrollY > grid.getBoundingClientRect().top + window.scrollY) {
-            if (lenis) lenis.scrollTo(target, { duration: .62 });
+            if (lenis) lenis.scrollTo(target, { duration: .95, offset: 0 });
             else window.scrollTo({ top: target, behavior: 'smooth' });
           }
-          tl.to(grid, { height: hPrima + rincorsa, duration: .17, ease: 'power2.out' })
-            .to(grid, { height: hDopo, duration: .62, ease: 'power3.inOut' });
+          tl.to(grid, { height: hPrima + rincorsa, duration: .26, ease: 'power2.out' })
+            .to(grid, { height: hDopo, duration: .95, ease: 'power3.inOut' });
         }
       });
     })();

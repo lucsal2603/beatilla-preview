@@ -729,12 +729,16 @@
         });
       });
 
-      /* Camere: scendendo, dietro al titolo si stende una velatura del
-         colore della stanza (da sinistra, come una pennellata) */
+      /* Camere: la velatura del colore della stanza NON è legata allo scroll.
+         Aspetta che il titolo sia arrivato e fermo, poi parte da sola e lo
+         evidenzia con una pennellata da sinistra. */
       gsap.utils.toArray('.room__title').forEach((t) => {
-        gsap.fromTo(t, { '--pennello': 0 }, {
-          '--pennello': 1, ease: 'none',
-          scrollTrigger: { trigger: t, start: 'top 94%', end: 'top 64%', scrub: .4 }
+        gsap.set(t, { '--pennello': 0 });
+        ScrollTrigger.create({
+          trigger: t, start: 'top 78%', once: true,
+          onEnter: () => gsap.to(t, {
+            '--pennello': 1, duration: .85, ease: 'power2.out', delay: .35
+          })
         });
       });
     }

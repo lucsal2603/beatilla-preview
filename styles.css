@@ -802,6 +802,9 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
      opposti, con la fessura di luce fissa al centro. Nessun aggancio
      allo scroll: la pagina ci scorre attraverso normalmente. */
   .curtain { display: block; position: relative; background: var(--bg); }
+  /* La fascia nera dei numeri scende sopra il carrello: la sua curva inferiore
+     poggia sulle foto, così agli angoli non si intravede più la carta chiara. */
+  .stats { position: relative; z-index: 3; margin-bottom: calc(-1 * clamp(20px, 5vw, 44px)); }
   .curtain__pin { position: relative; height: 100svh; overflow: hidden; }
   .curtain__inner { position: absolute; inset: 0; display: flex; will-change: transform; }
   .curtain__col { position: relative; flex: 1; overflow: hidden; will-change: transform; }

@@ -731,10 +731,10 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
      di 5 è esattamente 1/3 della striscia e il loop è senza stacchi */
   .curtain__track { display: flex; flex-direction: column; will-change: transform; }
   .curtain__track img { display: block; width: 100%; height: 36svh; object-fit: cover; margin-bottom: 6px; }
-  .curtain__col--left { margin-right: 3px; }
+  .curtain__col--left { margin-right: 6px; }
   .curtain__seam {
     position: absolute; left: 50%; top: 0; bottom: 0;
-    width: 3px; margin-left: -1.5px; z-index: 3; pointer-events: none;
+    width: 6px; margin-left: -3px; z-index: 3; pointer-events: none;
     background: linear-gradient(180deg, transparent, rgba(255, 244, 214, .95) 22%, #ffedc2 50%, rgba(255, 244, 214, .95) 78%, transparent);
     box-shadow: 0 0 22px 6px rgba(255, 233, 180, .55);
   }

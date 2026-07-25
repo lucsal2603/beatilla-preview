@@ -524,7 +524,7 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 /* ============================================================
    11c. COSA VISITARE
    ============================================================ */
-.visit { padding-block: var(--section-y) calc(var(--section-y) + 110px); background: var(--white); }
+.visit { padding-block: var(--section-y) calc(var(--section-y) + 180px); background: var(--white); }
 .visit__head { text-align: center; margin-bottom: clamp(2.4rem, 5vh, 3.6rem); }
 .visit__head h2 { font-size: clamp(2.4rem, 5.5vw, 4rem); margin-top: 1rem; }
 .visit__intro { max-width: 60ch; margin: 1.4rem auto 0; color: rgba(26,26,24,.72); line-height: 1.75; }

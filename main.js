@@ -728,6 +728,15 @@
           scrollTrigger: { trigger: s, start: 'top 98%', end: 'top 62%', scrub: .5 }
         });
       });
+
+      /* Camere: scendendo, dietro al titolo si stende una velatura del
+         colore della stanza (da sinistra, come una pennellata) */
+      gsap.utils.toArray('.room__title').forEach((t) => {
+        gsap.fromTo(t, { '--pennello': 0 }, {
+          '--pennello': 1, ease: 'none',
+          scrollTrigger: { trigger: t, start: 'top 94%', end: 'top 64%', scrub: .4 }
+        });
+      });
     }
 
     /* ---------- PULL-QUOTE REVEAL ---------- */
@@ -1004,21 +1013,23 @@
     document.body.append(dot, leaf);
     document.body.classList.add('has-cursor');
     const interactive = 'a, button, [role="button"], input, textarea, select, .service, .exp__card, .visit__card, .press__item';
-    let mx = 0, my = 0, lx = 0, ly = 0, rot = 0;
-    const ease = reduce ? 1 : 0.16;
+    let mx = 0, pmx = null, rot = 0, vel = 0;
     const show = () => { dot.style.opacity = '1'; leaf.style.opacity = '1'; };
     const hide = () => { dot.style.opacity = '0'; leaf.style.opacity = '0'; };
     window.addEventListener('mousemove', (e) => {
-      mx = e.clientX; my = e.clientY;
-      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+      mx = e.clientX;
+      if (pmx !== null) vel = mx - pmx;
+      pmx = mx;
+      dot.style.left = mx + 'px'; dot.style.top = e.clientY + 'px';
+      /* la foglia sta incollata al puntatore: niente inseguimento in ritardo */
+      leaf.style.left = mx + 'px'; leaf.style.top = e.clientY + 'px';
       show();
     });
     const loop = () => {
-      const dx = mx - lx, dy = my - ly;
-      lx += dx * ease; ly += dy * ease;
-      const target = Math.max(-26, Math.min(26, dx * 1.4));
-      rot += (target - rot) * (reduce ? 1 : 0.12);
-      leaf.style.left = lx + 'px'; leaf.style.top = ly + 'px';
+      /* resta morbida solo l'inclinazione, che non è posizione: niente lag */
+      const target = Math.max(-26, Math.min(26, vel * 1.4));
+      vel *= .8; /* si raddrizza da sola quando il mouse si ferma */
+      rot += (target - rot) * (reduce ? 1 : 0.18);
       leaf.style.transform = 'translate(-50%, -50%) rotate(' + rot.toFixed(2) + 'deg)';
       requestAnimationFrame(loop);
     };

@@ -350,7 +350,22 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 }
 .rooms .room__media .img-slot::after { display: none; }
 .room__num { font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--accent); }
-.room__title { font-size: clamp(2rem, 4vw, 3.1rem); margin: .6rem 0 1.2rem; }
+.room__title { font-size: clamp(2rem, 4vw, 3.1rem); margin: .6rem 0 1.2rem; position: relative; display: inline-block; z-index: 0; }
+/* La velatura del colore della stanza dietro il titolo: si stende da
+   sinistra mentre si scende (--pennello va da 0 a 1 con lo scroll) */
+.room__title::before {
+  content: ""; position: absolute; z-index: -1;
+  inset: .05em -.22em 0 -.22em;
+  background: var(--tinta, transparent);
+  border-radius: .14em;
+  transform: scaleX(var(--pennello, 0));
+  transform-origin: left center;
+}
+.room--a { --tinta: rgba(196, 61, 46, .16); }   /* Pomodoro: il rosso degli arredi */
+.room--b { --tinta: rgba(232, 134, 47, .17); }  /* Mandarino: l'arancio agrumato */
+.room--c { --tinta: rgba(194, 68, 126, .15); }  /* Lampone: la parete magenta */
+.room--d { --tinta: rgba(224, 178, 58, .2); }   /* Pallina: i cerchi gialli dell'opera */
+.room--e { --tinta: rgba(156, 122, 79, .18); }  /* Jahara: il legno del loft country */
 .room__desc { color: rgba(26,26,24,.7); max-width: 40ch; margin-bottom: 1.6rem; }
 .link-more {
   display: inline-flex; align-items: center; gap: .5rem;

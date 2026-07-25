@@ -313,13 +313,15 @@
          schermo. Misuro la geometria reale invece di fidarmi di scrollWidth
          (che a seconda del motore ignora il padding finale). */
       const corsa = () => {
-        const items = track.querySelectorAll('.gallery__item');
+        /* il centro del fine corsa è l'ultima FOTO: la chiusura di testo
+           che le sta a destra resta fuori dal conto e fa da coda */
+        const items = track.querySelectorAll('.gallery__item:not(.gallery__item--fine)');
         if (!items.length) return getScrollX();
         const last = items[items.length - 1];
         const x = gsap.getProperty(track, 'x') || 0;
         const r = last.getBoundingClientRect();
         const centroAZero = r.left - x + r.width / 2;
-        return Math.max(getScrollX(), Math.round(centroAZero - pin.clientWidth / 2));
+        return Math.max(0, Math.round(centroAZero - pin.clientWidth / 2));
       };
       /* Titolo dentro il pin: l'altezza extra della sezione (per lo scroll
          orizzontale mentre è agganciata) è la corsa da percorrere. */

@@ -247,7 +247,8 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 /* ============================================================
    2. HERO
    ============================================================ */
-.hero { position: relative; height: 100vh; height: 100svh; min-height: 600px; overflow: hidden; }
+/* z-index sopra le foglie (60): nascono dietro l'hero e sbucano dal suo bordo inferiore */
+.hero { position: relative; z-index: 70; height: 100vh; height: 100svh; min-height: 600px; overflow: hidden; }
 .hero__media { position: absolute; inset: 0; z-index: 0; transform: scale(1.4); will-change: transform; }
 /* Background video locale — riempie l'hero senza dipendere da YouTube */
 .hero__video { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
@@ -573,7 +574,7 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
    (lo scivolamento delle colonne è solo orizzontale, già bloccato da html).
    z-index:1 crea il contesto: così il mucchio (z -1) resta DIETRO al blocco
    nero, che gli copre la parte bassa — il nero comanda sul bordo. */
-.contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 1; }
+.contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 70; /* sopra le foglie (60): le inghiotte quando ci passano dietro */ }
 .contact::before {
   content: ""; position: absolute; left: 50%; top: 0;
   transform: translate(-50%, -55%); /* il 45% inferiore affonda dietro il nero */
@@ -1041,13 +1042,11 @@ html { overflow-x: clip; }
 
 /* Titolo Art Studio: la pennellata blu lo evidenzia da dietro,
    ancorata a sinistra e distesa su tutta la larghezza del titolo */
-.workshop__title-row { position: relative; display: inline-block; }
+.workshop__title-row { position: relative; display: block; width: fit-content; margin-inline: auto; }
 .workshop__title-row h2 {
   position: relative; z-index: 1;
-  /* scritta chiara sopra la pittura: si legge anche sul blu carico */
+  /* scritta chiara e piatta sopra la pittura: niente ombre né bordi */
   color: var(--bg);
-  text-shadow: 0 1px 2px rgba(18, 34, 70, .8), 0 0 10px rgba(18, 34, 70, .55),
-    0 0 22px rgba(18, 34, 70, .45), 0 3px 18px rgba(18, 34, 70, .35);
 }
 .workshop__stroke {
   position: absolute; left: -7%; top: 50%; transform: translateY(-50%);
@@ -1060,9 +1059,10 @@ html { overflow-x: clip; }
 .workshop__grid--reverse .workshop__text { position: relative; }
 .workshop__grid--reverse .workshop__text > :not(.residency-circles) { position: relative; z-index: 1; }
 .residency-circles {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(115%, 620px); height: auto;
-  opacity: .4; pointer-events: none; z-index: 0;
+  /* ancorata in alto: abbraccia titolo e descrizione, non solo il centro del blocco */
+  position: absolute; left: 50%; top: 0; transform: translate(-50%, -4%);
+  width: min(150%, 720px); max-width: none; height: auto;
+  opacity: .45; pointer-events: none; z-index: 0;
 }
 
 /* Esperienze: 4 card */

@@ -653,34 +653,32 @@
                  : document.documentElement.scrollHeight;
       };
 
-      /* altezza/larghezza di ciascun file: serve per fermarsi PRIMA del bordo nero
-         qualunque sia la forma della foglia (la n.3 è verticale: alta 2,5 volte la larghezza) */
-      const RAPPORTI = [96 / 129, 96 / 266, 96 / 38, 96 / 152, 96 / 165];
+      /* le foglie nascono dietro l'hero (che ha z-index più alto) e sbucano
+         dal suo bordo inferiore: mai sopra la foto della home */
+      const tetto = () => {
+        const h = document.querySelector('.hero');
+        return h ? h.getBoundingClientRect().bottom + window.scrollY - 60 : -70;
+      };
 
       const cadi = (partenzaY) => {
         const vw = window.innerWidth || screen.width || 375;
         const img = document.createElement('img');
-        const quale = (Math.random() * FOGLIE.length) | 0;
-        img.src = FOGLIE[quale];
+        img.src = FOGLIE[(Math.random() * FOGLIE.length) | 0];
         img.alt = '';
         const size = 26 + Math.random() * 20;
         img.style.width = size + 'px';
         cielo.appendChild(img);
-        const alt = size * RAPPORTI[quale];    /* altezza resa della foglia */
         const amp = 26 + Math.random() * 40;   /* ampiezza dell'oscillazione */
         const x0 = amp / 2 + Math.random() * Math.max(40, vw - amp - size * 2);
-        /* fine corsa: il punto PIÙ BASSO della foglia (anche ruotata) resta
-           sopra il bordo del blocco nero, mai oltre */
-        const fine = suolo() - (alt / 2 + Math.hypot(size, alt) / 2 + 4);
-        const y0 = partenzaY !== undefined ? partenzaY : -70;
+        /* la corsa finisce ben DENTRO il blocco nero (che ha z-index più alto
+           e quindi le copre): la foglia scivola dietro al bordo e sparisce lì */
+        const fine = suolo() + 320;
+        const y0 = partenzaY !== undefined ? partenzaY : tetto();
         const velocita = 150 + Math.random() * 70; /* px/s: né lenta né veloce */
         gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1 });
         gsap.to(img, {
           y: fine, duration: Math.max(1, (fine - y0) / velocita), ease: 'none',
-          onComplete: () => {
-            gsap.killTweensOf(img);
-            gsap.to(img, { opacity: 0, duration: .8, onComplete: () => img.remove() });
-          }
+          onComplete: () => { gsap.killTweensOf(img); img.remove(); } /* a quel punto è già coperta dal nero */
         });
         gsap.to(img, { x: x0 + amp, duration: 1.7 + Math.random() * 1.5, ease: 'sine.inOut', yoyo: true, repeat: -1 });
         gsap.to(img, { rotation: `+=${34 + Math.random() * 40}`, duration: 2.1 + Math.random() * 1.8, ease: 'sine.inOut', yoyo: true, repeat: -1 });
@@ -689,8 +687,8 @@
       /* all'arrivo il cielo è già in moto: qualche foglia sparsa lungo la pagina,
          come se cadessero da un po' */
       window.addEventListener('load', () => setTimeout(() => {
-        const limite = suolo();
-        for (let i = 0; i < 6; i++) cadi(Math.random() * limite * .8);
+        const cima = tetto(), limite = suolo();
+        for (let i = 0; i < 6; i++) cadi(cima + Math.random() * Math.max(0, limite * .85 - cima));
       }, 400));
 
       const goccia = () => {

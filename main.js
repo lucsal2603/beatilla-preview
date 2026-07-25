@@ -653,11 +653,12 @@
                  : document.documentElement.scrollHeight;
       };
 
-      /* le foglie nascono dietro l'hero (che ha z-index più alto) e sbucano
-         dal suo bordo inferiore: mai sopra la foto della home */
+      /* le foglie NON partono dalla cima assoluta della pagina: nascono
+         appena SOTTO il bordo della home, così nessun pixel tocca mai
+         la foto dell'hero, su qualunque telefono */
       const tetto = () => {
         const h = document.querySelector('.hero');
-        return h ? h.getBoundingClientRect().bottom + window.scrollY - 60 : -70;
+        return h ? h.getBoundingClientRect().bottom + window.scrollY + 6 : 0;
       };
 
       const cadi = (partenzaY) => {
@@ -675,7 +676,8 @@
         const fine = suolo() + 320;
         const y0 = partenzaY !== undefined ? partenzaY : tetto();
         const velocita = 150 + Math.random() * 70; /* px/s: né lenta né veloce */
-        gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1 });
+        gsap.set(img, { x: x0, y: y0, rotation: Math.random() * 360, scaleX: Math.random() < .5 ? -1 : 1, opacity: 0 });
+        gsap.to(img, { opacity: 1, duration: .5, ease: 'none' }); /* ingresso morbido appena sotto la home */
         gsap.to(img, {
           y: fine, duration: Math.max(1, (fine - y0) / velocita), ease: 'none',
           onComplete: () => { gsap.killTweensOf(img); img.remove(); } /* a quel punto è già coperta dal nero */

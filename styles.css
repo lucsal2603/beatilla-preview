@@ -860,6 +860,13 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
   }
   /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
   .video { height: auto; min-height: 0; }
+  /* bordo alto ben arcuato, bordo basso appena accennato: la curva di sotto
+     fa da invito a quella di Ospiti, che ci si incastra risalendo */
+  .video {
+    border-radius: 50% 50% 50% 50% /
+      clamp(30px, 8vw, 54px) clamp(30px, 8vw, 54px)
+      clamp(14px, 3.6vw, 24px) clamp(14px, 3.6vw, 24px);
+  }
   .video .img-slot { position: static; }
   .video .img-slot > img,
   .video .img-slot > img[data-img-parallax] {

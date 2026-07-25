@@ -729,101 +729,27 @@
       });
     }
 
-    /* ---------- OSPITI CHE RISALE SUL CAPPELLO ----------
-       Su telefono la foto del cappello è mostrata intera e occupa
-       parecchio schermo. Appena la si supera, la sezione Ospiti sale
-       più in fretta della pagina e si ferma coprendo solo la punta
-       inferiore della foto: si accorcia l'attesa senza tagliare l'immagine. */
+    /* ---------- IL CAPPELLO E LA RISALITA DI OSPITI ----------
+       Arrivati alla foto del cappello lo scorrimento si ferma: mentre resta
+       fermo, Ospiti risale finché il suo bordo ad arco si chiude esattamente
+       sul bordo inferiore della foto. Poi la pagina riprende a scendere. */
     const testi = document.querySelector('.testi');
     const fascia = document.querySelector('.video');
     if (testi && fascia && isMobile() && !prefersReduced) {
-      const risalita = () => Math.min(190, fascia.getBoundingClientRect().height * 0.22);
-      gsap.fromTo(testi, { y: 0 }, {
-        y: () => -risalita(), ease: 'none',
-        scrollTrigger: {
-          trigger: fascia,
-          start: 'bottom 92%',   /* quando la punta del cappello sta per uscire */
-          end: 'bottom 55%',     /* poco più in basso ha già coperto la punta */
-          scrub: true,
-          invalidateOnRefresh: true
-        }
-      });
-    }
-
-    /* ---------- ARRIVI LATERALI ----------
-       Le immagini aspettano spostate di lato e si mettono al posto giusto
-       mentre si scende: agganciate allo scroll (scrub), non partono da sole.
-       Agiscono sul contenitore .img-slot, quindi non litigano con le
-       animazioni già presenti su card e titoli. */
-    if (!prefersReduced) {
-      const passo = isMobile() ? 62 : 130;
-
-      const daiLati = (selettore, distanza) => {
-        gsap.utils.toArray(selettore).forEach((el, i) => {
-          const verso = (i % 2 === 0) ? -1 : 1;
-          gsap.fromTo(el,
-            { x: verso * distanza, rotate: verso * 1.5, opacity: .35 },
-            {
-              x: 0, rotate: 0, opacity: 1, ease: 'none',
-              scrollTrigger: { trigger: el, start: 'top 96%', end: 'top 58%', scrub: .5, invalidateOnRefresh: true }
-            });
-        });
+      /* quanto deve salire: il proprio arco più la curva inferiore della foto,
+         così i due bordi combaciano invece di sovrapporsi a caso */
+      const risalita = () => {
+        const arcoOspiti = parseFloat(getComputedStyle(testi, '::before').height) || 56;
+        const raggioFoto = parseFloat((getComputedStyle(fascia).borderBottomLeftRadius.split(' ')[1] || '0')) || 0;
+        return Math.round(arcoOspiti + raggioFoto);
       };
-
-      daiLati('.exp__card .img-slot', passo);
-      daiLati('.visit__card .img-slot', passo);
-      daiLati('.workshop__media .img-slot', passo * 1.15);
-      daiLati('.workshop__artist-photo', passo);
-
-      /* Titoli di sezione: salgono piano mentre la sezione attraversa lo
-         schermo. Movimento continuo, non un'apparizione. */
-      gsap.utils.toArray('.exp__head, .visit__head, .services__head, .gethere__head, .faq__head')
-        .forEach((testa) => {
-          gsap.fromTo(testa, { y: 34 }, {
-            y: -26, ease: 'none',
-            scrollTrigger: { trigger: testa, start: 'top bottom', end: 'bottom top', scrub: true }
-          });
-        });
-
-      /* Le schede dei servizi si raddrizzano scendendo: partono appena
-         inclinate e piatte, arrivano dritte. */
-      gsap.utils.toArray('.service').forEach((s, i) => {
-        gsap.fromTo(s,
-          { y: 26, rotate: (i % 2 ? 1 : -1) * .8 },
-          {
-            y: 0, rotate: 0, ease: 'none',
-            scrollTrigger: { trigger: s, start: 'top 98%', end: 'top 70%', scrub: .4 }
-          });
-      });
-
-      /* Il blocco dell'artista e la sua macchia respirano insieme allo scroll */
-      const artista = document.querySelector('.workshop__artist');
-      if (artista) {
-        gsap.fromTo(artista, { scale: .955 }, {
-          scale: 1, ease: 'none',
-          scrollTrigger: { trigger: artista, start: 'top bottom', end: 'top 45%', scrub: .6 }
-        });
-      }
-
-      /* Statistiche: ogni colonna arriva da un'altezza diversa */
-      gsap.utils.toArray('.stat').forEach((s, i) => {
-        gsap.fromTo(s, { y: 40 + i * 18, opacity: .3 }, {
-          y: 0, opacity: 1, ease: 'none',
-          scrollTrigger: { trigger: s, start: 'top 98%', end: 'top 62%', scrub: .5 }
-        });
-      });
-
-      /* Camere: la velatura del colore della stanza NON è legata allo scroll.
-         Aspetta che il titolo sia arrivato e fermo, poi parte da sola e lo
-         evidenzia con una pennellata da sinistra. */
-      gsap.utils.toArray('.room__title').forEach((t) => {
-        gsap.set(t, { '--pennello': 0 });
-        ScrollTrigger.create({
-          trigger: t, start: 'top 78%', once: true,
-          onEnter: () => gsap.to(t, {
-            '--pennello': 1, duration: .85, ease: 'power2.out', delay: .35
-          })
-        });
+      ScrollTrigger.create({
+        trigger: fascia,
+        start: 'bottom bottom',            /* la foto ha appena finito di entrare */
+        end: () => '+=' + (risalita() + 130),
+        pin: true, anticipatePin: 1, invalidateOnRefresh: true,
+        scrub: true,
+        animation: gsap.fromTo(testi, { y: 0 }, { y: () => -risalita(), ease: 'none' })
       });
     }
 
@@ -1102,10 +1028,25 @@
        ScrollTrigger.refresh() completo (decine di ricalcoli pesanti proprio
        mentre si scrolla → pagina che si "blocca"). Ora i caricamenti vengono
        raggruppati in UN solo refresh, quando sono fermi da 300ms. */
-    let imgRefreshT;
+    /* PERF telefono. Ogni immagine che finiva di caricare scatenava un
+       ScrollTrigger.refresh(): decine di ricalcoli pesanti proprio mentre si
+       scorre veloce → la pagina si impuntava. Ma tutte le immagini hanno
+       width/height dichiarati, quindi il loro arrivo NON cambia il layout:
+       il ricalcolo serve solo se l'altezza della pagina è davvero cambiata,
+       e comunque lo facciamo a scorrimento fermo, quando il telefono è libero. */
+    let imgRefreshT, altezzaNota = document.documentElement.scrollHeight, ultimoScroll = 0;
+    window.addEventListener('scroll', () => { ultimoScroll = Date.now(); }, { passive: true });
     const queueImgRefresh = () => {
       clearTimeout(imgRefreshT);
-      imgRefreshT = setTimeout(() => ScrollTrigger.refresh(), 300);
+      imgRefreshT = setTimeout(() => {
+        const h = document.documentElement.scrollHeight;
+        if (h === altezzaNota) return;            /* nulla si è mosso: niente da rifare */
+        if (Date.now() - ultimoScroll < 500) { queueImgRefresh(); return; } /* sta ancora scorrendo: rimando */
+        altezzaNota = h;
+        const rifai = () => ScrollTrigger.refresh();
+        if (window.requestIdleCallback) requestIdleCallback(rifai, { timeout: 1500 });
+        else rifai();
+      }, 400);
     };
     document.querySelectorAll('img').forEach((img) => {
       if (!img.complete) img.addEventListener('load', queueImgRefresh, { once: true });

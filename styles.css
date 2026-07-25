@@ -248,7 +248,15 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
    2. HERO
    ============================================================ */
 /* z-index sopra le foglie (60): nascono dietro l'hero e sbucano dal suo bordo inferiore */
-.hero { position: relative; z-index: 70; height: 100vh; height: 100svh; min-height: 600px; overflow: hidden; }
+/* La home resta ferma in cima mentre la sezione successiva le sale sopra
+   e la copre. Lo z-index basso la mette sotto ai contenuti che la coprono;
+   le foglie nascono comunque sotto il suo bordo, quindi non ci finiscono mai
+   sopra. Quando è completamente coperta viene nascosta (vedi main.js). */
+.hero {
+  position: sticky; top: 0; z-index: 1;
+  height: 100vh; height: 100svh; min-height: 600px; overflow: hidden;
+}
+.hero.is-coperta { visibility: hidden; }
 .hero__media { position: absolute; inset: 0; z-index: 0; transform: scale(1.4); will-change: transform; }
 /* Background video locale — riempie l'hero senza dipendere da YouTube */
 .hero__video { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
@@ -286,7 +294,7 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
 /* ============================================================
    3. INTRO / CHI SIAMO
    ============================================================ */
-.intro { padding-block: var(--section-y); text-align: center; }
+.intro { padding-block: var(--section-y); text-align: center; background: var(--bg); z-index: 3; }
 .intro .container { max-width: 760px; }
 .intro__label { display: inline-block; margin-bottom: 2rem; }
 .intro__lead {
@@ -988,6 +996,7 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
    Verificato: non aggiunge spazio verticale sotto il footer. */
 html { overflow-x: clip; }
 .intro, .rooms, .dining, .stats, .services, .workshop, .testi, .faq, .footer { position: relative; }
+.break, .rooms, .gallery, .exp, .services, .workshop, .video, .testi, .visit { z-index: 2; }
 
 /* Chi siamo: pende dall'angolo alto-sinistro */
 .olive--1 { top: -30px; left: -30px; width: 96px; rotate: 205deg; opacity: .8; }
@@ -1021,7 +1030,7 @@ html { overflow-x: clip; }
 }
 
 /* --- seconda ondata di ramoscelli --- */
-.hero, .exp, .visit, .press, .gethere { position: relative; }
+.exp, .visit, .press, .gethere { position: relative; } /* .hero no: è sticky (vedi sopra), qui verrebbe sovrascritta */
 .olive--10 { top: 84px; right: 18px; width: 92px; rotate: -150deg; opacity: .8; z-index: 4; }
 .olive--11 { bottom: 22px; right: 20px; width: 86px; rotate: -25deg; opacity: .85; z-index: 3; }
 .olive--12 { bottom: -26px; left: -28px; width: 84px; rotate: 40deg; opacity: .7; }

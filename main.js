@@ -160,6 +160,28 @@
       }
     }
 
+    /* ---------- HOME COPERTA DAL CONTENUTO ----------
+       La home resta ferma in cima (sticky) e la sezione Chi siamo le sale
+       sopra coprendola. Una volta nascosta del tutto la mettiamo fuori
+       gioco e fermiamo il video: niente lavoro inutile per il telefono. */
+    (() => {
+      const hero = document.querySelector('.hero');
+      const video = document.querySelector('.hero__video video');
+      if (!hero) return;
+      ScrollTrigger.create({
+        trigger: '.intro',
+        start: 'top top',   /* Chi siamo ha finito di coprire la home */
+        onEnter: () => {
+          hero.classList.add('is-coperta');
+          if (video && !video.paused) video.pause();
+        },
+        onLeaveBack: () => {
+          hero.classList.remove('is-coperta');
+          if (video && video.paused) video.play().catch(() => {}); /* riparte anche su telefono */
+        }
+      });
+    })();
+
     /* ---------- INTRO line-by-line clip reveal (desktop) / fade unico (mobile) ---------- */
     if (isMobile()) {
       gsap.from('.intro__lead', {

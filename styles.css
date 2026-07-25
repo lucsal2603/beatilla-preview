@@ -1001,3 +1001,33 @@ html { overflow-x: clip; }
   white-space: nowrap;
   border: 0;
 }
+
+/* ============================================================
+   REVISIONE CONTENUTI (documento della proprietà)
+   ============================================================ */
+/* riquadri in attesa di foto: gradiente + iconcina, anche dove gli
+   override "contain" azzererebbero l'altezza */
+.img-slot--empty { background: linear-gradient(135deg, var(--img-1) 0%, var(--img-2) 100%) !important; }
+.img-slot--empty::after { display: block !important; }
+.rooms .room__media .img-slot--empty { aspect-ratio: 4 / 3 !important; }
+.workshop__media .img-slot--empty { aspect-ratio: 16 / 10 !important; }
+.workshop__artist-photo { aspect-ratio: 16 / 9; margin-top: 2.4rem; }
+
+/* Art Studio: sottotitoli dei blocchi Workshop/Residency */
+.workshop__subtitle { font-family: var(--serif); font-size: clamp(1.5rem, 2.6vw, 2rem); margin-bottom: 1.2rem; }
+.workshop__lead { font-size: 1.05rem; letter-spacing: .01em; }
+.workshop__grid--reverse { margin-top: clamp(3rem, 7vh, 5.5rem); }
+@media (min-width: 981px) {
+  .workshop__grid--reverse .workshop__media { order: -1; }
+}
+
+/* Esperienze: 4 card */
+@media (min-width: 981px) {
+  .exp__grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 980px) {
+  .exp__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .exp__grid { grid-template-columns: 1fr; }
+}

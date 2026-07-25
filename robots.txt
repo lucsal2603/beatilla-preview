@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: DomainCrawler
+Disallow: /
+
+Sitemap: https://www.agriturismobeatilla.it/sitemap.xml

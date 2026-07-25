@@ -585,6 +585,9 @@ body.menu-open .nav__overlay-links a:nth-child(6) { transition-delay: .40s; }
    z-index:1 crea il contesto: così il mucchio (z -1) resta DIETRO al blocco
    nero, che gli copre la parte bassa — il nero comanda sul bordo. */
 .contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 70; /* sopra le foglie (60): le inghiotte quando ci passano dietro */ }
+/* il cespuglio è pensato per lo schermo stretto del telefono: sui monitor
+   larghi resterebbe un francobollo in mezzo al bordo, quindi non c'è */
+@media (min-width: 769px) { .leaf-pile { display: none; } }
 .leaf-pile {
   position: absolute; left: 50%; top: 0;
   transform: translate(-50%, -55%); /* il 45% inferiore affonda dietro il nero */
@@ -968,7 +971,7 @@ html { overflow-x: clip; }
 /* Art Workshop: angolo alto-destro */
 .olive--6 { top: 20px; right: -28px; width: 90px; rotate: -160deg; opacity: .75; }
 /* Ospiti: rametto disteso, da parte a parte sopra il titoletto */
-.olive--7 { top: -58px; left: 50%; translate: -50% 0; width: 54px; rotate: 90deg; opacity: .65; }
+.olive--7 { top: -96px; left: 8%; width: 54px; height: auto; rotate: 78deg; opacity: .65; } /* height:auto: senza, l'attributo height=560 la rendeva una sbarra attraverso il testo */
 /* FAQ: sale dall'angolo basso-destro */
 .olive--8 { bottom: -28px; right: -26px; width: 84px; rotate: -32deg; opacity: .7; }
 /* Footer (scuro): bordo sinistro — ancorato in basso (come olive--21) così
@@ -982,7 +985,7 @@ html { overflow-x: clip; }
   .olive--4 { width: 56px; right: 14px; top: -16px; }
   .olive--5, .olive--8 { display: none; } /* su telefono lì ci sono già gli schizzi */
   .olive--6 { width: 60px; right: -18px; top: 14px; }
-  .olive--7 { width: 40px; top: -44px; }
+  .olive--7 { width: 40px; top: -74px; left: 4%; }
   .olive--9 { width: 52px; }
 }
 
@@ -1004,7 +1007,7 @@ html { overflow-x: clip; }
 @media (max-width: 768px) {
   .olive--10, .olive--16, .olive--17, .olive--19 { display: none; }
   .olive--11 { width: 58px; bottom: 14px; right: 12px; }
-  .olive--12 { width: 56px; bottom: -18px; left: -18px; }
+  .olive--12 { width: 46px; height: auto; bottom: -14px; left: -30px; rotate: 24deg; }
   .olive--13 { width: 58px; bottom: -14px; right: -20px; }
   .olive--14 { width: 54px; bottom: -18px; right: -18px; }
   .olive--15 { width: 58px; top: 16px; right: -18px; }

@@ -284,21 +284,43 @@
         allCards.forEach((c) => io.observe(c));
         setActive(realCards[0]);
 
-        /* a scroll fermo: se siamo su un clone, teletrasporto sulla gemella vera */
-        let settleT;
-        track.addEventListener('scroll', () => {
-          clearTimeout(settleT);
-          settleT = setTimeout(() => {
-            const center = track.scrollLeft + track.clientWidth / 2;
-            let best = null, bd = Infinity;
-            allCards.forEach((c) => {
-              const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
-              if (d < bd) { bd = d; best = c; }
-            });
-            if (best === cloneLast) goTo(realCards[N - 1], false);
-            else if (best === cloneFirst) goTo(realCards[0], false);
-          }, 140);
-        }, { passive: true });
+        /* A scroll fermo, se siamo su un clone salto sulla gemella vera.
+           Il salto va fatto con l'aggancio a scatti DISATTIVATO: altrimenti il
+           browser lo riaggancia al clone, il nostro assestamento riparte e i due
+           si rincorrono — è quello che bloccava il rullino per qualche secondo
+           dopo aver girato dall'ultima alla prima camera (e viceversa). */
+        let settleT, saltando = false;
+        const salta = (target) => {
+          saltando = true;
+          track.style.scrollSnapType = 'none';
+          goTo(target, false);
+          /* due frame: il tempo che la nuova posizione sia acquisita davvero */
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            track.style.scrollSnapType = '';
+            saltando = false;
+          }));
+        };
+        const assesta = () => {
+          if (saltando) return;
+          const center = track.scrollLeft + track.clientWidth / 2;
+          let best = null, bd = Infinity;
+          allCards.forEach((c) => {
+            const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
+            if (d < bd) { bd = d; best = c; }
+          });
+          if (best === cloneLast) salta(realCards[N - 1]);
+          else if (best === cloneFirst) salta(realCards[0]);
+        };
+        /* scrollend è preciso: scatta a inerzia finita, non a metà slancio */
+        if ('onscrollend' in window) {
+          track.addEventListener('scrollend', assesta);
+        } else {
+          track.addEventListener('scroll', () => {
+            if (saltando) return;
+            clearTimeout(settleT);
+            settleT = setTimeout(assesta, 160);
+          }, { passive: true });
+        }
       })();
     } else {
       gsap.utils.toArray('.room').forEach((room) => {
@@ -850,6 +872,27 @@
     }
 
     /* Il cerchio dorato dietro il testo della Residency resta fisso, senza animazione. */
+
+    /* ---------- PALLINI DELLE NUVOLE ----------
+       I tre pallini sopra le nuvole di Esperienze galleggiano piano, ognuno
+       col suo tempo, così non sembrano incollati. Solo su telefono, dove le
+       nuvole esistono. */
+    if (isMobile() && !prefersReduced) {
+      const exp = document.querySelector('.curtain + .exp');
+      if (exp) {
+        [1, 2, 3].forEach((n, i) => {
+          const b = document.createElement('span');
+          b.className = 'exp__bolla exp__bolla--' + n;
+          b.setAttribute('aria-hidden', 'true');
+          exp.appendChild(b);
+          gsap.to(b, {
+            y: -6 - i * 1.5, x: i === 1 ? 2 : (i === 0 ? -2.5 : 2.5),
+            duration: 1.9 + i * 0.45, ease: 'sine.inOut',
+            yoyo: true, repeat: -1, delay: i * 0.35
+          });
+        });
+      }
+    }
 
     /* ---------- FOGLIE CHE CADONO ----------
        Ogni pochi secondi una foglia si stacca dalla CIMA della pagina e

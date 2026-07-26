@@ -110,18 +110,50 @@
     })();
 
     /* ---------- CONTACT FORM (no backend; graceful feedback) ---------- */
+    /* RICHIESTA DISPONIBILITÀ
+       Al clic prepariamo la mail già scritta e apriamo l'app di posta
+       dell'ospite: a lui resta solo da premere invia. Nessun servizio di
+       mezzo, quindi nessun tetto mensile e nessuno spam, e la richiesta
+       arriva dal suo indirizzo vero: per rispondere basta "Rispondi". */
     const form = document.getElementById('contactForm');
     const status = document.getElementById('formStatus');
+    const DESTINATARIO = 'info@agriturismobeatilla.it';
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = form.name.value.trim();
+      const nome = form.name.value.trim();
       const email = form.email.value.trim();
-      if (!name || !email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      const date = form.dates.value.trim();
+      const messaggio = form.message.value.trim();
+      if (!nome || !email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
         status.textContent = 'Inserisci nome ed email validi per inviare la richiesta.';
         return;
       }
-      status.textContent = 'Grazie, ' + name + '. Ti risponderemo al più presto.';
-      form.reset();
+      const oggetto = 'Richiesta disponibilità — ' + nome;
+      const corpo = [
+        'Buongiorno,',
+        'vorrei verificare la disponibilità presso Agriturismo Beatilla.',
+        '',
+        'Nome: ' + nome,
+        'Email: ' + email,
+        date ? 'Date del soggiorno: ' + date : 'Date del soggiorno: da definire',
+        '',
+        messaggio || '(nessun messaggio aggiuntivo)',
+        '',
+        'Grazie,',
+        nome
+      ].join('\n');
+      const link = 'mailto:' + DESTINATARIO +
+        '?subject=' + encodeURIComponent(oggetto) +
+        '&body=' + encodeURIComponent(corpo);
+      status.textContent = 'Apriamo la tua app di posta con il messaggio già scritto: ti basta premere invia.';
+      window.location.href = link;
+      /* se l'app di posta non si apre (webmail senza client configurato)
+         lo diciamo, invece di lasciare l'ospite a chiedersi cosa è successo */
+      setTimeout(() => {
+        if (document.hidden) return; /* l'app si è aperta davvero */
+        status.innerHTML = 'Se la posta non si è aperta, scrivici direttamente a ' +
+          '<a href="mailto:' + DESTINATARIO + '">' + DESTINATARIO + '</a>.';
+      }, 1800);
     });
 
     /* ============================================================

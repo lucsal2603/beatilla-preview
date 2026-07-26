@@ -92,6 +92,90 @@
       if (v.readyState >= 2) play(); else v.addEventListener('canplay', play, { once: true });
     })();
 
+    /* ============================================================
+       CONSENSO COOKIE — PREDISPOSIZIONE (oggi SPENTA)
+       ============================================================
+       Il sito NON usa cookie di tracciamento: l'interruttore qui sotto è
+       spento e il banner non compare. Un banner che chiede il consenso
+       quando non c'è nulla da autorizzare è scorretto e infastidisce.
+
+       QUANDO SI AGGIUNGERÀ GOOGLE ANALYTICS (o simili), bastano tre passi:
+         1. mettere TRACCIAMENTO_ATTIVO = true
+         2. scrivere il codice dentro avviaTracciamento()
+         3. completare le parti lasciate vuote in cookie.html
+       Tutto il resto — banner, memoria della scelta, possibilità di
+       cambiare idea — è già pronto e funzionante.
+       ============================================================ */
+    const TRACCIAMENTO_ATTIVO = false;
+    const CHIAVE_CONSENSO = 'beatilla-consenso';
+
+    const avviaTracciamento = () => {
+      /* ↓↓↓ DA RIEMPIRE quando si aggiunge Analytics ↓↓↓
+         Qui va il codice che carica lo strumento di statistica.
+         Viene eseguito SOLO dopo che l'utente ha accettato.
+         Esempio della forma che avrà:
+           const s = document.createElement('script');
+           s.async = true;
+           s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX';
+           document.head.appendChild(s);
+           window.dataLayer = window.dataLayer || [];
+           function gtag(){ dataLayer.push(arguments); }
+           gtag('js', new Date());
+           gtag('config', 'G-XXXXXXX');
+         ↑↑↑ FINE PARTE DA RIEMPIRE ↑↑↑ */
+    };
+
+    (function consenso() {
+      const leggi = () => { try { return localStorage.getItem(CHIAVE_CONSENSO); } catch (e) { return null; } };
+      const scrivi = (v) => { try { localStorage.setItem(CHIAVE_CONSENSO, v); } catch (e) {} };
+
+      /* con l'interruttore spento non mostriamo nulla e non carichiamo nulla */
+      if (!TRACCIAMENTO_ATTIVO) return;
+
+      if (leggi() === 'si') avviaTracciamento();
+
+      const EN = document.documentElement.lang === 'en';
+      const testi = EN ? {
+        titolo: 'Cookies',
+        corpo: 'We use cookies to understand how the site is used. You can accept or decline: declining changes nothing about your visit.',
+        policy: 'Cookie policy', si: 'Accept', no: 'Decline', pref: 'Cookie preferences'
+      } : {
+        titolo: 'Cookie',
+        corpo: 'Usiamo i cookie per capire come viene usato il sito. Puoi accettare o rifiutare: rifiutando non cambia nulla della tua visita.',
+        policy: 'Cookie policy', si: 'Accetta', no: 'Rifiuta', pref: 'Preferenze cookie'
+      };
+
+      const banner = document.createElement('div');
+      banner.className = 'cookie';
+      banner.setAttribute('role', 'dialog');
+      banner.setAttribute('aria-label', testi.titolo);
+      banner.innerHTML =
+        '<p class="cookie__testo">' + testi.corpo +
+        ' <a href="' + (EN ? 'cookie.html' : 'cookie.html') + '">' + testi.policy + '</a></p>' +
+        '<div class="cookie__azioni">' +
+        '<button type="button" class="cookie__no">' + testi.no + '</button>' +
+        '<button type="button" class="cookie__si">' + testi.si + '</button>' +
+        '</div>';
+
+      const mostra = () => { document.body.appendChild(banner); requestAnimationFrame(() => banner.classList.add('visibile')); };
+      const nascondi = () => { banner.classList.remove('visibile'); setTimeout(() => banner.remove(), 400); };
+
+      banner.querySelector('.cookie__si').addEventListener('click', () => { scrivi('si'); avviaTracciamento(); nascondi(); });
+      banner.querySelector('.cookie__no').addEventListener('click', () => { scrivi('no'); nascondi(); });
+
+      if (!leggi()) mostra();
+
+      /* si deve poter cambiare idea: link nel footer */
+      const footer = document.querySelector('.footer__links');
+      if (footer) {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.textContent = testi.pref;
+        a.addEventListener('click', (e) => { e.preventDefault(); if (!banner.parentNode) mostra(); });
+        footer.appendChild(a);
+      }
+    })();
+
     /* Il cambio lingua manuale vince sull'automatismo: memorizziamo la scelta */
     document.addEventListener('click', (e) => {
       const a = e.target.closest('[data-lingua]');

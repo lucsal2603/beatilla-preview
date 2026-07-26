@@ -1,4 +1,37 @@
 /* ============================================================
+   BANNER COOKIE (predisposto, oggi non compare — vedi main.js)
+   ============================================================ */
+.cookie {
+  position: fixed; z-index: 2500;
+  left: clamp(.8rem, 3vw, 2rem); right: clamp(.8rem, 3vw, 2rem);
+  bottom: clamp(.8rem, 3vw, 2rem);
+  max-width: 620px; margin-inline: auto;
+  background: var(--bg); color: var(--text);
+  border: 1px solid rgba(26,26,24,.16); border-radius: 6px;
+  padding: clamp(1.1rem, 4vw, 1.5rem);
+  box-shadow: 0 18px 50px rgba(26,26,24,.18);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
+}
+.cookie.visibile { opacity: 1; transform: none; }
+.cookie__testo { font-size: .9rem; line-height: 1.6; color: rgba(26,26,24,.78); margin-bottom: 1.1rem; }
+.cookie__testo a { color: var(--accent); border-bottom: 1px solid rgba(122,106,82,.35); }
+.cookie__azioni { display: flex; gap: .7rem; flex-wrap: wrap; }
+/* stessa evidenza ai due pulsanti: rifiutare dev'essere facile quanto accettare */
+.cookie__si, .cookie__no {
+  flex: 1 1 auto; min-width: 130px;
+  font-family: var(--sans); font-size: .78rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .8rem 1.2rem; border-radius: 100px; cursor: pointer;
+  transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+}
+.cookie__si { background: var(--accent); color: var(--bg); border: 1px solid var(--accent); }
+.cookie__si:hover { background: var(--text); border-color: var(--text); }
+.cookie__no { background: transparent; color: var(--text); border: 1px solid rgba(26,26,24,.3); }
+.cookie__no:hover { border-color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .cookie { transition: none; } }
+
+/* ============================================================
    SCHERMATA DI CARICAMENTO
    ============================================================ */
 .loader {

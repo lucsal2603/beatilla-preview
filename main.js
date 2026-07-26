@@ -255,8 +255,10 @@
     if (typeof gsap === 'undefined') return; // fail-safe: site still works statically
     gsap.registerPlugin(ScrollTrigger);
     ScrollTrigger.config({ ignoreMobileResize: true });
-    /* Parti dall'alto: evita che un reload a metà pagina mostri il pin in uno stato sbagliato */
-    if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; window.scrollTo(0, 0); }
+    /* Gestiamo noi il ripristino della posizione (vedi più sotto): quello
+       automatico del browser avverrebbe mentre la schermata di caricamento
+       blocca lo scorrimento, quindi andrebbe perso. */
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
     /* ---------- LENIS: smooth scroll con inerzia, sincronizzato con ScrollTrigger ----------
        Sul touch resta lo scorrimento nativo (Lenis smootha solo la rotella): niente lag su telefono. */
@@ -296,7 +298,7 @@
        e le altezze cambiano: senza questo ricalcolo le animazioni legate allo
        scroll resterebbero agganciate alle posizioni di prima. */
     if (loader && document.getElementById('loader')) {
-      viaLoader = () => { heroTl.play(); ScrollTrigger.refresh(); };
+      viaLoader = () => { heroTl.play(); ScrollTrigger.refresh(); tornaDoveEravamo(); };
     } else {
       heroTl.play();
     }
@@ -1257,12 +1259,43 @@
       setTimeout(goccia, 1500);
     }
 
-    /* Recalculate on resize / after images load for pinned/scrub triggers.
-       Dopo il refresh riporto sempre la pagina in cima: così un reload riparte dall'hero col video,
-       non da metà pagina (es. le Camere). Gestisco anche il ritorno dalla bfcache con "pageshow". */
-    const toTop = () => { if (lenis) lenis.scrollTo(0, { immediate: true, force: true }); else window.scrollTo(0, 0); };
-    window.addEventListener('load', () => { ScrollTrigger.refresh(); toTop(); });
-    window.addEventListener('pageshow', toTop);
+    /* DOVE ERAVAMO RIMASTI.
+       Ricaricando la pagina, o tornando indietro dalla privacy o dalla versione
+       in altra lingua, si riparte dal punto in cui si stava leggendo invece che
+       dall'inizio del sito. La posizione viene salvata mentre si scorre e
+       ripristinata quando la pagina è davvero pronta — cioè dopo che le
+       animazioni legate allo scorrimento hanno ricalcolato le loro posizioni,
+       altrimenti si atterrerebbe nel punto sbagliato. */
+    const CHIAVE_POS = 'beatilla-pos:' + location.pathname;
+    let salvaT;
+    const salvaPosizione = () => {
+      try { sessionStorage.setItem(CHIAVE_POS, String(Math.round(window.scrollY))); } catch (e) {}
+    };
+    window.addEventListener('scroll', () => {
+      clearTimeout(salvaT);
+      salvaT = setTimeout(salvaPosizione, 200);
+    }, { passive: true });
+    /* pagehide copre anche iOS, dove beforeunload non è affidabile */
+    window.addEventListener('pagehide', salvaPosizione);
+    window.addEventListener('beforeunload', salvaPosizione);
+
+    const tornaDoveEravamo = () => {
+      let y = 0;
+      try { y = parseInt(sessionStorage.getItem(CHIAVE_POS) || '0', 10) || 0; } catch (e) {}
+      /* se si arriva con un'ancora (#camere) comanda quella, non la memoria */
+      if (location.hash && document.querySelector(location.hash)) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      y = Math.min(y, Math.max(0, max));
+      if (y < 40) return;
+      if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
+      else window.scrollTo(0, y);
+      ScrollTrigger.update();
+    };
+
+    window.addEventListener('load', () => { ScrollTrigger.refresh(); tornaDoveEravamo(); });
+    /* ritorno dalla cache del browser (tasto indietro): la posizione la
+       ripristina già il browser, a noi basta riallineare le animazioni */
+    window.addEventListener('pageshow', (e) => { if (e.persisted) ScrollTrigger.refresh(); });
     /* PERF telefono: prima OGNI immagine lazy caricata scatenava un
        ScrollTrigger.refresh() completo (decine di ricalcoli pesanti proprio
        mentre si scrolla → pagina che si "blocca"). Ora i caricamenti vengono

@@ -221,13 +221,25 @@ img {
   transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease);
 }
 .nav__links a:not(.nav__cta):hover::after { transform: scaleX(1); transform-origin: left; }
-/* selettore lingua: pillola discreta accanto a Prenota */
+/* Selettore lingua accanto a Prenota. Sull'hero la barra è chiara ma corre
+   sopra il video: senza uno sfondo proprio la pillola sparisce sui fotogrammi
+   chiari. Ha quindi due stati, come il resto della barra. */
 .nav__lang {
   font-size: .72rem; letter-spacing: .14em;
-  padding: .45rem .8rem; border: 1px solid rgba(26,26,24,.25); border-radius: 100px;
+  padding: .45rem .8rem; border-radius: 100px;
+  background: rgba(26,26,24,.32);
+  border: 1px solid rgba(250,248,244,.45);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   transition: border-color .3s var(--ease), color .3s var(--ease), background .3s var(--ease);
 }
-.nav__lang:hover { border-color: var(--accent); color: var(--accent); }
+.nav__lang:hover { background: rgba(26,26,24,.5); border-color: rgba(250,248,244,.8); }
+/* a barra piena (dopo lo scorrimento) torna discreta sul fondo chiaro */
+.nav.scrolled .nav__lang {
+  background: rgba(26,26,24,.05);
+  border-color: rgba(26,26,24,.22);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+.nav.scrolled .nav__lang:hover { background: rgba(26,26,24,.09); border-color: var(--accent); color: var(--accent); }
 body.menu-open .nav__overlay-links .nav__lang { align-self: center; }
 
 .nav__cta {

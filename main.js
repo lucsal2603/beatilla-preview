@@ -418,43 +418,36 @@
         allCards.forEach((c) => io.observe(c));
         setActive(realCards[0]);
 
-        /* A scroll fermo, se siamo su un clone salto sulla gemella vera.
-           Il salto va fatto con l'aggancio a scatti DISATTIVATO: altrimenti il
-           browser lo riaggancia al clone, il nostro assestamento riparte e i due
-           si rincorrono — è quello che bloccava il rullino per qualche secondo
-           dopo aver girato dall'ultima alla prima camera (e viceversa). */
-        let settleT, saltando = false;
-        const salta = (target) => {
-          saltando = true;
-          track.style.scrollSnapType = 'none';
-          goTo(target, false);
-          /* due frame: il tempo che la nuova posizione sia acquisita davvero */
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            track.style.scrollSnapType = '';
-            saltando = false;
-          }));
-        };
-        const assesta = () => {
-          if (saltando) return;
-          const center = track.scrollLeft + track.clientWidth / 2;
+        /* LOOP SENZA ATTESE. Il vecchio schema (aspetta che lo scroll si
+           fermi, poi salta sulla gemella) lasciava una finestra morta: chi
+           riswipava subito dopo il giro si vedeva mangiare il gesto per ~1s.
+           Ora il riallineamento avviene DURANTE lo scorrimento: appena il
+           centro oltrepassa un clone, spostiamo lo scroll di un ciclo esatto
+           (clone e gemella sono identici al pixel, quindi non si vede nulla)
+           e l'inerzia prosegue sulla camera successiva senza fermarsi mai.
+           Con il dito ancora appoggiato non si tocca niente: il riallineo
+           parte al momento del rilascio, e per sicurezza anche al touchstart
+           successivo, così nessun gesto trova mai un clone sotto di sé. */
+        const CICLO = () => cloneFirst.offsetLeft - realCards[0].offsetLeft;
+        let dito = false;
+
+        const riallinea = () => {
+          /* criterio: il clone è la scheda PIÙ VICINA al centro. Regge anche
+             quando il bordo della striscia ferma lo scroll qualche pixel
+             prima del centro esatto del clone. */
+          const centro = track.scrollLeft + track.clientWidth / 2;
           let best = null, bd = Infinity;
           allCards.forEach((c) => {
-            const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
+            const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - centro);
             if (d < bd) { bd = d; best = c; }
           });
-          if (best === cloneLast) salta(realCards[N - 1]);
-          else if (best === cloneFirst) salta(realCards[0]);
+          if (best === cloneFirst) track.scrollLeft -= CICLO();
+          else if (best === cloneLast) track.scrollLeft += CICLO();
         };
-        /* scrollend è preciso: scatta a inerzia finita, non a metà slancio */
-        if ('onscrollend' in window) {
-          track.addEventListener('scrollend', assesta);
-        } else {
-          track.addEventListener('scroll', () => {
-            if (saltando) return;
-            clearTimeout(settleT);
-            settleT = setTimeout(assesta, 160);
-          }, { passive: true });
-        }
+
+        track.addEventListener('touchstart', () => { dito = true; riallinea(); }, { passive: true });
+        track.addEventListener('touchend', () => { dito = false; riallinea(); }, { passive: true });
+        track.addEventListener('scroll', () => { if (!dito) riallinea(); }, { passive: true });
       })();
     } else {
       gsap.utils.toArray('.room').forEach((room) => {

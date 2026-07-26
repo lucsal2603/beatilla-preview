@@ -1,4 +1,7 @@
 (function () {
+    /* La stessa logica serve le due lingue: le poche frasi generate da qui
+       vengono scelte in base alla lingua della pagina. */
+    const INGLESE = document.documentElement.lang === 'en';
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     /* innerWidth può essere 0 in contesti di prerender/anteprima: fallback su screen.width */
     const isMobile = () => (window.innerWidth || screen.width || 1024) <= 768;
@@ -89,6 +92,12 @@
       if (v.readyState >= 2) play(); else v.addEventListener('canplay', play, { once: true });
     })();
 
+    /* Il cambio lingua manuale vince sull'automatismo: memorizziamo la scelta */
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('[data-lingua]');
+      if (a) { try { localStorage.setItem('beatilla-lingua', a.getAttribute('data-lingua')); } catch (err) {} }
+    });
+
     /* Nessuna immagine si trascina fuori né apre il menu contestuale */
     document.addEventListener('dragstart', (e) => { if (e.target.tagName === 'IMG') e.preventDefault(); });
     document.addEventListener('contextmenu', (e) => { if (e.target.tagName === 'IMG') e.preventDefault(); });
@@ -120,13 +129,13 @@
       const open = () => {
         document.body.classList.add('menu-open');
         toggle.setAttribute('aria-expanded', 'true');
-        toggle.setAttribute('aria-label', 'Chiudi menu');
+        toggle.setAttribute('aria-label', INGLESE ? 'Close menu' : 'Chiudi menu');
         overlay.setAttribute('aria-hidden', 'false');
       };
       const close = () => {
         document.body.classList.remove('menu-open');
         toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Apri menu');
+        toggle.setAttribute('aria-label', INGLESE ? 'Open menu' : 'Apri menu');
         overlay.setAttribute('aria-hidden', 'true');
       };
       toggle.addEventListener('click', () => {
@@ -147,7 +156,7 @@
         const b = document.createElement('button');
         b.className = 'testi__dot' + (i === 0 ? ' active' : '');
         b.setAttribute('role', 'tab');
-        b.setAttribute('aria-label', 'Testimonianza ' + (i + 1));
+        b.setAttribute('aria-label', (INGLESE ? 'Review ' : 'Testimonianza ') + (i + 1));
         b.addEventListener('click', () => { show(i); restart(); });
         dotsWrap.appendChild(b);
       });
@@ -197,11 +206,23 @@
       const date = form.dates.value.trim();
       const messaggio = form.message.value.trim();
       if (!nome || !email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        status.textContent = 'Inserisci nome ed email validi per inviare la richiesta.';
+        status.textContent = INGLESE ? 'Please enter a valid name and email address.' : 'Inserisci nome ed email validi per inviare la richiesta.';
         return;
       }
-      const oggetto = 'Richiesta disponibilità — ' + nome;
-      const corpo = [
+      const oggetto = (INGLESE ? 'Availability request — ' : 'Richiesta disponibilità — ') + nome;
+      const corpo = (INGLESE ? [
+        'Hello,',
+        'I would like to check availability at Agriturismo Beatilla.',
+        '',
+        'Name: ' + nome,
+        'Email: ' + email,
+        date ? 'Dates of stay: ' + date : 'Dates of stay: to be defined',
+        '',
+        messaggio || '(no additional message)',
+        '',
+        'Thank you,',
+        nome
+      ] : [
         'Buongiorno,',
         'vorrei verificare la disponibilità presso Agriturismo Beatilla.',
         '',
@@ -213,17 +234,17 @@
         '',
         'Grazie,',
         nome
-      ].join('\n');
+      ]).join('\n');
       const link = 'mailto:' + DESTINATARIO +
         '?subject=' + encodeURIComponent(oggetto) +
         '&body=' + encodeURIComponent(corpo);
-      status.textContent = 'Apriamo la tua app di posta con il messaggio già scritto: ti basta premere invia.';
+      status.textContent = INGLESE ? 'Opening your email app with the message ready: just press send.' : 'Apriamo la tua app di posta con il messaggio già scritto: ti basta premere invia.';
       window.location.href = link;
       /* se l'app di posta non si apre (webmail senza client configurato)
          lo diciamo, invece di lasciare l'ospite a chiedersi cosa è successo */
       setTimeout(() => {
         if (document.hidden) return; /* l'app si è aperta davvero */
-        status.innerHTML = 'Se la posta non si è aperta, scrivici direttamente a ' +
+        status.innerHTML = (INGLESE ? 'If your email app did not open, write to us directly at ' : 'Se la posta non si è aperta, scrivici direttamente a ') +
           '<a href="mailto:' + DESTINATARIO + '">' + DESTINATARIO + '</a>.';
       }, 1800);
     });
@@ -400,7 +421,7 @@
           const d = document.createElement('button');
           d.type = 'button';
           d.className = 'rooms__dot';
-          d.setAttribute('aria-label', 'Vai alla camera ' + (i + 1));
+          d.setAttribute('aria-label', (INGLESE ? 'Go to room ' : 'Vai alla camera ') + (i + 1));
           d.addEventListener('click', () => goTo(card, true));
           dotsWrap.appendChild(d);
           return d;
@@ -712,7 +733,7 @@
         if (inCorso) return;
         const stavaChiusa = grid.classList.contains('is-collapsed');
         btn.setAttribute('aria-expanded', String(stavaChiusa));
-        label.textContent = stavaChiusa ? 'Mostra meno' : 'Tutti i servizi';
+        label.textContent = stavaChiusa ? (INGLESE ? 'Show less' : 'Mostra meno') : (INGLESE ? 'All amenities' : 'Tutti i servizi');
 
         if (prefersReduced) {
           grid.classList.toggle('is-collapsed');
@@ -1028,7 +1049,9 @@
        le foglie partono comunque dall'inizio del sito e passano davanti
        solo quando arrivano a quell'altezza. */
     if (!prefersReduced) {
-      const FOGLIE = ['img/foglia-1.webp', 'img/foglia-2.webp', 'img/foglia-3.webp', 'img/foglia-4.webp', 'img/foglia-5.webp'];
+      /* la pagina inglese vive in /en/: le risorse stanno un livello sopra */
+      const RADICE = document.documentElement.lang === 'en' ? '../' : '';
+      const FOGLIE = ['foglia-1', 'foglia-2', 'foglia-3', 'foglia-4', 'foglia-5'].map((f) => RADICE + 'img/' + f + '.webp');
       const cielo = document.createElement('div');
       cielo.className = 'leaves';
       cielo.setAttribute('aria-hidden', 'true');

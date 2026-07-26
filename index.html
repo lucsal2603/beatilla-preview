@@ -12,6 +12,9 @@
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="theme-color" content="#FAF8F4" />
   <link rel="canonical" href="https://www.agriturismobeatilla.it/" />
+  <link rel="alternate" hreflang="it" href="https://www.agriturismobeatilla.it/" />
+  <link rel="alternate" hreflang="en" href="https://www.agriturismobeatilla.it/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://www.agriturismobeatilla.it/en/" />
   <!-- Icona del sito: è quella che compare nella scheda del browser e
        accanto al nome nei risultati di ricerca. Il .ico contiene più misure
        (Google legge quella da 48). -->
@@ -26,8 +29,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
   <!-- ===================== SEO · LINGUA & PERFORMANCE (LCP) ===================== -->
-  <link rel="alternate" hreflang="it" href="https://www.agriturismobeatilla.it/" />
-  <link rel="alternate" hreflang="x-default" href="https://www.agriturismobeatilla.it/" />
   <link rel="preload" as="image" href="img/frammenti-animali.jpg" fetchpriority="high" />
 
   <!-- ===================== SEO · GEO (local) ===================== -->
@@ -324,11 +325,22 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script>
+    /* Lingua automatica: se il dispositivo NON è in italiano si passa alla
+       versione inglese, salvo scelta manuale (memorizzata). */
+    (function () {
+      try {
+        var scelta = localStorage.getItem('beatilla-lingua');
+        var italiano = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase().indexOf('it') === 0;
+        if (scelta === 'en' || (!scelta && !italiano)) location.replace('en/');
+      } catch (e) {}
+    })();
+  </script>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
 
-  <link rel="stylesheet" href="styles.css?v=58" />
+  <link rel="stylesheet" href="styles.css?v=59" />
 </head>
 <body>
   <!-- Schermata di caricamento: resta finché il video e le immagini della
@@ -353,6 +365,7 @@
       <a href="#servizi">Servizi</a>
       <a href="#workshop">Art Studio</a>
       <a href="#cosa-visitare">Cosa visitare</a>
+      <a class="nav__lang" data-lingua="en" href="en/" aria-label="English version">EN</a>
       <a class="nav__cta" href="https://wubook.net/nneb/bk/?ep=efbd0f20&board=bb&o=2.0.0.0&c=EUR&lang=it" target="_blank" rel="noopener">Prenota</a>
     </nav>
     <button class="nav__toggle" id="navToggle" aria-label="Apri menu" aria-expanded="false" aria-controls="navOverlay">
@@ -394,7 +407,16 @@
         </h1>
       </div>
       <a class="hero__scroll" href="#storia" aria-label="Scorri verso il basso">
-        <svg viewBox="0 0 24 36" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2v28M5 23l7 7 7-7"/></svg>
+        <!-- ramoscello d'ulivo che invita a scendere (al posto della freccia) -->
+        <svg viewBox="0 0 24 40" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+          <path d="M12 2 C 11.2 12, 12.8 24, 12 36" />
+          <path d="M11.7 8 C 8.5 7.2, 6.6 5.4, 6 3.4 C 8.6 3.6, 10.7 5.2, 11.7 8 Z" fill="currentColor" stroke="none" opacity=".85"/>
+          <path d="M12.3 12 C 15.5 11.2, 17.4 9.4, 18 7.4 C 15.4 7.6, 13.3 9.2, 12.3 12 Z" fill="currentColor" stroke="none" opacity=".85"/>
+          <path d="M11.8 17 C 8.6 16.2, 6.7 14.4, 6.1 12.4 C 8.7 12.6, 10.8 14.2, 11.8 17 Z" fill="currentColor" stroke="none" opacity=".85"/>
+          <path d="M12.2 22 C 15.4 21.2, 17.3 19.4, 17.9 17.4 C 15.3 17.6, 13.2 19.2, 12.2 22 Z" fill="currentColor" stroke="none" opacity=".85"/>
+          <path d="M11.9 27 C 9.1 26.3, 7.4 24.7, 6.9 23 C 9.2 23.2, 11 24.6, 11.9 27 Z" fill="currentColor" stroke="none" opacity=".85"/>
+          <ellipse cx="12" cy="36.4" rx="2.1" ry="2.6" fill="currentColor" stroke="none"/>
+        </svg>
       </a>
     </section>
 
@@ -1140,6 +1162,6 @@
   <!-- Lenis servito in locale: nessuna dipendenza da CDN esterni (ricordarsi di copiarlo nel repo al momento della pubblicazione) -->
   <script src="lenis.min.js"></script>
 
-  <script src="main.js?v=52"></script>
+  <script src="main.js?v=53"></script>
 </body>
 </html>

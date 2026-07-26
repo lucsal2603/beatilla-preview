@@ -88,6 +88,25 @@
       function start() { timer = setInterval(() => show(idx + 1), 4000); }
       function restart() { clearInterval(timer); start(); }
       start();
+
+      /* si cambia recensione anche scorrendo col dito a destra o a sinistra */
+      const vista = document.getElementById('testiViewport');
+      if (vista) {
+        let x0 = null, y0 = null;
+        vista.addEventListener('touchstart', (e) => {
+          x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+        }, { passive: true });
+        vista.addEventListener('touchend', (e) => {
+          if (x0 === null) return;
+          const dx = e.changedTouches[0].clientX - x0;
+          const dy = e.changedTouches[0].clientY - y0;
+          x0 = null;
+          /* solo gesti chiaramente orizzontali: non rubiamo lo scroll */
+          if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+          show(idx + (dx < 0 ? 1 : -1));
+          restart();
+        }, { passive: true });
+      }
     })();
 
     /* ---------- CONTACT FORM (no backend; graceful feedback) ---------- */
@@ -729,27 +748,20 @@
       });
     }
 
-    /* ---------- IL CAPPELLO E LA RISALITA DI OSPITI ----------
-       Arrivati alla foto del cappello lo scorrimento si ferma: mentre resta
-       fermo, Ospiti risale finché il suo bordo ad arco si chiude esattamente
-       sul bordo inferiore della foto. Poi la pagina riprende a scendere. */
-    const testi = document.querySelector('.testi');
+    /* ---------- IL CAPPELLO CHE SPARISCE ----------
+       La foto del cappello resta incollata in cima e non si muove: è OSPITI
+       che sale, col suo bordo ad arco, fino a chiudersi contro l'arco che
+       scende dalla sezione "Scopri il suo lavoro" — e la foto sparisce.
+       Tecnica adesiva come la home: nessuno spaziatore, nessun salto, e lo
+       scorrimento resta fluido sul telefono. Quando è coperta la togliamo
+       di mezzo per non tenere viva una foto grande dietro tutto il sito. */
     const fascia = document.querySelector('.video');
-    if (testi && fascia && isMobile() && !prefersReduced) {
-      /* quanto deve salire: il proprio arco più la curva inferiore della foto,
-         così i due bordi combaciano invece di sovrapporsi a caso */
-      const risalita = () => {
-        const arcoOspiti = parseFloat(getComputedStyle(testi, '::before').height) || 56;
-        const raggioFoto = parseFloat((getComputedStyle(fascia).borderBottomLeftRadius.split(' ')[1] || '0')) || 0;
-        return Math.round(arcoOspiti + raggioFoto);
-      };
+    const testi = document.querySelector('.testi');
+    if (fascia && testi && isMobile() && !prefersReduced) {
       ScrollTrigger.create({
-        trigger: fascia,
-        start: 'bottom bottom',            /* la foto ha appena finito di entrare */
-        end: () => '+=' + (risalita() + 130),
-        pin: true, anticipatePin: 1, invalidateOnRefresh: true,
-        scrub: true,
-        animation: gsap.fromTo(testi, { y: 0 }, { y: () => -risalita(), ease: 'none' })
+        trigger: testi, start: 'top top',
+        onEnter: () => fascia.classList.add('is-coperta'),
+        onLeaveBack: () => fascia.classList.remove('is-coperta')
       });
     }
 

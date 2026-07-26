@@ -238,7 +238,7 @@
       });
       inner.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-      window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
+      window.addEventListener('resize', () => { if (window.innerWidth > 1024) close(); }); /* stessa soglia del CSS */
     })();
 
     /* ---------- TESTIMONIALS auto-rotate ---------- */
@@ -614,7 +614,20 @@
         const x = gsap.getProperty(track, 'x') || 0;
         const r = last.getBoundingClientRect();
         const centroAZero = r.left - x + r.width / 2;
-        return Math.max(0, Math.round(centroAZero - pin.clientWidth / 2));
+        const perCentrareFoto = centroAZero - pin.clientWidth / 2;
+
+        /* Su schermi stretti (tablet) la coda di testo resterebbe tagliata a
+           metà: se serve, allunghiamo la corsa quel tanto che basta perché
+           l'invito finale entri tutto. Su schermi larghi ci sta già e questo
+           non cambia nulla. */
+        let perMostrareCoda = 0;
+        const coda = track.querySelector('.gallery__item--fine');
+        if (coda) {
+          const c = coda.getBoundingClientRect();
+          const margine = 24;
+          perMostrareCoda = (c.right - x) - pin.clientWidth + margine;
+        }
+        return Math.max(0, Math.round(Math.max(perCentrareFoto, perMostrareCoda)));
       };
       /* Titolo dentro il pin: l'altezza extra della sezione (per lo scroll
          orizzontale mentre è agganciata) è la corsa da percorrere. */

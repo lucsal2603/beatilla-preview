@@ -297,7 +297,9 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 
 /* Pulsante prenota fisso — solo schermi piccoli */
 .book-fab { display: none; }
-@media (max-width: 768px) {
+/* Fino al tablet compreso: le voci della barra stanno nel menu a panino,
+   quindi "Prenota" resta raggiungibile col pulsante flottante. */
+@media (max-width: 1024px) {
   .book-fab {
     display: inline-flex; align-items: center; gap: .5rem;
     position: fixed; z-index: 80;
@@ -485,6 +487,8 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
    È l'ultimo elemento, quindi la corsa orizzontale lo lascia centrato. */
 .gallery__item--fine { display: flex; align-items: center; }
 .gallery__fine { min-width: min(420px, 40vw); padding-right: clamp(1rem, 4vw, 3rem); }
+/* su tablet la chiusura si stringe: entra tutta senza allungare troppo la corsa */
+@media (max-width: 1024px) { .gallery__fine { min-width: min(300px, 62vw); } }
 .gallery__fine-e { text-transform: uppercase; letter-spacing: .22em; font-size: .72rem; color: var(--accent); margin-bottom: 1.1rem; }
 .gallery__fine-frase { font-family: var(--serif); font-size: clamp(1.5rem, 2.1vw, 2.3rem); line-height: 1.18; }
 .gallery__fine-cta {
@@ -850,11 +854,30 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   .visit__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* Dispositivi tattili fino al tablet: ogni elemento cliccabile deve avere
+   almeno 44px di altezza utile, altrimenti si sbaglia il tocco. Il testo
+   resta della stessa dimensione: cresce solo l'area sensibile. */
+@media (max-width: 1024px) {
+  .link-more, .gallery__fine-cta, .workshop__cta {
+    display: inline-flex; align-items: center; min-height: 44px;
+  }
+  /* i pallini delle recensioni restano piccoli ma diventano facili da centrare */
+  .testi__dot { position: relative; }
+  .testi__dot::after { content: ""; position: absolute; inset: -18px; }
+  .testi__dots { gap: 1.1rem; }
+}
+
+/* Menu a panino fino al tablet compreso: da 769 a 1024px le voci per esteso
+   non ci stanno (servono ~940px) e finivano su due righe col pulsante Prenota
+   fuori schermo. Sopra i 1024 torna la barra distesa. */
+@media (max-width: 1024px) {
+  .nav__links { display: none; }
+  .nav__toggle { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+}
+
 @media (max-width: 768px) {
   /* Spaziatura sezioni più compatta su telefono: si vede più contenuto senza vuoti eccessivi */
   :root { --section-y: clamp(3rem, 9vh, 5.5rem); }
-  .nav__links { display: none; }
-  .nav__toggle { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
   /* Aree di tocco adeguate (min 44px) per i link "Scopri" */
   .link-more { min-height: 44px; }
   .exp__grid { grid-template-columns: 1fr; }

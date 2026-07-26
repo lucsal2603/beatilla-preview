@@ -3,6 +3,78 @@
     /* innerWidth può essere 0 in contesti di prerender/anteprima: fallback su screen.width */
     const isMobile = () => (window.innerWidth || screen.width || 1024) <= 768;
 
+    /* ---------- SCHERMATA DI CARICAMENTO ----------
+       Resta finché non sono pronti il video e le immagini che si vedono
+       subito. NON aspettiamo le immagini in fondo alla pagina: quelle si
+       caricano solo avvicinandosi, quindi il caricamento non finirebbe mai.
+       C'è comunque un tetto di 9 secondi: su una rete lenta si entra lo
+       stesso, invece di restare bloccati davanti a una schermata ferma. */
+    const loader = document.getElementById('loader');
+    const barra = document.getElementById('loaderBar');
+    let viaLoader = () => {};
+    if (loader) {
+      const attese = [];
+      let registrate = false, uscito = false;
+
+      /* Dichiarati PRIMA di registrare le attese: la prima immagine già in
+         cache chiama subito il conteggio, e se queste non esistessero ancora
+         il codice si fermerebbe qui lasciando la schermata per sempre. */
+      const finito = () => {
+        if (uscito) return;
+        uscito = true;
+        if (barra) barra.style.width = '100%';
+        setTimeout(() => {
+          loader.classList.add('via');
+          document.body.classList.remove('caricamento');
+          viaLoader();
+          setTimeout(() => { if (loader.parentNode) loader.remove(); }, 900);
+        }, 220);
+      };
+      const segna = () => {
+        if (!attese.length) return;
+        const fatte = attese.filter((p) => p.fatto).length;
+        if (barra) barra.style.width = Math.round(fatte / attese.length * 100) + '%';
+        /* solo a registrazione conclusa: altrimenti "tutte pronte" sarebbe
+           vero già alla prima immagine */
+        if (registrate && fatte === attese.length) finito();
+      };
+      const aspetta = (avvia) => {
+        const p = { fatto: false };
+        attese.push(p);
+        avvia(() => { if (!p.fatto) { p.fatto = true; segna(); } });
+      };
+
+      document.body.classList.add('caricamento');
+      setTimeout(finito, 9000); /* tetto di sicurezza: su rete lenta si entra comunque */
+
+      /* immagini della prima schermata (non differite) */
+      document.querySelectorAll('img:not([loading="lazy"])').forEach((img) => {
+        aspetta((pronto) => {
+          if (img.complete) return pronto();
+          img.addEventListener('load', pronto, { once: true });
+          img.addEventListener('error', pronto, { once: true });
+        });
+      });
+      /* il video della home */
+      const vid = document.querySelector('.hero__video video');
+      if (vid) aspetta((pronto) => {
+        if (vid.readyState >= 3) return pronto();
+        vid.addEventListener('canplaythrough', pronto, { once: true });
+        vid.addEventListener('loadeddata', pronto, { once: true });
+        vid.addEventListener('error', pronto, { once: true });
+      });
+      /* i caratteri: senza, il titolo cambierebbe forma sotto gli occhi */
+      if (document.fonts && document.fonts.ready) aspetta((pronto) => document.fonts.ready.then(pronto));
+      /* il resto della pagina */
+      aspetta((pronto) => {
+        if (document.readyState === 'complete') return pronto();
+        window.addEventListener('load', pronto, { once: true });
+      });
+
+      registrate = true;
+      segna(); /* se era tutto già in cache, esce subito */
+    }
+
     /* ---------- Hero video: anche su telefono ----------
        La foto del cavallo resta come poster e si vede subito; il video
        (7 MB) parte dopo, quando la pagina è già utilizzabile. */
@@ -187,7 +259,7 @@
     }
 
     /* ---------- HERO load animation ---------- */
-    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' }, paused: true });
     if (!prefersReduced) {
       heroTl.to('.hero__media', { scale: 1.0, duration: 1.6, ease: 'power2.out' }, 0);
       heroTl.from('.hero__title .word', { yPercent: 150, opacity: 0, duration: 1.2, stagger: 0.12 }, 0.15);
@@ -196,6 +268,11 @@
       /* La nav scende dall'alto insieme all'hero (transform non è nella transition CSS della nav) */
       heroTl.from('.nav', { yPercent: -100, opacity: 0, duration: 0.9 }, 0.35);
     }
+
+    /* l'intro della home parte quando la schermata di caricamento se ne va,
+       così la si vede per intero invece di trovarla già a metà */
+    if (loader && document.getElementById('loader')) viaLoader = () => heroTl.play();
+    else heroTl.play();
 
     /* ---------- HERO exit parallax: il contenuto sale e sfuma mentre scorri via ---------- */
     if (!prefersReduced) {
@@ -807,9 +884,13 @@
     });
 
     /* ---------- FOOTER REVEAL ---------- */
+    /* Il punto di partenza era 'top 92%': col footer in fondo a una pagina
+       lunghissima cadeva OLTRE lo scroll massimo possibile, quindi non
+       scattava mai e il footer restava invisibile (opacità 0). Ora parte
+       appena entra dal basso: sempre raggiungibile. */
     gsap.from('.footer__inner', {
       y: 30, opacity: 0, duration: 0.9, ease: 'power2.out',
-      scrollTrigger: { trigger: '.footer', start: 'top 92%' }
+      scrollTrigger: { trigger: '.footer', start: 'top bottom' }
     });
 
     /* ---------- ART STUDIO: PENNELLATA BLU ----------

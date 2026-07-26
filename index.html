@@ -323,9 +323,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
 
-  <link rel="stylesheet" href="styles.css?v=56" />
+  <link rel="stylesheet" href="styles.css?v=58" />
 </head>
 <body>
+  <!-- Schermata di caricamento: resta finché il video e le immagini della
+       prima schermata non sono pronti, con un tetto di sicurezza. -->
+  <div class="loader" id="loader">
+    <div class="loader__inner">
+      <span class="loader__brand">Agriturismo Beatilla</span>
+      <span class="loader__tag">Mantova · Dal 1498</span>
+      <div class="loader__bar"><i id="loaderBar"></i></div>
+    </div>
+  </div>
+
   <script>/* Evita il salto del pin orizzontale al ricaricamento: la pagina riparte sempre dall'alto */if('scrollRestoration' in history){history.scrollRestoration='manual';}</script>
 
   <!-- ===================== 1. NAVIGATION ===================== -->
@@ -1125,6 +1135,6 @@
   <!-- Lenis servito in locale: nessuna dipendenza da CDN esterni (ricordarsi di copiarlo nel repo al momento della pubblicazione) -->
   <script src="lenis.min.js"></script>
 
-  <script src="main.js?v=47"></script>
+  <script src="main.js?v=49"></script>
 </body>
 </html>

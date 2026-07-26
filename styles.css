@@ -892,6 +892,9 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 }
 @media (max-width: 560px) {
   .footer__top { grid-template-columns: 1fr; gap: 2.2rem; }
+  /* la descrizione ha un tetto di larghezza: senza margini automatici il suo
+     riquadro resta a sinistra e il testo appare scentrato rispetto al titolo */
+  .footer__claim { margin-inline: auto; }
   .footer__bottom { flex-direction: column; align-items: flex-start; gap: .8rem; }
   .footer__credit { margin-left: 0; }
 }

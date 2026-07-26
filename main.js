@@ -1159,12 +1159,19 @@
         const px = e.clientX, py = e.clientY;
         let preso = false, offX = 0, offY = 0;
         const scia = [{ x: px, y: py, t: e.timeStamp }];
+        /* Da qui in poi niente selezione del testo: le foglie lasciano passare
+           il tocco, quindi senza questo il dito che trascina evidenzierebbe le
+           parole sotto. Va messo SUBITO, non quando la presa scatta: dopo
+           sarebbe tardi, la selezione è già iniziata. */
+        document.body.classList.add('trascino');
         const afferra = () => {
           preso = true;
           gsap.killTweensOf(img);
           if (img.dati.arrivo) img.dati.arrivo.kill();
           gsap.set(img, { opacity: 1 });
           img.classList.add('presa');
+          const sel = window.getSelection && window.getSelection();
+          if (sel && sel.removeAllRanges) sel.removeAllRanges();
           /* la foglia non salta sotto il dito: mantiene la distanza che aveva */
           offX = gsap.getProperty(img, 'x') - (px + window.scrollX);
           offY = gsap.getProperty(img, 'y') - (py + window.scrollY);
@@ -1185,16 +1192,20 @@
           });
         };
         const bloccaScroll = (ev) => { if (preso) ev.preventDefault(); };
+        const vietaSelezione = (ev) => ev.preventDefault();
         const molla = () => { if (preso) lancia(img, scia); finisci(); };
         function finisci() {
           clearTimeout(timer);
           preso = false;
           img.classList.remove('presa');
+          document.body.classList.remove('trascino');
+          document.removeEventListener('selectstart', vietaSelezione);
           window.removeEventListener('pointermove', muovi);
           window.removeEventListener('pointerup', molla);
           window.removeEventListener('pointercancel', molla);
           window.removeEventListener('touchmove', bloccaScroll);
         }
+        document.addEventListener('selectstart', vietaSelezione);
         window.addEventListener('pointermove', muovi, { passive: false });
         window.addEventListener('pointerup', molla);
         window.addEventListener('pointercancel', molla);

@@ -1200,6 +1200,13 @@ html { overflow-x: clip; }
   pointer-events: none;
 }
 .leaves img.presa { touch-action: none; }
+/* Mentre si trascina una foglia il testo sotto non si evidenzia e non compare
+   il menu di selezione: le foglie lasciano passare il tocco, quindi il blocco
+   va messo sul documento. */
+body.trascino, body.trascino * {
+  user-select: none !important; -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
 
 /* Titolo Art Studio: la pennellata blu lo evidenzia da dietro,
    ancorata a sinistra e distesa su tutta la larghezza del titolo */

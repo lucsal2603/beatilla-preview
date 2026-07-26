@@ -876,8 +876,15 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   margin-left: auto; font-size: .66rem; letter-spacing: .04em;
   color: rgba(250,248,244,.32);
 }
-.footer__credit a { color: inherit; border-bottom: 1px solid transparent; transition: color .3s var(--ease), border-color .3s var(--ease); }
-.footer__credit a:hover { color: rgba(250,248,244,.7); border-bottom-color: rgba(250,248,244,.3); }
+/* sottolineato sempre, non solo al passaggio del mouse: da telefono non
+   esiste il passaggio del mouse e il collegamento sembrerebbe testo normale */
+.footer__credit a {
+  color: rgba(250,248,244,.5);
+  border-bottom: 1px solid rgba(250,248,244,.32);
+  padding-bottom: 1px;
+  transition: color .3s var(--ease), border-color .3s var(--ease);
+}
+.footer__credit a:hover { color: rgba(250,248,244,.85); border-bottom-color: rgba(250,248,244,.6); }
 
 @media (max-width: 1024px) {
   .footer__top { grid-template-columns: 1fr 1fr; gap: 2.4rem 2rem; }

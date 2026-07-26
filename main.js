@@ -1171,10 +1171,10 @@
          basso dopo un minuto le foglie vive erano tutte sparse in fondo e in
          cima non ne nasceva più nessuna (sembrava che smettessero). */
       const tettoFoglie = () => {
-        if (isMobile()) return 14; /* sul telefono la densità andava bene così */
+        if (isMobile()) return 11; /* un filo meno fitte di prima (erano 14) */
         const schermate = Math.max(1, document.documentElement.scrollHeight / (window.innerHeight || 812));
-        /* schermi grandi: ~2,5 foglie per schermata, con un tetto assoluto */
-        return Math.min(54, Math.round(schermate * 2.6));
+        /* schermi grandi: ~2 foglie per schermata invece di 2,5 */
+        return Math.min(42, Math.round(schermate * 2.05));
       };
 
       /* le foglie si fermano sul mucchio al bordo dei contatti, non oltre */

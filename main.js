@@ -1070,8 +1070,7 @@
       /* le foglie si fermano sul mucchio al bordo dei contatti, non oltre */
       const suolo = () => {
         const c = document.getElementById('prenota');
-        return c ? c.getBoundingClientRect().top + window.scrollY
-                 : document.documentElement.scrollHeight;
+        return c ? c.offsetTop : document.documentElement.scrollHeight;
       };
 
       /* il mucchio reagisce a ogni foglia che ci finisce dentro: si assesta
@@ -1089,8 +1088,13 @@
          appena SOTTO il bordo della home, così nessun pixel tocca mai
          la foto dell'hero, su qualunque telefono */
       const tetto = () => {
-        const h = document.querySelector('.hero');
-        return h ? h.getBoundingClientRect().bottom + window.scrollY + 6 : 0;
+        /* NON misuriamo la home: essendo "appiccicata" in cima, il browser ne
+           riporta la posizione renderizzata (che segue lo scroll), non quella
+           reale nel documento. Usiamo l'inizio della sezione successiva, che
+           sta ferma. Senza questo, tenendo premuta una foglia veniva spinta
+           sotto il bordo dello schermo e sembrava sparita. */
+        const sotto = document.querySelector('.intro');
+        return sotto ? sotto.offsetTop + 6 : (window.innerHeight || 812);
       };
 
       /* Movimento naturale: caduta + oscillazione + rotazione. Sta in una

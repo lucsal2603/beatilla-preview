@@ -323,8 +323,6 @@
 
   <!-- ===================== GOOGLE FONTS & CDN ===================== -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <script>
     /* Lingua automatica: se il dispositivo NON è in italiano si passa alla
        versione inglese, salvo scelta manuale (memorizzata). */
@@ -336,11 +334,12 @@
       } catch (e) {}
     })();
   </script>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" /></noscript>
+  <!-- Caratteri ospitati sul nostro server: nessuna richiesta a terzi,
+       quindi nessun dato dei visitatori esce dal sito. -->
+  <link rel="preload" as="font" type="font/woff2" href="font/youngserif-2.woff2" crossorigin />
+  <link rel="stylesheet" href="font/font.css" />
 
-  <link rel="stylesheet" href="styles.css?v=60" />
+  <link rel="stylesheet" href="styles.css?v=61" />
 </head>
 <body>
   <!-- Schermata di caricamento: resta finché il video e le immagini della
@@ -1152,6 +1151,7 @@
         <a href="#esperienze">Esperienze</a>
         <a href="#faq">FAQ</a>
         <a href="#prenota">Contatti</a>
+        <a href="privacy.html">Privacy</a>
       </nav>
     </div>
   </footer>
@@ -1162,6 +1162,6 @@
   <!-- Lenis servito in locale: nessuna dipendenza da CDN esterni (ricordarsi di copiarlo nel repo al momento della pubblicazione) -->
   <script src="lenis.min.js"></script>
 
-  <script src="main.js?v=55"></script>
+  <script src="main.js?v=56"></script>
 </body>
 </html>

@@ -825,16 +825,69 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 /* ============================================================
    13. FOOTER
    ============================================================ */
-.footer { background: var(--text); color: rgba(250,248,244,.65); padding: 2.4rem var(--gutter); }
-.footer__inner { max-width: var(--maxw); margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
-.footer__brand { font-family: var(--serif); font-size: 1.3rem; color: var(--bg); }
-/* firma dello sviluppatore: presente ma discreta, sotto la riga legale */
-.footer__credit { display: block; margin-top: .5rem; font-size: .68rem; letter-spacing: .04em; color: rgba(250,248,244,.42); }
-.footer__credit a { color: inherit; border-bottom: 1px solid transparent; transition: color .3s ease, border-color .3s ease; }
-.footer__credit a:hover { color: rgba(250,248,244,.8); border-bottom-color: rgba(250,248,244,.4); }
-.footer__meta { font-size: .78rem; }
-.footer__links { display: flex; gap: 1.6rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .18em; }
+/* ============================================================
+   FOOTER — a colonne, con la riga legale staccata in fondo
+   ============================================================ */
+.footer { background: var(--text); color: rgba(250,248,244,.6); padding: clamp(3.4rem, 8vh, 5.5rem) var(--gutter) clamp(2rem, 5vh, 2.8rem); }
+.footer__inner { max-width: var(--maxw); margin-inline: auto; }
+
+/* le colonne respirano: marchio più largo, le altre uguali fra loro */
+.footer__top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: clamp(2.2rem, 5vw, 4rem);
+  align-items: start;
+}
+.footer__col { display: flex; flex-direction: column; }
+.footer__brand { font-family: var(--serif); font-size: clamp(1.35rem, 2.4vw, 1.7rem); color: var(--bg); line-height: 1.2; }
+.footer__claim { margin-top: .9rem; font-size: .84rem; line-height: 1.65; color: rgba(250,248,244,.5); max-width: 30ch; }
+
+/* intestazioni di colonna: piccole e distanziate, danno ordine */
+.footer__tit {
+  font-size: .66rem; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(250,248,244,.38); margin-bottom: 1.1rem;
+}
+.footer__testo { font-size: .88rem; line-height: 1.8; color: rgba(250,248,244,.72); }
+.footer__testo a { color: inherit; border-bottom: 1px solid transparent; transition: color .3s var(--ease), border-color .3s var(--ease); }
+.footer__testo a:hover { color: var(--bg); border-bottom-color: rgba(250,248,244,.35); }
+
+.footer__links { gap: .7rem; }
+.footer__links a {
+  font-size: .84rem; letter-spacing: .02em; text-transform: none;
+  color: rgba(250,248,244,.72); transition: color .3s var(--ease);
+}
 .footer__links a:hover { color: var(--bg); }
+
+/* riga finale: separata da un filo, tutto piccolo e discreto */
+.footer__bottom {
+  margin-top: clamp(2.8rem, 6vh, 4rem);
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(250,248,244,.12);
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: .6rem clamp(1.2rem, 3vw, 2.2rem);
+  font-size: .72rem;
+}
+.footer__meta { color: rgba(250,248,244,.45); }
+.footer__legal { display: flex; gap: 1.1rem; }
+.footer__legal a { color: rgba(250,248,244,.45); transition: color .3s var(--ease); }
+.footer__legal a:hover { color: rgba(250,248,244,.8); }
+/* la firma: ultima, minuta, spinta a destra e larga quanto il suo testo */
+.footer__credit {
+  margin-left: auto; font-size: .66rem; letter-spacing: .04em;
+  color: rgba(250,248,244,.32);
+}
+.footer__credit a { color: inherit; border-bottom: 1px solid transparent; transition: color .3s var(--ease), border-color .3s var(--ease); }
+.footer__credit a:hover { color: rgba(250,248,244,.7); border-bottom-color: rgba(250,248,244,.3); }
+
+@media (max-width: 1024px) {
+  .footer__top { grid-template-columns: 1fr 1fr; gap: 2.4rem 2rem; }
+  .footer__col--marchio { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .footer__top { grid-template-columns: 1fr; gap: 2.2rem; }
+  .footer__bottom { flex-direction: column; align-items: flex-start; gap: .8rem; }
+  .footer__credit { margin-left: 0; }
+}
 
 /* ============================================================
    RESPONSIVE

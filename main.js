@@ -177,7 +177,7 @@
       if (!leggi()) mostra();
 
       /* si deve poter cambiare idea: link nel footer */
-      const footer = document.querySelector('.footer__links');
+      const footer = document.querySelector('.footer__legal') || document.querySelector('.footer__links');
       if (footer) {
         const a = document.createElement('a');
         a.href = '#';

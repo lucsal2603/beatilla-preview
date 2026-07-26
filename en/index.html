@@ -340,7 +340,7 @@
   <link rel="preload" as="font" type="font/woff2" href="../font/youngserif-2.woff2" crossorigin />
   <link rel="stylesheet" href="../font/font.css" />
 
-  <link rel="stylesheet" href="../styles.css?v=65" />
+  <link rel="stylesheet" href="../styles.css?v=66" />
 </head>
 <body>
   <!-- Schermata di caricamento: resta finché il video e le immagini della
@@ -1136,16 +1136,42 @@
     <img class="olive olive--9" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     <img class="olive olive--21" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     <div class="footer__inner">
-      <span class="footer__brand">Agriturismo Beatilla</span>
-      <span class="footer__meta">Beatilla Soc. Agricola S.S. · P.IVA IT02135460208 · © 2026</span>
-      <span class="footer__credit">Website by <a href="https://lucsal.it" target="_blank" rel="noopener">Luca Salvemini</a></span>
-      <nav class="footer__links" aria-label="Footer links">
-        <a href="#camere">Rooms</a>
-        <a href="#esperienze">Experiences</a>
-        <a href="#faq">FAQ</a>
-        <a href="#prenota">Contatti</a>
-        <a href="privacy.html">Privacy</a>
-      </nav>
+      <div class="footer__top">
+        <div class="footer__col footer__col--marchio">
+          <span class="footer__brand">Agriturismo Beatilla</span>
+          <p class="footer__claim">An art and eco-design farm resort in the Mantuan countryside, since 1498.</p>
+        </div>
+
+        <div class="footer__col">
+          <p class="footer__tit">Where we are</p>
+          <p class="footer__testo">
+            Corte Barco &middot; Strada Mantova 21<br />
+            46045 Marmirolo (MN), Italy
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <p class="footer__tit">Contact</p>
+          <p class="footer__testo">
+            <a href="tel:+390376466480">+39 0376 466 480</a><br />
+            <a href="mailto:info@agriturismobeatilla.it">info@agriturismobeatilla.it</a>
+          </p>
+        </div>
+
+        <nav class="footer__col footer__links" aria-label="Footer links">
+          <p class="footer__tit">Explore</p>
+          <a href="#camere">Rooms</a>
+          <a href="#esperienze">Experiences</a>
+          <a href="#faq">FAQ</a>
+          <a href="#prenota">Contact</a>
+        </nav>
+      </div>
+
+      <div class="footer__bottom">
+        <span class="footer__meta">Beatilla Soc. Agricola S.S. &middot; P.IVA IT02135460208 &middot; &copy; 2026</span>
+        <span class="footer__legal"><a href="privacy.html">Privacy</a></span>
+        <span class="footer__credit">Website by <a href="https://lucsal.it" target="_blank" rel="noopener">Luca Salvemini</a></span>
+      </div>
     </div>
   </footer>
 
@@ -1155,6 +1181,6 @@
   <!-- Lenis servito in locale: nessuna dipendenza da CDN esterni (ricordarsi di copiarlo nel repo al momento della pubblicazione) -->
   <script src="../lenis.min.js"></script>
 
-  <script src="../main.js?v=61"></script>
+  <script src="../main.js?v=62"></script>
 </body>
 </html>

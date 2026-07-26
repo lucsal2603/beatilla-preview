@@ -271,8 +271,14 @@
 
     /* l'intro della home parte quando la schermata di caricamento se ne va,
        così la si vede per intero invece di trovarla già a metà */
-    if (loader && document.getElementById('loader')) viaLoader = () => heroTl.play();
-    else heroTl.play();
+    /* Quando la schermata di caricamento se ne va la pagina torna scorrevole
+       e le altezze cambiano: senza questo ricalcolo le animazioni legate allo
+       scroll resterebbero agganciate alle posizioni di prima. */
+    if (loader && document.getElementById('loader')) {
+      viaLoader = () => { heroTl.play(); ScrollTrigger.refresh(); };
+    } else {
+      heroTl.play();
+    }
 
     /* ---------- HERO exit parallax: il contenuto sale e sfuma mentre scorri via ---------- */
     if (!prefersReduced) {
@@ -871,6 +877,83 @@
         trigger: testi, start: 'top top',
         onEnter: () => fascia.classList.add('is-coperta'),
         onLeaveBack: () => fascia.classList.remove('is-coperta')
+      });
+    }
+
+    /* ---------- ARRIVI LATERALI ----------
+       Le immagini aspettano spostate di lato e si mettono al posto giusto
+       mentre si scende: agganciate allo scroll (scrub), non partono da sole.
+       Agiscono sul contenitore .img-slot, quindi non litigano con le
+       animazioni già presenti su card e titoli. */
+    if (!prefersReduced) {
+      const passo = isMobile() ? 62 : 130;
+
+      const daiLati = (selettore, distanza) => {
+        gsap.utils.toArray(selettore).forEach((el, i) => {
+          const verso = (i % 2 === 0) ? -1 : 1;
+          gsap.fromTo(el,
+            { x: verso * distanza, rotate: verso * 1.5, opacity: .35 },
+            {
+              x: 0, rotate: 0, opacity: 1, ease: 'none',
+              scrollTrigger: { trigger: el, start: 'top 96%', end: 'top 58%', scrub: .5, invalidateOnRefresh: true }
+            });
+        });
+      };
+
+      daiLati('.exp__card .img-slot', passo);
+      daiLati('.visit__card .img-slot', passo);
+      daiLati('.workshop__media .img-slot', passo * 1.15);
+      daiLati('.workshop__artist-photo', passo);
+
+      /* Titoli di sezione: salgono piano mentre la sezione attraversa lo
+         schermo. Movimento continuo, non un'apparizione. */
+      gsap.utils.toArray('.exp__head, .visit__head, .services__head, .gethere__head, .faq__head')
+        .forEach((testa) => {
+          gsap.fromTo(testa, { y: 34 }, {
+            y: -26, ease: 'none',
+            scrollTrigger: { trigger: testa, start: 'top bottom', end: 'bottom top', scrub: true }
+          });
+        });
+
+      /* Le schede dei servizi si raddrizzano scendendo: partono appena
+         inclinate e piatte, arrivano dritte. */
+      gsap.utils.toArray('.service').forEach((s, i) => {
+        gsap.fromTo(s,
+          { y: 26, rotate: (i % 2 ? 1 : -1) * .8 },
+          {
+            y: 0, rotate: 0, ease: 'none',
+            scrollTrigger: { trigger: s, start: 'top 98%', end: 'top 70%', scrub: .4 }
+          });
+      });
+
+      /* Il blocco dell'artista e la sua macchia respirano insieme allo scroll */
+      const artista = document.querySelector('.workshop__artist');
+      if (artista) {
+        gsap.fromTo(artista, { scale: .955 }, {
+          scale: 1, ease: 'none',
+          scrollTrigger: { trigger: artista, start: 'top bottom', end: 'top 45%', scrub: .6 }
+        });
+      }
+
+      /* Statistiche: ogni colonna arriva da un'altezza diversa */
+      gsap.utils.toArray('.stat').forEach((s, i) => {
+        gsap.fromTo(s, { y: 40 + i * 18, opacity: .3 }, {
+          y: 0, opacity: 1, ease: 'none',
+          scrollTrigger: { trigger: s, start: 'top 98%', end: 'top 62%', scrub: .5 }
+        });
+      });
+
+      /* Camere: la velatura del colore della stanza NON è legata allo scroll.
+         Aspetta che il titolo sia arrivato e fermo, poi parte da sola e lo
+         evidenzia con una pennellata da sinistra. */
+      gsap.utils.toArray('.room__title').forEach((t) => {
+        gsap.set(t, { '--pennello': 0 });
+        ScrollTrigger.create({
+          trigger: t, start: 'top 78%', once: true,
+          onEnter: () => gsap.to(t, {
+            '--pennello': 1, duration: .85, ease: 'power2.out', delay: .35
+          })
+        });
       });
     }
 

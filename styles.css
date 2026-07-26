@@ -394,6 +394,13 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   text-transform: uppercase; letter-spacing: .2em; font-size: .75rem; color: var(--accent);
 }
 .link-more span { transition: transform .35s var(--ease); }
+/* Tutta la scheda della camera è cliccabile, non solo "Scopri": il link si
+   estende con un velo trasparente su tutta l'area (immagine e bordi
+   compresi). Resta un solo collegamento, quindi la lettura assistita e la
+   navigazione da tastiera non cambiano. */
+.room { position: relative; }
+.room .link-more::after { content: ""; position: absolute; inset: 0; z-index: 5; }
+@media (hover: hover) { .room { cursor: pointer; } }
 .link-more:hover span { transform: translateX(6px); }
 /* Pallini del rullino camere e sipario foto: esistono solo su telefono */
 .rooms__dots { display: none; }

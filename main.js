@@ -158,7 +158,7 @@
     const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     if (!prefersReduced) {
       heroTl.to('.hero__media', { scale: 1.0, duration: 1.6, ease: 'power2.out' }, 0);
-      heroTl.from('.hero__title .word', { yPercent: 110, opacity: 0, duration: 1.2, stagger: 0.12 }, 0.15);
+      heroTl.from('.hero__title .word', { yPercent: 150, opacity: 0, duration: 1.2, stagger: 0.12 }, 0.15);
       heroTl.from('.hero__label', { y: 20, opacity: 0, duration: 0.9 }, 0.1);
       heroTl.from('.hero__scroll', { opacity: 0, duration: 0.8 }, 1.0);
       /* La nav scende dall'alto insieme all'hero (transform non è nella transition CSS della nav) */
@@ -214,7 +214,7 @@
     } else {
       gsap.utils.toArray('.reveal-line > span').forEach((line) => {
         gsap.from(line, {
-          yPercent: 110,
+          yPercent: 150,
           ease: 'power3.out',
           duration: 1.0,
           scrollTrigger: { trigger: line, start: 'top 80%' }
@@ -722,7 +722,7 @@
     document.querySelectorAll('[data-words]').forEach((h) => {
       const words = splitWords(h);
       gsap.from(words, {
-        yPercent: 115,
+        yPercent: 150,
         duration: 1.0, ease: 'power3.out', stagger: 0.07,
         scrollTrigger: { trigger: h, start: 'top 85%' }
       });

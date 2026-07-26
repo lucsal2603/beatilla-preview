@@ -108,6 +108,11 @@
        ============================================================ */
     const TRACCIAMENTO_ATTIVO = false;
     const CHIAVE_CONSENSO = 'beatilla-consenso';
+    /* In ANTEPRIMA il banner si vede lo stesso, per mostrarlo al cliente.
+       Sul dominio vero resta invisibile finché TRACCIAMENTO_ATTIVO è spento:
+       così non può finire online un banner che chiede il consenso per cookie
+       che ancora non esistono. Nessun rischio di dimenticanza. */
+    const IN_ANTEPRIMA = /github\.io$|^localhost$|^127\.0\.0\.1$/.test(location.hostname);
 
     const avviaTracciamento = () => {
       /* ↓↓↓ DA RIEMPIRE quando si aggiunge Analytics ↓↓↓
@@ -129,10 +134,12 @@
       const leggi = () => { try { return localStorage.getItem(CHIAVE_CONSENSO); } catch (e) { return null; } };
       const scrivi = (v) => { try { localStorage.setItem(CHIAVE_CONSENSO, v); } catch (e) {} };
 
-      /* con l'interruttore spento non mostriamo nulla e non carichiamo nulla */
-      if (!TRACCIAMENTO_ATTIVO) return;
+      /* si mostra se il tracciamento è attivo, oppure in anteprima (vetrina) */
+      if (!TRACCIAMENTO_ATTIVO && !IN_ANTEPRIMA) return;
 
-      if (leggi() === 'si') avviaTracciamento();
+      /* il tracciamento parte solo se è davvero attivo: in anteprima il banner
+         è una dimostrazione e accettando non si avvia nulla */
+      if (TRACCIAMENTO_ATTIVO && leggi() === 'si') avviaTracciamento();
 
       const EN = document.documentElement.lang === 'en';
       const testi = EN ? {
@@ -160,7 +167,11 @@
       const mostra = () => { document.body.appendChild(banner); requestAnimationFrame(() => banner.classList.add('visibile')); };
       const nascondi = () => { banner.classList.remove('visibile'); setTimeout(() => banner.remove(), 400); };
 
-      banner.querySelector('.cookie__si').addEventListener('click', () => { scrivi('si'); avviaTracciamento(); nascondi(); });
+      banner.querySelector('.cookie__si').addEventListener('click', () => {
+        scrivi('si');
+        if (TRACCIAMENTO_ATTIVO) avviaTracciamento();
+        nascondi();
+      });
       banner.querySelector('.cookie__no').addEventListener('click', () => { scrivi('no'); nascondi(); });
 
       if (!leggi()) mostra();

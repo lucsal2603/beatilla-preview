@@ -106,17 +106,53 @@
   </main>
 
   <script>
-    /* I collegamenti alla home puntano alla radice del sito. In anteprima il
-       sito vive in una sottocartella, quindi la ricalcoliamo: senza, "torna
-       alla home" porterebbe fuori dall'anteprima. */
     (function () {
-      var p = location.pathname.split('/')[1];
-      if (p && location.hostname.indexOf('github.io') > -1) {
-        var base = '/' + p + '/';
-        var a = document.getElementById('casa'), b = document.getElementById('casa2');
-        if (a) a.setAttribute('href', base);
-        if (b) b.setAttribute('href', base);
+      /* 1. LINGUA. Il servizio di hosting serve una sola pagina d'errore, questa,
+         per qualsiasi indirizzo sbagliato: una copia in /en/ non verrebbe mai
+         mostrata. Quindi la pagina si traduce da sola, con la stessa regola del
+         resto del sito: inglese se l'indirizzo chiesto era in /en/, oppure se il
+         dispositivo non è in italiano (salvo scelta manuale già memorizzata). */
+      var EN = {
+        titolo: 'Page not found · Agriturismo Beatilla',
+        etichetta: 'Error 404',
+        h1: 'This page got lost in the fields',
+        testo: "The page you were looking for no longer exists, or it has been moved. No trouble at all: head back to the home page, or get in touch — we'll help.",
+        cta: 'Back to the home page',
+        aiuto: 'Would you rather talk to us? Give us a call, we answer gladly.',
+        struttura: 'The farm',
+        mail: 'Or write to us at '
+      };
+      var inEn = location.pathname.indexOf('/en/') === 0 || location.pathname.indexOf('/en/') > 0;
+      var scelta = null, italiano = true;
+      try {
+        scelta = localStorage.getItem('beatilla-lingua');
+        italiano = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase().indexOf('it') === 0;
+      } catch (e) {}
+      if (inEn || scelta === 'en' || (!scelta && !italiano)) {
+        document.documentElement.lang = 'en';
+        document.title = EN.titolo;
+        var q = function (s) { return document.querySelector(s); };
+        q('.label').textContent = EN.etichetta;
+        q('h1').textContent = EN.h1;
+        q('.lead').textContent = EN.testo;
+        q('.cta').textContent = EN.cta;
+        q('.aiuto').textContent = EN.aiuto;
+        var chi = document.querySelectorAll('.chi');
+        if (chi[2]) chi[2].textContent = EN.struttura;
+        var mail = q('.mail');
+        mail.innerHTML = EN.mail + mail.querySelector('a').outerHTML;
       }
+
+      /* 2. RITORNO A CASA. I collegamenti puntano alla radice del sito; in
+         anteprima il sito vive in una sottocartella, quindi la ricalcoliamo,
+         e chi arriva dall'inglese torna alla home inglese. */
+      var base = '/';
+      var p = location.pathname.split('/')[1];
+      if (p && location.hostname.indexOf('github.io') > -1) base = '/' + p + '/';
+      if (document.documentElement.lang === 'en') base += 'en/';
+      var a = document.getElementById('casa'), b = document.getElementById('casa2');
+      if (a) a.setAttribute('href', base);
+      if (b) b.setAttribute('href', base);
     })();
   </script>
 </body>

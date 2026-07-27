@@ -72,253 +72,340 @@
 
   <!-- ===================== SEO · DATI STRUTTURATI (JSON-LD) ===================== -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://www.agriturismobeatilla.it/#website",
-        "url": "https://www.agriturismobeatilla.it/",
-        "name": "Agriturismo Beatilla",
-        "alternateName": "Beatilla Farm Resort",
-        "inLanguage": "it-IT",
-        "publisher": { "@id": "https://www.agriturismobeatilla.it/#agriturismo" }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://www.agriturismobeatilla.it/#website",
+      "url": "https://www.agriturismobeatilla.it/",
+      "name": "Agriturismo Beatilla",
+      "alternateName": "Beatilla Farm Resort",
+      "inLanguage": "it-IT",
+      "publisher": {
+        "@id": "https://www.agriturismobeatilla.it/#agriturismo"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://www.agriturismobeatilla.it/#webpage",
+      "url": "https://www.agriturismobeatilla.it/",
+      "name": "Agriturismo Beatilla · Art Eco Design Farm · Mantova",
+      "description": "Agriturismo Beatilla: art eco design farm a Marmirolo, alle porte di Mantova. Camere d'autore, cucina del territorio ed esperienze d'arte in una corte del 1498.",
+      "inLanguage": "it-IT",
+      "isPartOf": {
+        "@id": "https://www.agriturismobeatilla.it/#website"
       },
-      {
-        "@type": "WebPage",
-        "@id": "https://www.agriturismobeatilla.it/#webpage",
-        "url": "https://www.agriturismobeatilla.it/",
-        "name": "Agriturismo Beatilla · Art Eco Design Farm · Mantova",
-        "description": "Agriturismo Beatilla: art eco design farm a Marmirolo, alle porte di Mantova. Camere d'autore, cucina del territorio ed esperienze d'arte in una corte del 1498.",
-        "inLanguage": "it-IT",
-        "isPartOf": { "@id": "https://www.agriturismobeatilla.it/#website" },
-        "about": { "@id": "https://www.agriturismobeatilla.it/#agriturismo" },
-        "mainEntity": { "@id": "https://www.agriturismobeatilla.it/#agriturismo" },
-        "primaryImageOfPage": "https://www.agriturismobeatilla.it/img/frammenti-cascina.jpg",
-        "dateModified": "2026-07-23"
+      "about": {
+        "@id": "https://www.agriturismobeatilla.it/#agriturismo"
       },
-      {
-        "@type": "LodgingBusiness",
-        "@id": "https://www.agriturismobeatilla.it/#agriturismo",
-        "name": "Agriturismo Beatilla",
-        "alternateName": ["Beatilla Art Eco Design Farm", "Beatilla Farm Resort", "Beatilla Holiday Farm Eco Design"],
-        "description": "Art eco design farm nella campagna di Marmirolo, alle porte di Mantova. Camere d'autore decorate dall'artista Luca Bornoffi, cucina del territorio ed esperienze d'arte, in una corte del 1498.",
-        "url": "https://www.agriturismobeatilla.it/",
-        "image": [
-          "https://www.agriturismobeatilla.it/img/frammenti-cascina.jpg",
-          "https://www.agriturismobeatilla.it/img/frammenti-animali.jpg",
-          "https://www.agriturismobeatilla.it/img/esperienze-ristorante.jpg"
-        ],
-        "logo": "https://www.agriturismobeatilla.it/img/arte-artista.jpg",
-        "telephone": "+390376466480",
-        "email": "info@agriturismobeatilla.it",
-        "priceRange": "€€",
-        "foundingDate": "1498",
-        "currenciesAccepted": "EUR",
-        "checkinTime": "15:00",
-        "checkoutTime": "10:00",
-        "petsAllowed": false,
+      "mainEntity": {
+        "@id": "https://www.agriturismobeatilla.it/#agriturismo"
+      },
+      "primaryImageOfPage": "https://www.agriturismobeatilla.it/img/frammenti-cascina.jpg",
+      "dateModified": "2026-07-23"
+    },
+    {
+      "@type": "LodgingBusiness",
+      "@id": "https://www.agriturismobeatilla.it/#agriturismo",
+      "name": "Agriturismo Beatilla",
+      "alternateName": [
+        "Beatilla Art Eco Design Farm",
+        "Beatilla Farm Resort",
+        "Beatilla Holiday Farm Eco Design"
+      ],
+      "description": "Art eco design farm nella campagna di Marmirolo, alle porte di Mantova. Camere d'autore decorate dall'artista Luca Bornoffi, cucina del territorio ed esperienze d'arte, in una corte del 1498.",
+      "url": "https://www.agriturismobeatilla.it/",
+      "image": [
+        "https://www.agriturismobeatilla.it/img/frammenti-cascina.jpg",
+        "https://www.agriturismobeatilla.it/img/frammenti-animali.jpg",
+        "https://www.agriturismobeatilla.it/img/esperienze-ristorante.jpg"
+      ],
+      "logo": "https://www.agriturismobeatilla.it/img/arte-artista.jpg",
+      "telephone": "+390376466480",
+      "email": "info@agriturismobeatilla.it",
+      "priceRange": "€€",
+      "foundingDate": "1498",
+      "currenciesAccepted": "EUR",
+      "checkinTime": "15:00",
+      "checkoutTime": "10:00",
+      "petsAllowed": false,
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Corte Barco, Strada Mantova 21",
+        "addressLocality": "Marmirolo",
+        "addressRegion": "MN",
+        "postalCode": "46045",
+        "addressCountry": "IT"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 45.200963,
+        "longitude": 10.761172
+      },
+      "hasMap": "https://maps.google.com/maps?q=45.200963,10.761172",
+      "mainEntityOfPage": {
+        "@id": "https://www.agriturismobeatilla.it/#webpage"
+      },
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": "Marmirolo, Provincia di Mantova",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Corte Barco, Strada Mantova 21",
           "addressLocality": "Marmirolo",
           "addressRegion": "MN",
-          "postalCode": "46045",
           "addressCountry": "IT"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 45.200963,
-          "longitude": 10.761172
-        },
-        "hasMap": "https://maps.google.com/maps?q=45.200963,10.761172",
-        "mainEntityOfPage": { "@id": "https://www.agriturismobeatilla.it/#webpage" },
-        "containedInPlace": {
-          "@type": "AdministrativeArea",
-          "name": "Marmirolo, Provincia di Mantova",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Marmirolo",
-            "addressRegion": "MN",
-            "addressCountry": "IT"
-          }
-        },
-        "sameAs": [
-          "https://instagram.com/agriturismobeatilla",
-          "https://www.lucabornoffi.com"
-        ],
-        "founder": {
-          "@type": "Person",
-          "name": "Luca Bornoffi",
-          "url": "https://www.lucabornoffi.com"
-        },
-        "numberOfRooms": 14,
-        "containsPlace": [
-          { "@type": "Accommodation", "name": "Camera Pomodoro" },
-          { "@type": "Accommodation", "name": "Camera Mandarino" },
-          { "@type": "Accommodation", "name": "Suite Lampone" },
-          { "@type": "Accommodation", "name": "Appartamento Pallina" },
-          { "@type": "Accommodation", "name": "Loft Country Jahara" }
-        ],
-        "makesOffer": {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Art Workshop",
-            "description": "Esperienza di pittura nello studio dell'artista Luca Bornoffi: colori, pennelli e tela inclusi; l'opera realizzata resta all'ospite."
-          }
-        },
-        "slogan": "Mi casa es tu casa",
-        "amenityFeature": [
-          { "@type": "LocationFeatureSpecification", "name": "Wi-Fi gratuito", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Parcheggio gratuito", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Colazione", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Macchina del caffè in camera", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Appartamenti attrezzati con angolo cottura", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Lettini per bambini", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Giardino con area giochi", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Noleggio biciclette", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Sala lettura", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Servizio concierge", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Yoga all'aperto", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Visita della fattoria", "value": true }
-        ],
-        "potentialAction": {
-          "@type": "ReserveAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://wubook.net/nneb/bk/?ep=efbd0f20&board=bb&o=2.0.0.0&c=EUR&lang=it",
-            "inLanguage": "it-IT",
-            "actionPlatform": [
-              "http://schema.org/DesktopWebPlatform",
-              "http://schema.org/MobileWebPlatform"
-            ]
-          },
-          "result": { "@type": "LodgingReservation", "name": "Prenotazione camera" }
         }
       },
-      {
-        "@type": "Restaurant",
-        "@id": "https://www.agriturismobeatilla.it/#ristorante",
-        "name": "Ristorante Corte Barco · Agriturismo Beatilla",
-        "alternateName": "Ristorante Art Gallery Corte Barco",
-        "servesCuisine": ["Cucina mantovana", "Cucina italiana"],
-        "acceptsReservations": "True",
-        "telephone": "+393392226468",
-        "priceRange": "€€",
-        "url": "https://www.agriturismobeatilla.it/",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Corte Barco, Strada Mantova 21",
-          "addressLocality": "Marmirolo",
-          "addressRegion": "MN",
-          "postalCode": "46045",
-          "addressCountry": "IT"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 45.200963,
-          "longitude": 10.761172
-        },
-        "isPartOf": { "@id": "https://www.agriturismobeatilla.it/#agriturismo" }
+      "sameAs": [
+        "https://instagram.com/agriturismobeatilla",
+        "https://www.lucabornoffi.com"
+      ],
+      "founder": {
+        "@type": "Person",
+        "name": "Luca Bornoffi",
+        "url": "https://www.lucabornoffi.com"
       },
-      {
-        "@type": "FAQPage",
-        "@id": "https://www.agriturismobeatilla.it/#faq",
-        "isPartOf": { "@id": "https://www.agriturismobeatilla.it/#webpage" },
-        "mainEntity": [
-          {
-                    "@type": "Question",
-                    "name": "A che ora sono il check-in e il check-out?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Il check-in è disponibile dalle 15:00, mentre il check-out è entro le 10:00. Per garantirvi un alloggio preparato con la massima cura, vi chiediamo gentilmente di rispettare l'orario di arrivo."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "La colazione è inclusa?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Sì. Ogni mattina vi consegneremo la nostra Breakfast Basket, un cestino preparato con prodotti freschi fatti in casa consegnata direttamente in camera all'orario desiderato dalle 7:30 alle 9:45."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "C'è il parcheggio?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Sì. È disponibile un parcheggio scoperto gratuito all'interno della struttura. Su richiesta è disponibile anche un parcheggio coperto a pagamento."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "Il ristorante è aperto anche a chi non soggiorna a Beatilla?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Sì. Il ristorante sarà felice di accogliere anche gli ospiti esterni, su prenotazione. Per prenotazioni: +39 339 222 6468"
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "Beatilla è adatto a famiglie con bambini?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Assolutamente sì. Disponiamo di lettini per i più piccoli, ampi spazi all'aperto e un grande giardino dove trascorrere momenti di relax in famiglia."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "Sono ammessi gli animali domestici?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "No, al momento non è possibile ospitare animali domestici."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "È possibile noleggiare biciclette?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Sì. Mettiamo a disposizione biciclette su prenotazione, ideali per esplorare il Bosco della Fontana, Mantova, Borghetto sul Mincio e la ciclabile fino al Lago di Garda."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "Dove si trova Beatilla?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Beatilla si trova a Marmirolo, nel cuore della campagna mantovana, a pochi minuti dal centro storico di Mantova e dal Bosco della Fontana. È una posizione ideale per visitare il territorio tra Mantova, il Lago di Garda e le colline moreniche."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "Gli appartamenti dispongono di una cucina?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Sì. Tutti gli appartamenti sono dotati di cucina attrezzata con stoviglie ed elettrodomestici."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "È disponibile il Wi-Fi?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Sì, il Wi-Fi è gratuito e disponibile in tutta la struttura."
-                    }
-          },
-          {
-                    "@type": "Question",
-                    "name": "Posso prenotare esperienze durante il soggiorno?",
-                    "acceptedAnswer": {
-                              "@type": "Answer",
-                              "text": "Sì. Organizziamo Workshop d'arte, visite alla fattoria, escursioni, noleggio biciclette e altre esperienze su prenotazione."
-                    }
-          }
-]
+      "numberOfRooms": 14,
+      "containsPlace": [
+        {
+          "@type": "Accommodation",
+          "name": "Camera Pomodoro"
+        },
+        {
+          "@type": "Accommodation",
+          "name": "Camera Mandarino"
+        },
+        {
+          "@type": "Accommodation",
+          "name": "Suite Lampone"
+        },
+        {
+          "@type": "Accommodation",
+          "name": "Appartamento Pallina"
+        },
+        {
+          "@type": "Accommodation",
+          "name": "Loft Country Jahara"
+        }
+      ],
+      "makesOffer": {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Art Workshop",
+          "description": "Esperienza di pittura nello studio dell'artista Luca Bornoffi: colori, pennelli e tela inclusi; l'opera realizzata resta all'ospite."
+        }
+      },
+      "slogan": "Mi casa es tu casa",
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Wi-Fi gratuito",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Parcheggio gratuito",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Colazione",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Macchina del caffè in camera",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Appartamenti attrezzati con angolo cottura",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Lettini per bambini",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Giardino con area giochi",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Noleggio biciclette",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Sala lettura",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Servizio concierge",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Yoga all'aperto",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Visita della fattoria",
+          "value": true
+        }
+      ],
+      "potentialAction": {
+        "@type": "ReserveAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://wubook.net/nneb/bk/?ep=efbd0f20&board=bb&o=2.0.0.0&c=EUR&lang=it",
+          "inLanguage": "it-IT",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        },
+        "result": {
+          "@type": "LodgingReservation",
+          "name": "Prenotazione camera"
+        }
       }
-    ]
-  }
+    },
+    {
+      "@type": "Restaurant",
+      "@id": "https://www.agriturismobeatilla.it/#ristorante",
+      "name": "Ristorante Corte Barco · Agriturismo Beatilla",
+      "alternateName": "Ristorante Art Gallery Corte Barco",
+      "servesCuisine": [
+        "Cucina mantovana",
+        "Cucina italiana"
+      ],
+      "acceptsReservations": "True",
+      "telephone": "+393392226468",
+      "priceRange": "€€",
+      "url": "https://www.agriturismobeatilla.it/",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Corte Barco, Strada Mantova 21",
+        "addressLocality": "Marmirolo",
+        "addressRegion": "MN",
+        "postalCode": "46045",
+        "addressCountry": "IT"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 45.200963,
+        "longitude": 10.761172
+      },
+      "isPartOf": {
+        "@id": "https://www.agriturismobeatilla.it/#agriturismo"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.agriturismobeatilla.it/#faq",
+      "isPartOf": {
+        "@id": "https://www.agriturismobeatilla.it/#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "A che ora sono il check-in e il check-out?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Il check-in è disponibile dalle 15:00, mentre il check-out è entro le 10:00. Per garantirvi un alloggio preparato con la massima cura, vi chiediamo gentilmente di rispettare l'orario di arrivo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "La colazione è inclusa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì. Ogni mattina vi consegneremo la nostra Breakfast Basket, un cestino preparato con prodotti freschi fatti in casa consegnata direttamente in camera all'orario desiderato dalle 7:30 alle 9:45."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "C'è il parcheggio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì. È disponibile un parcheggio scoperto gratuito all'interno della struttura. Su richiesta è disponibile anche un parcheggio coperto a pagamento."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Il ristorante è aperto anche a chi non soggiorna a Beatilla?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì. Il ristorante sarà felice di accogliere anche gli ospiti esterni, su prenotazione. Per prenotazioni: +39 339 222 6468"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Beatilla è adatto a famiglie con bambini?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Assolutamente sì. Disponiamo di lettini per i più piccoli, ampi spazi all'aperto e un grande giardino dove trascorrere momenti di relax in famiglia."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Sono ammessi gli animali domestici?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, al momento non è possibile ospitare animali domestici."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "È possibile noleggiare biciclette?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì. Mettiamo a disposizione biciclette su prenotazione, ideali per esplorare il Bosco della Fontana, Mantova, Borghetto sul Mincio e la ciclabile fino al Lago di Garda."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Dove si trova Beatilla?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Beatilla si trova a Marmirolo, nel cuore della campagna mantovana, a pochi minuti dal centro storico di Mantova e dal Bosco della Fontana. È una posizione ideale per visitare il territorio tra Mantova, il Lago di Garda e le colline moreniche."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Gli appartamenti dispongono di una cucina?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì. Tutti gli appartamenti sono dotati di cucina attrezzata con stoviglie ed elettrodomestici."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "È disponibile il Wi-Fi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì, il Wi-Fi è gratuito e disponibile in tutta la struttura."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso prenotare esperienze durante il soggiorno?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sì. Organizziamo Workshop d'arte, visite alla fattoria, escursioni, noleggio biciclette e altre esperienze su prenotazione."
+          }
+        }
+      ]
+    }
+  ]
+}
   </script>
 
   <!-- ===================== GOOGLE FONTS & CDN ===================== -->
@@ -1188,6 +1275,6 @@
   <!-- Lenis servito in locale: nessuna dipendenza da CDN esterni (ricordarsi di copiarlo nel repo al momento della pubblicazione) -->
   <script src="lenis.min.js"></script>
 
-  <script src="main.js?v=63"></script>
+  <script src="main.js?v=64"></script>
 </body>
 </html>

@@ -929,6 +929,38 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   .visit__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* Anche i "Scopri" e gli inviti restano sopra i 24px minimi col mouse
+   (fino a 1024px hanno già i 44px pieni per il dito, regola più avanti). */
+.link-more, .gallery__fine-cta, .workshop__cta, .footer__links a, .footer__legal a, .footer__credit a {
+  display: inline-flex; align-items: center; min-height: 26px;
+}
+
+/* Bersagli da mouse: le voci della barra erano alte 20px, sotto il minimo di
+   24px richiesto dalle linee guida di accessibilità per elementi non testuali.
+   La barra è alta 68px, quindi c'è spazio in abbondanza: non cambia nulla
+   nell'aspetto. */
+.nav__links a { display: inline-flex; align-items: center; min-height: 26px; }
+/* logo e freccia di scorrimento: portati alla soglia piena del tocco */
+.nav__brand { display: inline-flex; align-items: center; min-height: 44px; }
+.hero__scroll { min-height: 44px; }
+
+/* Aree tattili: telefoni, email e link del footer avevano 18-27px di altezza
+   utile, sotto la soglia dei 44px raccomandata per il dito. Cresce solo la
+   zona sensibile, il testo resta della stessa dimensione; gli spazi tra le
+   voci vengono ridotti in compensazione, così il layout non si allunga. */
+@media (hover: none), (pointer: coarse), (max-width: 1024px) {
+  .contact__phones { gap: 0; }
+  .contact__phones a,
+  .contact__row a.v,
+  .footer__links a,
+  .footer__legal a,
+  .footer__credit a {
+    display: inline-flex; align-items: center; min-height: 44px;
+  }
+  .footer__links { gap: 0; }
+  .footer__legal { gap: 1.4rem; }
+}
+
 /* Dispositivi tattili fino al tablet: ogni elemento cliccabile deve avere
    almeno 44px di altezza utile, altrimenti si sbaglia il tocco. Il testo
    resta della stessa dimensione: cresce solo l'area sensibile. */

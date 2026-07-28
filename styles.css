@@ -737,12 +737,24 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
    più lunga, così la citazione non esce mai dal box e nome/città non si sovrappongono ai puntini */
 .testi__viewport { position: relative; display: grid; }
 .testi__item {
+  /* è un <figure>: il browser gli mette 40px di margine per lato, che qui
+     strozzavano la citazione a 250px su 330 disponibili */
+  margin: 0;
   grid-area: 1 / 1; opacity: 0; visibility: hidden;
   transition: opacity .8s var(--ease), visibility .8s var(--ease);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 .testi__item.active { opacity: 1; visibility: visible; }
-.testi__quote { font-family: var(--serif); font-style: italic; font-size: clamp(1.5rem, 3.4vw, 2.4rem); line-height: 1.35; }
+/* Corpo tarato su recensioni VERE, molto più lunghe delle frasi brevi di prima:
+   con il corpo precedente venivano tre parole per riga e diventavano illeggibili. */
+.testi__quote {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.15rem, 2.3vw, 1.75rem); line-height: 1.45;
+  /* il contenitore è in colonna con allineamento centrato: senza width la
+     citazione si stringerebbe sul contenuto, spezzando il testo in righe
+     cortissime. Il tetto in caratteri tiene comunque la riga leggibile. */
+  width: 100%; max-width: 36ch; margin-inline: auto;
+}
 .testi__who { margin-top: 1.8rem; }
 .testi__name { text-transform: uppercase; letter-spacing: .2em; font-size: .78rem; }
 .testi__city { font-size: .78rem; color: var(--accent); margin-top: .25rem; }
@@ -1244,7 +1256,7 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   .stats__grid { gap: 1.9rem; }
 
   /* Testimonianze */
-  .testi__quote { font-size: 1.3rem; }
+  .testi__quote { font-size: 1.12rem; max-width: none; }
 
   /* Contatti: pannelli meno gonfi */
   .contact__left, .contact__right { padding: 3rem 1.5rem; }

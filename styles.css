@@ -1,4 +1,32 @@
 /* ============================================================
+   WHATSAPP — riga nei contatti + pulsante sempre a portata
+   ============================================================ */
+/* nei contatti: stessa riga degli altri recapiti, con l'icona che la rende
+   riconoscibile a colpo d'occhio */
+.contact__wa { display: inline-flex; align-items: center; gap: .55rem; }
+.contact__wa svg { width: 20px; height: 20px; flex: none; color: #25D366; }
+
+/* Pulsante fisso: piccolo e defilato in basso a sinistra, così non litiga con
+   "Prenota" che sta a destra. Volutamente sobrio — il colore pieno di WhatsApp
+   su questa palette calda risulterebbe stonato — ma la sagoma dell'icona lo
+   rende riconoscibile lo stesso. */
+.wa-fab {
+  position: fixed; z-index: 85;
+  left: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  width: 48px; height: 48px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--text); color: #FAF8F4;
+  box-shadow: 0 8px 22px rgba(26,26,24,.26);
+  transition: transform .3s var(--ease), background .3s var(--ease);
+}
+.wa-fab svg { width: 24px; height: 24px; }
+.wa-fab:hover { background: #25D366; transform: translateY(-2px); }
+.wa-fab:active { transform: scale(.94); }
+/* sparisce quando il menu a tutto schermo è aperto */
+body.menu-open .wa-fab { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .wa-fab { transition: none; } }
+
+/* ============================================================
    BANNER COOKIE (predisposto, oggi non compare — vedi main.js)
    ============================================================ */
 .cookie {
@@ -864,6 +892,11 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 .footer__testo a:hover { color: var(--bg); border-bottom-color: rgba(250,248,244,.35); }
 
 .footer__links { gap: .7rem; }
+/* le voci di navigazione seguono l'allineamento della colonna: su telefono le
+   colonne sono centrate, quindi devono esserlo anche loro (restavano a sinistra
+   perché sono elementi in linea dentro un contenitore in colonna) */
+.footer__links a { align-self: center; }
+@media (min-width: 561px) { .footer__links a { align-self: flex-start; } }
 .footer__links a {
   font-size: .84rem; letter-spacing: .02em; text-transform: none;
   color: rgba(250,248,244,.72); transition: color .3s var(--ease);

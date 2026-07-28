@@ -108,11 +108,12 @@
        ============================================================ */
     const TRACCIAMENTO_ATTIVO = false;
     const CHIAVE_CONSENSO = 'beatilla-consenso';
-    /* In ANTEPRIMA il banner si vede lo stesso, per mostrarlo al cliente.
-       Sul dominio vero resta invisibile finché TRACCIAMENTO_ATTIVO è spento:
-       così non può finire online un banner che chiede il consenso per cookie
-       che ancora non esistono. Nessun rischio di dimenticanza. */
-    const IN_ANTEPRIMA = /github\.io$|^localhost$|^127\.0\.0\.1$/.test(location.hostname);
+    /* Dimostrazione del banner in anteprima: SPENTA. Serviva a farlo vedere al
+       cliente; oggi il sito non usa cookie di tracciamento, quindi non c'è
+       nulla da autorizzare e il banner non deve comparire da nessuna parte.
+       Per rivederlo in anteprima basta rimettere qui la riga commentata. */
+    const IN_ANTEPRIMA = false;
+    /* const IN_ANTEPRIMA = /github\.io$|^localhost$|^127\.0\.0\.1$/.test(location.hostname); */
 
     const avviaTracciamento = () => {
       /* ↓↓↓ DA RIEMPIRE quando si aggiunge Analytics ↓↓↓

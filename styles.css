@@ -303,7 +303,30 @@ img {
   backdrop-filter: none; -webkit-backdrop-filter: none;
 }
 .nav.scrolled .nav__lang:hover { background: rgba(26,26,24,.09); border-color: var(--accent); color: var(--accent); }
-body.menu-open .nav__overlay-links .nav__lang { align-self: center; }
+/* A tendina aperta la pillola della lingua esce dalla colonna delle voci e
+   sale in alto a destra, accanto alla X: piccola, discreta, sempre a portata
+   di pollice. Toglierla dalla colonna libera anche lo spazio che faceva
+   scendere l'elenco troppo vicino al logo. */
+body.menu-open .nav__overlay-links .nav__lang {
+  position: fixed;
+  /* allineata al centro della X: padding alto della barra + metà dei 44px
+     del pulsante. La barra si accorcia dopo lo scorrimento, e la pillola
+     la segue con la regola qui sotto. */
+  top: calc(1.25rem + 22px); transform: translateY(-50%);
+  right: calc(var(--gutter) + 46px);
+  z-index: 1001;
+  font-family: var(--sans);
+  font-size: .66rem; letter-spacing: .14em; line-height: 1;
+  padding: .42rem .72rem;
+  border-radius: 100px;
+  background: rgba(26,26,24,.05);
+  border: 1px solid rgba(26,26,24,.24);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  color: var(--text);
+  opacity: 1;
+}
+/* barra accorciata (dopo lo scorrimento): la X sale, e la pillola con lei */
+body.menu-open .nav.scrolled ~ .nav__overlay .nav__lang { top: calc(.9rem + 22px); }
 
 .nav__cta {
   border: 1px solid currentColor;
@@ -332,6 +355,13 @@ body.menu-open .nav { color: var(--text); }
   position: fixed; inset: 0; z-index: 990;
   background: var(--bg);
   display: flex; align-items: center; justify-content: center;
+  /* La barra in alto resta visibile sopra la tendina: senza questo spazio
+     l'elenco si centra sull'intero schermo e la prima voce finisce sotto il
+     logo. Riservando la fascia della barra, l'elenco si centra nello spazio
+     che gli resta davvero. overflow-y è una rete di sicurezza per gli
+     schermi molto bassi. */
+  padding-top: 64px;
+  overflow-y: auto;
   opacity: 0; visibility: hidden; pointer-events: none;
   transition: opacity .45s var(--ease), visibility .45s var(--ease);
 }
@@ -345,6 +375,15 @@ body.menu-open .nav__overlay { opacity: 1; visibility: visible; pointer-events: 
   transition: opacity .5s var(--ease), transform .5s var(--ease), color .3s var(--ease);
 }
 .nav__overlay-links a:hover, .nav__overlay-links a:focus-visible { color: var(--accent); }
+
+/* Schermi bassi (telefoni piccoli, e qualunque telefono coricato): sei voci
+   in corpo grande più la fascia riservata alla barra non ci stanno. Qui il
+   menu si stringe invece di costringere a scorrere. */
+@media (max-height: 700px) {
+  .nav__overlay { padding-top: 54px; }
+  .nav__overlay-links { gap: clamp(.85rem, 3vh, 1.4rem); }
+  .nav__overlay-links a { font-size: clamp(1.5rem, 6.5vw, 2rem); padding: .3rem 1rem; }
+}
 body.menu-open .nav__overlay-links a { opacity: 1; transform: none; }
 body.menu-open .nav__overlay-links a:nth-child(1) { transition-delay: .10s; }
 body.menu-open .nav__overlay-links a:nth-child(2) { transition-delay: .16s; }

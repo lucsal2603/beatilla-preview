@@ -739,12 +739,19 @@
       });
     });
 
-    /* ---------- ESPERIENZE: staggered cards via batch() ---------- */
-    gsap.set('[data-card]', { y: 50, opacity: 0 });
+    /* ---------- ESPERIENZE: staggered cards via batch() ----------
+       Sul telefono le schede sono alte quanto mezzo schermo: aspettare
+       che il loro bordo alto raggiunga l'85% voleva dire accenderle
+       quando erano già sotto gli occhi. Lì partono appena si affacciano
+       dal bordo basso, con meno strada da fare e in meno tempo. Su
+       schermi grandi resta come prima, che andava bene. */
+    gsap.set('[data-card]', { y: () => (isMobile() ? 26 : 50), opacity: 0 });
     ScrollTrigger.batch('[data-card]', {
-      start: 'top 85%',
+      start: () => (isMobile() ? 'top 100%' : 'top 85%'),
       onEnter: (batch) => gsap.to(batch, {
-        y: 0, opacity: 1, duration: 0.9, ease: 'power2.out', stagger: 0.15, overwrite: true
+        y: 0, opacity: 1, ease: 'power2.out', overwrite: true,
+        duration: isMobile() ? 0.55 : 0.9,
+        stagger: isMobile() ? 0.07 : 0.15
       })
     });
 

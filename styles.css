@@ -488,6 +488,15 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   margin-bottom: clamp(4rem, 9vh, 8rem);
 }
 .room:last-child { margin-bottom: 0; }
+/* I due cloni servono solo al rullino orizzontale del telefono, che li usa
+   per girare all'infinito. Li mette JavaScript al caricamento, in base alla
+   larghezza di allora: se poi la finestra viene allargata — sul computer
+   capita di continuo — il layout torna a colonne ma i cloni restano lì, e
+   la prima e l'ultima camera si vedono due volte. Sopra la soglia del
+   rullino non devono mai comparire. */
+@media (min-width: 769px) {
+  .room--clone { display: none !important; }
+}
 .room--reverse .room__media { order: 2; }
 .room__media { overflow: hidden; }
 .room__media .img-slot { width: 100%; will-change: transform, clip-path; }
@@ -1215,7 +1224,11 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   .dining__text h2, .workshop__text h2, .contact__left h2 {
     font-size: clamp(1.9rem, 8vw, 2.5rem);
   }
-  .hero__title { font-size: clamp(2.6rem, 11.5vw, 4rem); }
+  /* Il minimo era 2.6rem: sui telefoni da 320px "Dove il tempo" restava
+     sette pixel troppo lungo e si spezzava, facendo diventare il titolo di
+     tre righe. Il minimo entra in gioco solo sotto i 341px di larghezza,
+     quindi da lì in su non cambia niente. */
+  .hero__title { font-size: clamp(2.45rem, 11.5vw, 4rem); }
   .hero__label { margin-bottom: 1.25rem; }
 
   /* Chi siamo: lead e corpo più piccoli, più aria tra i blocchi */
@@ -1275,12 +1288,18 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   /* card "a fuoco": quella centrata piena, le altre soft (classe aggiunta da JS) */
   .rooms--roll .room { opacity: .55; transform: scale(.96); transition: opacity .45s var(--ease), transform .45s var(--ease); }
   .rooms--roll .room.is-active { opacity: 1; transform: none; }
-  .rooms__dots { display: flex; justify-content: center; gap: .5rem; margin-top: .2rem; }
+  .rooms__dots { display: flex; justify-content: center; gap: 1rem; margin-top: .2rem; }
   .rooms__dot {
+    position: relative;
     width: 8px; height: 8px; border-radius: 999px;
     border: 1px solid var(--accent); background: transparent; padding: 0;
     transition: width .35s var(--ease), background .3s var(--ease);
   }
+  /* Il pallino resta piccolo, ma il dito ne trova uno da 24x40: l'area
+     invisibile arriva a metà dello spazio fra un pallino e l'altro, così
+     due aree vicine si sfiorano senza sovrapporsi e nessun tocco finisce
+     sulla camera sbagliata. Stessa idea dei pallini delle recensioni. */
+  .rooms__dot::after { content: ""; position: absolute; inset: -16px -8px; }
   /* il pallino della camera in vista si allunga a pillola */
   .rooms__dot.active { width: 26px; background: var(--accent); }
 

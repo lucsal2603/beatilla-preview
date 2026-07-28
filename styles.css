@@ -303,30 +303,40 @@ img {
   backdrop-filter: none; -webkit-backdrop-filter: none;
 }
 .nav.scrolled .nav__lang:hover { background: rgba(26,26,24,.09); border-color: var(--accent); color: var(--accent); }
-/* A tendina aperta la pillola della lingua esce dalla colonna delle voci e
-   sale in alto a destra, accanto alla X: piccola, discreta, sempre a portata
-   di pollice. Toglierla dalla colonna libera anche lo spazio che faceva
-   scendere l'elenco troppo vicino al logo. */
-body.menu-open .nav__overlay-links .nav__lang {
-  position: fixed;
-  /* allineata al centro della X: padding alto della barra + metà dei 44px
-     del pulsante. La barra si accorcia dopo lo scorrimento, e la pillola
-     la segue con la regola qui sotto. */
-  top: calc(1.25rem + 22px); transform: translateY(-50%);
-  right: calc(var(--gutter) + 46px);
-  z-index: 1001;
-  font-family: var(--sans);
-  font-size: .66rem; letter-spacing: .14em; line-height: 1;
-  padding: .42rem .72rem;
-  border-radius: 100px;
-  background: rgba(26,26,24,.05);
-  border: 1px solid rgba(26,26,24,.24);
-  backdrop-filter: none; -webkit-backdrop-filter: none;
-  color: var(--text);
-  opacity: 1;
+/* A tendina aperta la pillola della lingua sale in alto a destra accanto alla
+   X, piccola e discreta.
+
+   Non usa la copia dentro la tendina: quella vive in un piano a quota 990,
+   mentre la barra sta a 1000, quindi appena la barra prendeva lo sfondo pieno
+   (dopo lo scorrimento) le si stendeva sopra e la pillola spariva. Si mostra
+   invece la pillola VERA, quella dentro la barra, che sta già sopra la tendina
+   e per giunta si allinea da sola alla X senza calcoli a mano. */
+body.menu-open .nav__overlay-links .nav__lang { display: none; }
+
+@media (max-width: 768px) {
+  /* A tendina aperta nella barra convivono logo, pillola e X. Sui telefoni
+     stretti non ci stanno: a 320px la pillola arrivava a toccare il logo.
+     Il logo si stringe solo mentre la tendina è aperta, e solo dove serve —
+     il valore centrale supera 1.5rem già sopra i 545px, quindi da lì in su
+     resta identico. */
+  .nav__brand { transition: font-size .35s var(--ease); }
+  body.menu-open .nav__brand { font-size: clamp(1.05rem, 4.4vw, 1.5rem); }
+
+  /* 18px meno gli 8px di margine negativo del pulsante = 10px veri fra
+     pillola e X */
+  body.menu-open .nav__links { display: flex; align-items: center; margin-left: auto; margin-right: 18px; }
+  body.menu-open .nav__links > *:not(.nav__lang) { display: none; }
+  body.menu-open .nav__links .nav__lang {
+    font-family: var(--sans);
+    font-size: .66rem; letter-spacing: .14em; line-height: 1;
+    padding: .42rem .72rem;
+    background: rgba(26,26,24,.05);
+    border-color: rgba(26,26,24,.24);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    color: var(--text);
+  }
+  body.menu-open .nav__links .nav__lang:hover { background: rgba(26,26,24,.09); border-color: var(--accent); color: var(--accent); }
 }
-/* barra accorciata (dopo lo scorrimento): la X sale, e la pillola con lei */
-body.menu-open .nav.scrolled ~ .nav__overlay .nav__lang { top: calc(.9rem + 22px); }
 
 .nav__cta {
   border: 1px solid currentColor;

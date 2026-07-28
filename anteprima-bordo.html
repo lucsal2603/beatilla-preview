@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Anteprima cornice immagini — Beatilla</title>
+<link rel="stylesheet" href="font/font.css" />
+<style>
+  :root { --bg:#FAF8F4; --testo:#1A1A18; --accent:#7A6A52; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    background:var(--bg); color:var(--testo);
+    font-family:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    padding:clamp(1.6rem,5vw,3rem) clamp(1.4rem,5vw,2rem) 5rem;
+    -webkit-font-smoothing:antialiased;
+  }
+  .foglio { max-width:1080px; margin-inline:auto; }
+  h1 { font-family:'Young Serif',Georgia,serif; font-weight:400; font-size:clamp(1.5rem,4vw,2.2rem); line-height:1.2; }
+  .occhiello { font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:.6rem; }
+  .intro { max-width:56ch; margin:1rem 0 3rem; font-size:.98rem; line-height:1.7; color:#3d3d39; }
+
+  .griglia { display:grid; gap:clamp(3rem,7vw,4.5rem) clamp(2rem,5vw,3.5rem); grid-template-columns:1fr; }
+  @media (min-width:760px) { .griglia { grid-template-columns:1fr 1fr; } }
+
+  .caso { }
+  .caso h2 { font-family:'Young Serif',Georgia,serif; font-weight:400; font-size:1.15rem; margin-bottom:.4rem; }
+  .caso p { font-size:.9rem; line-height:1.6; color:#6b6b66; margin-bottom:2rem; max-width:44ch; }
+
+  /* stesso identico impianto del sito */
+  .img-slot { position:relative; background:linear-gradient(135deg,#c9c1b3,#a8a091); overflow:hidden; width:100%; aspect-ratio:4/3; }
+  .img-slot > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* PROPOSTA — filo esterno + angolino da album */
+  .con .img-slot { outline:1px solid rgba(122,106,82,.38); outline-offset:10px; }
+  .con .img-slot::after {
+    content:""; position:absolute; right:0; bottom:0; width:26px; height:26px; z-index:3;
+    background:linear-gradient(135deg, transparent 50%,
+      rgba(122,106,82,.55) 50%, rgba(122,106,82,.55) calc(50% + 1px),
+      var(--bg) calc(50% + 1px));
+    filter:drop-shadow(-1px -1px 2px rgba(26,26,24,.22));
+  }
+  /* VARIANTE — angolino pieno bronzo */
+  .pieno .img-slot { outline:1px solid rgba(122,106,82,.38); outline-offset:10px; }
+  .pieno .img-slot::after {
+    content:""; position:absolute; right:0; bottom:0; width:26px; height:26px; z-index:3;
+    background:linear-gradient(135deg, transparent 52%, var(--accent) 52%);
+  }
+  /* VARIANTE — solo squadre agli angoli, niente filo continuo */
+  .squadre .img-slot { outline:none; }
+  .squadre .cornice { position:relative; padding:10px; }
+  .squadre .cornice::before, .squadre .cornice::after {
+    content:""; position:absolute; width:34px; height:34px; pointer-events:none;
+    border:1px solid rgba(122,106,82,.55);
+  }
+  .squadre .cornice::before { top:0; left:0; border-right:0; border-bottom:0; }
+  .squadre .cornice::after  { bottom:0; right:0; border-left:0; border-top:0; }
+  .squadre .img-slot::after {
+    content:""; position:absolute; right:0; bottom:0; width:26px; height:26px; z-index:3;
+    background:linear-gradient(135deg, transparent 50%,
+      rgba(122,106,82,.6) 50%, rgba(122,106,82,.6) calc(50% + 1px),
+      var(--bg) calc(50% + 1px));
+  }
+
+  .cat { display:block; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:2.2rem 0 .5rem; }
+  .caso h3 { font-family:'Young Serif',Georgia,serif; font-weight:400; font-size:1.5rem; }
+
+  footer { margin-top:4rem; padding-top:1.4rem; border-top:1px solid #e3ded4; font-size:.9rem; color:#6b6b66; max-width:60ch; line-height:1.7; }
+</style>
+</head>
+<body>
+<div class="foglio">
+
+  <p class="occhiello">Beatilla · anteprima, non pubblicata</p>
+  <h1>Una cornice per le immagini principali</h1>
+  <p class="intro">
+    Due segni, nessuno dei quali è un contorno appoggiato sulla foto: un <strong>filo sottile
+    che corre dieci pixel fuori dal bordo</strong>, come il passe-partout di una stampa
+    incorniciata, e un <strong>angolino nello spigolo in basso</strong>, come le alette di carta
+    che tenevano le foto negli album. Sotto trovi la versione attuale e tre modi di farlo.
+  </p>
+
+  <div class="griglia">
+
+    <div class="caso senza">
+      <h2>Adesso</h2>
+      <p>La foto finisce dove finisce, senza nessun segno intorno.</p>
+      <div class="cornice"><div class="img-slot"><img src="img/esperienze-studio.jpg" alt="" /></div></div>
+      <span class="cat">Where creativity begins</span>
+      <h3>Studio Bornoffi</h3>
+    </div>
+
+    <div class="caso con">
+      <h2>Proposta — filo + angolino di carta</h2>
+      <p>L'angolino è color carta con il filo bronzo sul taglio: sembra che la foto sia infilata nella pagina.</p>
+      <div class="cornice"><div class="img-slot"><img src="img/esperienze-studio.jpg" alt="" /></div></div>
+      <span class="cat">Where creativity begins</span>
+      <h3>Studio Bornoffi</h3>
+    </div>
+
+    <div class="caso pieno">
+      <h2>Variante — angolino pieno</h2>
+      <p>Stesso filo esterno, ma l'angolino è bronzo pieno. Più deciso, si nota da lontano.</p>
+      <div class="cornice"><div class="img-slot"><img src="img/esperienze-ristorante.jpg" alt="" /></div></div>
+      <span class="cat">Lunch &amp; dinner</span>
+      <h3>Art Gallery Restaurant</h3>
+    </div>
+
+    <div class="caso squadre">
+      <h2>Variante — squadre agli angoli</h2>
+      <p>Niente filo continuo: solo due squadre opposte, come i segni di taglio di una stampa. Più leggera.</p>
+      <div class="cornice"><div class="img-slot"><img src="img/esperienze-giardino.jpg" alt="" /></div></div>
+      <span class="cat">Fuori dalla porta</span>
+      <h3>Il giardino</h3>
+    </div>
+
+  </div>
+
+  <footer>
+    Niente di tutto questo è online: il sito pubblicato è rimasto com'era.
+    Dimmi quale ti convince e su quali immagini vuoi metterlo — per ora l'ho provato
+    solo sulle schede di <em>Da vivere</em> e <em>Cosa visitare</em>.
+  </footer>
+
+</div>
+</body>
+</html>

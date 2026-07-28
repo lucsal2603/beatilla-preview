@@ -7,20 +7,19 @@
 .contact__wa svg { width: 20px; height: 20px; flex: none; color: #25D366; }
 
 /* Pulsante fisso: piccolo e defilato in basso a sinistra, così non litiga con
-   "Prenota" che sta a destra. Volutamente sobrio — il colore pieno di WhatsApp
-   su questa palette calda risulterebbe stonato — ma la sagoma dell'icona lo
-   rende riconoscibile lo stesso. */
+   "Prenota" che sta a destra. Nel verde ufficiale di WhatsApp: si riconosce
+   all'istante, che è tutto il senso di un pulsante di contatto rapido. */
 .wa-fab {
   position: fixed; z-index: 85;
   left: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   width: 48px; height: 48px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
-  background: var(--text); color: #FAF8F4;
-  box-shadow: 0 8px 22px rgba(26,26,24,.26);
+  background: #25D366; color: #fff;
+  box-shadow: 0 8px 22px rgba(37,211,102,.34);
   transition: transform .3s var(--ease), background .3s var(--ease);
 }
-.wa-fab svg { width: 24px; height: 24px; }
-.wa-fab:hover { background: #25D366; transform: translateY(-2px); }
+.wa-fab svg { width: 26px; height: 26px; }
+.wa-fab:hover { background: #1da851; transform: translateY(-2px); }
 .wa-fab:active { transform: scale(.94); }
 /* sparisce quando il menu a tutto schermo è aperto */
 body.menu-open .wa-fab { opacity: 0; pointer-events: none; }

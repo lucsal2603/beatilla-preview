@@ -1017,10 +1017,14 @@
         gsap.utils.toArray(selettore).forEach((el, i) => {
           const verso = (i % 2 === 0) ? -1 : 1;
           gsap.fromTo(el,
-            { x: verso * distanza, rotate: verso * 1.5, opacity: .35 },
+            { x: verso * distanza, rotate: verso * 1.5, opacity: .55 },
             {
               x: 0, rotate: 0, opacity: 1, ease: 'none',
-              scrollTrigger: { trigger: el, start: 'top 96%', end: 'top 58%', scrub: .5, invalidateOnRefresh: true }
+              /* Comincia PRIMA che l'immagine entri in campo e finisce quando è
+                 ancora in basso: così quando la si guarda è già a posto. Prima
+                 partiva a 96% e finiva a 58%, cioè si sistemava solo dopo essere
+                 arrivata a metà schermo — si vedeva "arrivare" ed era brutto. */
+              scrollTrigger: { trigger: el, start: 'top 112%', end: 'top 78%', scrub: .5, invalidateOnRefresh: true }
             });
         });
       };

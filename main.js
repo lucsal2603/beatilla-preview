@@ -656,45 +656,6 @@
 
     }
 
-    /* ---------- SIPARIO FOTO (telefono): due colonne che scorrono DA SOLE ----------
-       Solo marquee infinito: sinistra in su, destra in giù, fessura di luce
-       fissa al centro. Nessuna animazione legata allo scroll: la pagina ci
-       scorre attraverso normalmente ed Esperienze arriva sotto come sempre.
-       Un set di 5 foto = 1/3 esatto della striscia → loop senza stacchi.
-       In pausa quando la sezione è fuori schermo. */
-    if (isMobile() && !prefersReduced) {
-      const curtain = document.getElementById('curtain');
-      if (curtain) {
-        const trkL = curtain.querySelector('.curtain__col--left .curtain__track');
-        const trkR = curtain.querySelector('.curtain__col--right .curtain__track');
-        const marqL = gsap.to(trkL, { yPercent: -100 / 3, duration: 26, ease: 'none', repeat: -1 });
-        const marqR = gsap.fromTo(trkR, { yPercent: -100 / 3 }, { yPercent: 0, duration: 26, ease: 'none', repeat: -1 });
-        ScrollTrigger.create({
-          trigger: curtain, start: 'top bottom', end: 'bottom top',
-          onToggle: (self) => { marqL.paused(!self.isActive); marqR.paused(!self.isActive); }
-        });
-
-        /* RIALZO INIZIALE: mentre la banda entra in scena, il tag delle nuvole
-           (Esperienze) si alza da sotto fino a COPRIRNE LA METÀ, poi restano
-           agganciati così e scorrono insieme. Scrub 1:1 esatto, zero molleggi. */
-        const expSec = document.querySelector('.exp');
-        if (expSec) {
-          curtain.classList.add('curtain--rise');
-          const half = () => Math.round(curtain.querySelector('.curtain__pin').offsetHeight / 2);
-          gsap.fromTo(expSec, { y: () => half() }, {
-            y: 0, ease: 'none',
-            scrollTrigger: {
-              trigger: curtain,
-              start: 'top bottom',
-              end: 'top top',
-              scrub: true,
-              invalidateOnRefresh: true
-            }
-          });
-        }
-      }
-    }
-
     /* ---------- RISTORANTE: image clip reveal from bottom + text ---------- */
     gsap.utils.toArray('[data-clip-up]').forEach((el) => {
       gsap.from(el, {
@@ -995,23 +956,6 @@
       });
     }
 
-    /* ---------- IL CAPPELLO CHE SPARISCE ----------
-       La foto del cappello resta incollata in cima e non si muove: è OSPITI
-       che sale, col suo bordo ad arco, fino a chiudersi contro l'arco che
-       scende dalla sezione "Scopri il suo lavoro" — e la foto sparisce.
-       Tecnica adesiva come la home: nessuno spaziatore, nessun salto, e lo
-       scorrimento resta fluido sul telefono. Quando è coperta la togliamo
-       di mezzo per non tenere viva una foto grande dietro tutto il sito. */
-    const fascia = document.querySelector('.video');
-    const testi = document.querySelector('.testi');
-    if (fascia && testi && isMobile() && !prefersReduced) {
-      ScrollTrigger.create({
-        trigger: testi, start: 'top top',
-        onEnter: () => fascia.classList.add('is-coperta'),
-        onLeaveBack: () => fascia.classList.remove('is-coperta')
-      });
-    }
-
     /* ---------- ARRIVI LATERALI ----------
        Le immagini aspettano spostate di lato e si mettono al posto giusto
        mentre si scende: agganciate allo scroll (scrub), non partono da sole.
@@ -1111,28 +1055,6 @@
       y: 30, opacity: 0, duration: 0.9, ease: 'power2.out',
       scrollTrigger: { trigger: '.footer', start: 'top bottom' }
     });
-
-    /* ---------- PALLINI DELLE NUVOLE ----------
-       I tre pallini sopra le nuvole di Esperienze galleggiano piano, ognuno
-       col suo tempo, così non sembrano incollati. Solo su telefono, dove le
-       nuvole esistono. */
-    if (isMobile() && !prefersReduced) {
-      const exp = document.querySelector('.curtain + .exp');
-      if (exp) {
-        [1, 2, 3].forEach((n, i) => {
-          const b = document.createElement('span');
-          b.className = 'exp__bolla exp__bolla--' + n;
-          b.setAttribute('aria-hidden', 'true');
-          exp.appendChild(b);
-          gsap.to(b, {
-            y: -6 - i * 1.5, x: i === 1 ? 2 : (i === 0 ? -2.5 : 2.5),
-            duration: 1.9 + i * 0.45, ease: 'sine.inOut',
-            yoyo: true, repeat: -1, delay: i * 0.35
-          });
-        });
-      }
-    }
-
 
     /* DOVE ERAVAMO RIMASTI.
        Ricaricando la pagina, o tornando indietro dalla privacy o dalla versione

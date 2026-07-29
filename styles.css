@@ -484,7 +484,7 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   z-index: 4; display: flex; flex-direction: column; align-items: center; gap: .6rem;
   color: var(--white);
 }
-.hero__scroll svg { width: 22px; height: 37px; animation: bob 2.2s var(--ease) infinite; }
+.hero__scroll svg { width: 18px; height: 30px; animation: bob 2.2s var(--ease) infinite; }
 @keyframes bob { 0%,100% { transform: translateY(0); opacity:.85;} 50% { transform: translateY(7px); opacity:.4;} }
 
 /* ============================================================
@@ -606,7 +606,6 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   text-align: center; color: rgba(26,26,24,.62);
   font-size: .95rem; line-height: 1.7;
 }
-.curtain { display: none; }
 
 /* ============================================================
    6. HORIZONTAL SCROLL GALLERY
@@ -803,18 +802,6 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
    11. TESTIMONIALS
    ============================================================ */
 .testi { position: relative; background: var(--white); padding-block: var(--section-y); text-align: center; }
-/* Il bordo bianco sopra Ospiti non è un taglio netto: sale ad arco leggero
-   sulla foto. I 2px di sovrapposizione evitano il filo chiaro su iOS. */
-.testi::before {
-  content: ""; position: absolute; left: -1px; right: -1px;
-  bottom: calc(100% - 2px); height: clamp(54px, 15vw, 100px);
-  background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%2040'%20preserveAspectRatio='none'%3E%3Cpath%20fill='%23FFFFFF'%20d='M0,1%20Q200,74%20400,1%20L400,40%20L0,40%20Z'/%3E%3C/svg%3E") no-repeat center bottom;
-  background-size: 100% 100%;
-  pointer-events: none;
-}
-/* Su schermi grandi l'arco saliva di 100px e copriva troppa foto: qui resta
-   più basso, sul telefono invece è già proporzionato e non cambia. */
-@media (min-width: 769px) { .testi::before { height: 62px; } }
 .testi .container { max-width: 820px; }
 /* Tutte le testimonianze impilate nella stessa cella grid: il riquadro prende l'altezza di quella
    più lunga, così la citazione non esce mai dal box e nome/città non si sovrappongono ai puntini */
@@ -1127,94 +1114,8 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   /* cintura di sicurezza: mai striscia bianca laterale su iOS */
   html, body { overflow-x: clip; }
 
-  /* ---------- SIPARIO FOTO (prima di Esperienze) ----------
-     Due colonne di foto che scorrono DA SOLE all'infinito, in versi
-     opposti, con la fessura di luce fissa al centro. Nessun aggancio
-     allo scroll: la pagina ci scorre attraverso normalmente. */
-  .curtain { display: block; position: relative; background: var(--bg); }
-  /* La fascia nera dei numeri scende sopra il carrello: la sua curva inferiore
-     poggia sulle foto, così agli angoli non si intravede più la carta chiara. */
-  /* La sovrapposizione deve superare la profondità dell'arco, non eguagliarla:
-     agli angoli il nero risale di tutto l'arco e lascerebbe scoperta la prima
-     striscia del carosello, dove passano i 6px di stacco fra una foto e
-     l'altra — che scorrendo si vedono come un lampo chiaro. */
-  .stats { position: relative; z-index: 3; margin-bottom: calc(-1 * (clamp(26px, 6.5vw, 56px) + 14px)); }
-  .curtain__pin { position: relative; height: 100svh; overflow: hidden; }
-  .curtain__inner { position: absolute; inset: 0; display: flex; will-change: transform; }
-  .curtain__col { position: relative; flex: 1; overflow: hidden; will-change: transform; }
-  /* niente gap flex: il distacco è un margine su OGNI foto, così un set
-     di 5 è esattamente 1/3 della striscia e il loop è senza stacchi */
-  .curtain__track { display: flex; flex-direction: column; will-change: transform; }
-  .curtain__track img { display: block; width: 100%; height: 36svh; object-fit: cover; margin-bottom: 6px; }
-  .curtain__col--left { margin-right: 6px; }
-  .curtain__seam {
-    position: absolute; left: 50%; top: 0; bottom: 0;
-    width: 6px; margin-left: -3px; z-index: 3; pointer-events: none;
-    background: linear-gradient(180deg, transparent, rgba(255, 244, 214, .95) 22%, #ffedc2 50%, rgba(255, 244, 214, .95) 78%, transparent);
-    box-shadow: 0 0 22px 6px rgba(255, 233, 180, .55);
-  }
-  /* Esperienze ATTACCATA alla banda del loop: niente filo di distacco
-     sotto, e il bordo alto è uno SCHIZZO D'ARTE — macchia crema
-     irregolare (con gocce di pittura) che morde le foto del loop */
-  .curtain + .exp { margin-top: -2px; position: relative; z-index: 2; }
-  .curtain + .exp::before {
-    content: "";
-    position: absolute; left: 0; right: 0;
-    bottom: calc(100% - 4px); /* 4px DENTRO Esperienze: saldatura senza spazi */
-    height: 64px;
-    pointer-events: none;
-    /* fila di nuvole su baseline ad ARCO (collina): centro più alto,
-       bordi più bassi — curva leggera, né piatta né esagerata */
-    background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%2084'%20preserveAspectRatio='none'%3E%3Cpath%20fill='%23FAF8F4'%20d='M0,54A30,30%200%200%201%2057,44A30,30%200%200%201%20114,36A30,30%200%200%201%20171,31A18,18%200%200%201%20200,30A18,18%200%200%201%20229,31A30,30%200%200%201%20286,36A30,30%200%200%201%20343,44A30,30%200%200%201%20400,54L400,84L0,84Z'/%3E%3Cpath%20fill='none'%20stroke='%231A1A18'%20stroke-width='2.5'%20d='M0,54A30,30%200%200%201%2057,44A30,30%200%200%201%20114,36A30,30%200%200%201%20171,31A18,18%200%200%201%20200,30A18,18%200%200%201%20229,31A30,30%200%200%201%20286,36A30,30%200%200%201%20343,44A30,30%200%200%201%20400,54'/%3E%3C/svg%3E") no-repeat bottom;
-    background-size: 100% 100%;
-  }
-  /* i tre pallini sopra le nuvole: elementi veri (non più disegnati nello
-     sfondo) così possono oscillare ognuno per conto proprio */
-  .exp__bolla {
-    position: absolute; z-index: 2; pointer-events: none;
-    border-radius: 50%;
-    background: var(--bg); border: 2.5px solid var(--text);
-    will-change: transform;
-  }
-  .exp__bolla--1 { width: 10px; height: 10px; left: 28.75%; top: -47px; }
-  .exp__bolla--2 { width: 12px; height: 12px; left: 50%;    top: -52px; }
-  .exp__bolla--3 { width: 10px; height: 10px; left: 71.25%; top: -47px; }
-
-  /* col rialzo attivo (classe aggiunta da JS): Esperienze si arrampica sul
-     loop fino a coprirne METÀ, poi restano agganciati e scorrono insieme */
-  .curtain--rise + .exp { margin-top: -50svh; background: var(--bg); }
-
-  /* fine SERVIZI: stesso schizzo col bordo nero, ma CAPOVOLTO — festoni
-     crema che pendono verso il basso, gobbe rivolte in giù */
-  .services { position: relative; }
-  .services::after {
-    content: "";
-    position: absolute; left: 0; right: 0;
-    top: calc(100% - 4px); /* 4px dentro Servizi: saldatura senza spazi */
-    height: 50px; z-index: 2; pointer-events: none;
-    background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20600%2072'%3E%3Cpath%20fill='%23FAF8F4'%20d='M0,24A27,27%200%200%200%2054,24A17,17%200%200%200%2088,24A38,38%200%200%200%20164,24A21,21%200%200%200%20206,24A44,44%200%200%200%20294,24A15,15%200%200%200%20324,24A34,34%200%200%200%20392,24A23,23%200%200%200%20438,24A41,41%200%200%200%20520,24A20,20%200%200%200%20560,24A20,20%200%200%200%20600,24L600,0L0,0Z'/%3E%3Cpath%20fill='none'%20stroke='%231A1A18'%20stroke-width='2.5'%20d='M0,24A27,27%200%200%200%2054,24A17,17%200%200%200%2088,24A38,38%200%200%200%20164,24A21,21%200%200%200%20206,24A44,44%200%200%200%20294,24A15,15%200%200%200%20324,24A34,34%200%200%200%20392,24A23,23%200%200%200%20438,24A41,41%200%200%200%20520,24A20,20%200%200%200%20560,24A20,20%200%200%200%20600,24'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='100'%20cy='50'%20r='5'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='275'%20cy='58'%20r='6'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='455'%20cy='52'%20r='4'/%3E%3Ccircle%20fill='%23FAF8F4'%20stroke='%231A1A18'%20stroke-width='2.5'%20cx='585'%20cy='45'%20r='4'/%3E%3C/svg%3E") repeat-x top;
-    background-size: auto 100%;
-  }
   /* Immagine full-bleed "Beatilla" sotto l'artista: su telefono mostrala per intero invece di ritagliarla */
   .video { height: auto; min-height: 0; }
-  /* bordo alto ben arcuato, bordo basso appena accennato: la curva di sotto
-     fa da invito a quella di Ospiti, che ci si incastra risalendo */
-  /* La foto del cappello NON ha il bordo alto curvo. È la sezione sopra
-     ("Scopri il suo lavoro") che le scende addosso con un arco, speculare a
-     quello di Ospiti. L'arco è disegnato in cima alla foto così resta
-     incollato a lei anche mentre lo schermo è fermo: Ospiti sale e ci si
-     chiude contro esattamente. */
-  .video { border-radius: 0; position: sticky; top: 68px; } /* sotto la barra: il fermo scatta prima */
-  .video.is-coperta { visibility: hidden; }
-  .video::before {
-    content: ""; position: absolute; left: -1px; right: -1px; top: -1px;
-    /* stessa altezza dell'arco di Ospiti: solo così le due curve sono
-       identiche e si chiudono combaciando */
-    height: clamp(54px, 15vw, 100px);
-    z-index: 3; pointer-events: none;
-    background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%2040'%20preserveAspectRatio='none'%3E%3Cpath%20fill='%23FFFFFF'%20d='M0,0%20L400,0%20L400,1%20Q200,74%200,1%20Z'/%3E%3C/svg%3E") no-repeat top;
-    background-size: 100% 100%;
-  }
   .video .img-slot { position: static; }
   .video .img-slot > img,
   .video .img-slot > img[data-img-parallax] {
@@ -1364,7 +1265,6 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   html { scroll-behavior: auto; }
   .hero__scroll svg { animation: none; }
   .rooms--roll .room { transform: none; }
-  .curtain { display: none !important; }
   .hero__media { transform: scale(1) !important; }
   .hero__video { display: none; }
   /* Niente scrub: pin sbloccato, la striscia si scorre a mano (titolo sopra) */

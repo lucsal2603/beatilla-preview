@@ -50,6 +50,18 @@
       document.body.classList.add('caricamento');
       setTimeout(finito, 30000); /* tetto di sicurezza: solo contro richieste rimaste appese */
 
+      /* PRIMA IL VIDEO, POI LE FOTO. Il video deve essere in riproduzione
+         quando la schermata si apre: gli lasciamo la banda libera per il
+         primo tratto, e i precaricatori delle foto partono appena ha i
+         primi fotogrammi (o dopo 1,2s, se fa i capricci). */
+      const partenze = [];
+      let immaginiPartite = false;
+      const viaImmagini = () => {
+        if (immaginiPartite) return;
+        immaginiPartite = true;
+        partenze.forEach((f) => f());
+      };
+
       /* TUTTE le immagini della pagina, comprese quelle differite: un
          precaricatore per ciascuna le porta in cache mentre la barra
          avanza; quando poi si scorre, compaiono già pronte. */
@@ -60,16 +72,35 @@
         registrateSrc.add(src);
         aspetta((pronto) => {
           if (img.complete && img.naturalWidth) return pronto();
-          const pre = new Image();
-          pre.addEventListener('load', pronto, { once: true });
-          pre.addEventListener('error', pronto, { once: true });
-          pre.src = src;
-          if (pre.complete && pre.naturalWidth) pronto();
+          partenze.push(() => {
+            const pre = new Image();
+            try { pre.fetchPriority = 'low'; } catch (e) {}
+            pre.addEventListener('load', pronto, { once: true });
+            pre.addEventListener('error', pronto, { once: true });
+            pre.src = src;
+            if (pre.complete && pre.naturalWidth) pronto();
+          });
         });
       });
-      /* Il video della home NON blocca l'ingresso: aspettarne il buffer
-         (~5MB) raddoppiava l'attesa. Nell'hero c'è il poster, già contato
-         tra le immagini; il video sfuma dentro da solo appena è pronto. */
+
+      /* Il video della home: aspettiamo i PRIMI fotogrammi (loadeddata /
+         canplay: mezzo secondo, non tutto il buffer), così all'apertura è
+         già in moto come prima. Tetto suo di 3s: se il telefono rifiuta il
+         precarico (es. risparmio energetico) non tiene in ostaggio nessuno. */
+      const vidLoader = document.querySelector('.hero__video video');
+      if (vidLoader && !prefersReduced && (vidLoader.getAttribute('src') || vidLoader.dataset.src)) {
+        aspetta((pronto) => {
+          const prontoEVia = () => { pronto(); viaImmagini(); };
+          if (vidLoader.readyState >= 2) return prontoEVia();
+          vidLoader.addEventListener('loadeddata', prontoEVia, { once: true });
+          vidLoader.addEventListener('canplay', prontoEVia, { once: true });
+          vidLoader.addEventListener('error', prontoEVia, { once: true });
+          setTimeout(prontoEVia, 3000);
+        });
+        setTimeout(viaImmagini, 1200); /* le foto non aspettano oltre */
+      } else {
+        viaImmagini();
+      }
       /* i caratteri: senza, il titolo cambierebbe forma sotto gli occhi */
       if (document.fonts && document.fonts.ready) aspetta((pronto) => document.fonts.ready.then(pronto));
       /* il resto della pagina */

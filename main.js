@@ -67,16 +67,9 @@
           if (pre.complete && pre.naturalWidth) pronto();
         });
       });
-      /* il video della home — solo se verrà davvero caricato: con "riduci
-         movimento" resta il poster e non va atteso, altrimenti si resterebbe
-         fermi fino al tetto di sicurezza */
-      const vid = document.querySelector('.hero__video video');
-      if (vid && !prefersReduced && (vid.getAttribute('src') || vid.dataset.src)) aspetta((pronto) => {
-        if (vid.readyState >= 3) return pronto();
-        vid.addEventListener('canplaythrough', pronto, { once: true });
-        vid.addEventListener('loadeddata', pronto, { once: true });
-        vid.addEventListener('error', pronto, { once: true });
-      });
+      /* Il video della home NON blocca l'ingresso: aspettarne il buffer
+         (~5MB) raddoppiava l'attesa. Nell'hero c'è il poster, già contato
+         tra le immagini; il video sfuma dentro da solo appena è pronto. */
       /* i caratteri: senza, il titolo cambierebbe forma sotto gli occhi */
       if (document.fonts && document.fonts.ready) aspetta((pronto) => document.fonts.ready.then(pronto));
       /* il resto della pagina */

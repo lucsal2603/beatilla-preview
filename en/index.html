@@ -178,7 +178,7 @@
         },
         {
           "@type": "Accommodation",
-          "name": "Lampone Suite"
+          "name": "Lampone Apartment"
         },
         {
           "@type": "Accommodation",
@@ -186,7 +186,7 @@
         },
         {
           "@type": "Accommodation",
-          "name": "Jahara Country Loft"
+          "name": "Country Apartments"
         }
       ],
       "makesOffer": {
@@ -424,10 +424,10 @@
   </script>
   <!-- Caratteri ospitati sul nostro server: nessuna richiesta a terzi,
        quindi nessun dato dei visitatori esce dal sito. -->
-  <link rel="preload" as="font" type="font/woff2" href="../font/youngserif-2.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="../font/cormorant-3.woff2" crossorigin />
   <link rel="stylesheet" href="../font/font.css" />
 
-  <link rel="stylesheet" href="../styles.css?v=90" />
+  <link rel="stylesheet" href="../styles.css?v=91" />
 </head>
 <body>
   <!-- Schermata di caricamento: resta finché il video e le immagini della
@@ -474,7 +474,6 @@
 
     <!-- ===================== 2. HERO ===================== -->
     <section class="hero">
-      <img class="olive olive--10" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
       <div class="hero__media img-slot">
         <img src="../img/frammenti-animali.jpg" fetchpriority="high" alt="A white horse grazing at dawn in the countryside around Agriturismo Beatilla" width="1600" height="1067" />
       </div>
@@ -529,13 +528,10 @@
           <em class="nome">Beatilla</em> offers apartments and rooms surrounded by greenery, designed for couples, families and travellers in search of peace. Minutes from Mantua and connected to the Mantua&ndash;Peschiera cycle path, our farmhouse is the ideal starting point for exploring the area — or simply taking a break.
         </p>
       </div>
-      <img class="olive olive--1" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
-      <img class="olive olive--13" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     </section>
 
     <!-- ===================== 4. FULL-BLEED IMAGE BREAK ===================== -->
     <section class="break">
-      <img class="olive olive--11" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
       <div class="img-slot" data-parallax>
         <img src="../img/frammenti-cascina.jpg" alt="The Beatilla farmhouse with its hand-painted gable sign" width="2000" height="1333" />
       </div>
@@ -591,12 +587,12 @@
         <article class="room room--c">
           <div class="room__media">
             <div class="img-slot" data-room-img="left">
-              <img src="../img/alloggi-lampone.jpg" alt="The Lampone Suite: independent apartment with bedroom, living room and kitchen" data-img-parallax loading="lazy" decoding="async" width="1600" height="1067" />
+              <img src="../img/alloggi-lampone.jpg" alt="The Lampone Apartment: independent apartment with bedroom, living room and kitchen" data-img-parallax loading="lazy" decoding="async" width="1600" height="1067" />
             </div>
           </div>
           <div class="room__text" data-room-text>
             <span class="room__num">03</span>
-            <h3 class="room__title">Lampone Suite</h3>
+            <h3 class="room__title">Lampone Apartment</h3>
             <p class="room__desc">More room to feel at home: an independent apartment with living room, kitchen and bedroom, where art and design accompany every moment of your stay.</p>
             <a class="link-more" href="https://wubook.net/nneb/bk/?ep=efbd0f20&board=bb&o=2.0.0.0&c=EUR&lang=en" target="_blank" rel="noopener">Discover <span>&rarr;</span></a>
           </div>
@@ -619,12 +615,12 @@
         <article class="room room--e">
           <div class="room__media">
             <div class="img-slot" data-room-img="left">
-              <img src="../img/alloggi-jahara.jpg" alt="The Jahara Country Loft: exposed wooden beams, mezzanine and kitchenette" data-img-parallax loading="lazy" decoding="async" width="1200" height="800" />
+              <img src="../img/alloggi-jahara.jpg" alt="The Country Apartments: exposed wooden beams, mezzanine and kitchenette" data-img-parallax loading="lazy" decoding="async" width="1200" height="800" />
             </div>
           </div>
           <div class="room__text" data-room-text>
             <span class="room__num">05</span>
-            <h3 class="room__title">Jahara Country Loft</h3>
+            <h3 class="room__title">Country Apartments</h3>
             <p class="room__desc">The most authentic soul of the farmhouse: stone, wood and beamed ceilings tell of rural tradition, reinterpreted through Beatilla's artistic style.</p>
             <a class="link-more" href="https://wubook.net/nneb/bk/?ep=efbd0f20&board=bb&o=2.0.0.0&c=EUR&lang=en" target="_blank" rel="noopener">Discover <span>&rarr;</span></a>
           </div>
@@ -633,9 +629,9 @@
         </div><!-- /rooms__track -->
 
         <div class="rooms__dots" id="roomsDots"></div>
+
+        <p class="rooms__note" data-fade>Every room and apartment at Beatilla has its own identity and its own name. Accommodation is assigned according to availability, always guaranteeing the booked type and services.</p>
       </div>
-      <img class="olive olive--2" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
-      <img class="olive olive--14" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     </section>
 
     <!-- ===================== 6. HORIZONTAL SCROLL GALLERY ===================== -->
@@ -654,21 +650,27 @@
           </figure>
           <figure class="gallery__item">
             <div class="img-slot">
+              <img src="../img/frammenti-reception.jpg" alt="The straw hat hanging in a corner of Beatilla's reception" loading="lazy" decoding="async" width="1200" height="1800" />
+            </div>
+            <figcaption class="gallery__cap">A view of the reception</figcaption>
+          </figure>
+          <figure class="gallery__item">
+            <div class="img-slot">
               <img src="../img/frammenti-giardino.jpg" alt="The shabby-chic garden with wrought-iron table and plants" loading="lazy" decoding="async" width="1200" height="1800" />
             </div>
             <figcaption class="gallery__cap">Shabby Chic Garden</figcaption>
           </figure>
           <figure class="gallery__item">
             <div class="img-slot">
-              <img src="../img/frammenti-aperitivo.jpg" alt="Aperitivo in the courtyard under the evening lights" loading="lazy" decoding="async" width="1200" height="1800" />
+              <img class="gallery__img--cascina" src="../img/frammenti-cascina.jpg" alt="The Beatilla sign painted on the farmhouse gable" loading="lazy" decoding="async" width="2000" height="1333" />
             </div>
-            <figcaption class="gallery__cap">Courtyard Aperitivo</figcaption>
+            <figcaption class="gallery__cap">Our farmhouse</figcaption>
           </figure>
           <figure class="gallery__item">
             <div class="img-slot">
-              <img src="../img/frammenti-cascina.jpg" alt="The Beatilla sign painted on the farmhouse gable" loading="lazy" decoding="async" width="2000" height="1333" />
+              <img src="../img/frammenti-aperitivo.jpg" alt="Aperitivo in the courtyard under the evening lights" loading="lazy" decoding="async" width="1200" height="1800" />
             </div>
-            <figcaption class="gallery__cap">Our farmhouse</figcaption>
+            <figcaption class="gallery__cap">Courtyard Aperitivo</figcaption>
           </figure>
           <figure class="gallery__item">
             <div class="img-slot">
@@ -686,7 +688,7 @@
             <div class="gallery__fine">
               <p class="gallery__fine-e">And then</p>
               <p class="gallery__fine-frase">Everything the photos<br>cannot tell you.</p>
-              <a class="gallery__fine-cta" href="#prenota">Come and live it <span>&rarr;</span></a>
+              <a class="gallery__fine-cta" href="https://wubook.net/nneb/bk/?ep=efbd0f20&board=bb&o=2.0.0.0&c=EUR&lang=en" target="_blank" rel="noopener">Come and live it <span>&rarr;</span></a>
             </div>
           </figure>
         </div>
@@ -713,7 +715,6 @@
           </div>
         </div>
       </div>
-      <img class="olive olive--4" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     </section>
 
     <!-- ===================== 8b. SIPARIO FOTO (solo telefono) ===================== -->
@@ -753,8 +754,6 @@
 
     <!-- ===================== 9. ESPERIENZE ===================== -->
     <section class="exp" id="esperienze">
-      <img class="olive olive--16" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
-      <img class="olive olive--17" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
       <div class="container">
         <div class="exp__head">
           <p class="label">To experience</p>
@@ -882,7 +881,6 @@
           </button>
         </div>
       </div>
-      <img class="olive olive--5" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     </section>
 
     <!-- ===================== 9c. ART WORKSHOP ===================== -->
@@ -893,7 +891,6 @@
             <p class="label">Art experience</p>
             <div class="workshop__title-row">
               <h2 data-words>Art Studio</h2>
-              <img class="workshop__stroke" src="../img/pennellata-blu.webp" alt="" aria-hidden="true" width="820" height="453" loading="lazy" decoding="async" />
             </div>
             <h3 class="workshop__subtitle">Art Workshop</h3>
             <p>After discovering the artistic journey of international artist <a href="https://www.lucabornoffi.com" target="_blank" rel="noopener">Luca Bornoffi</a> and the philosophy behind his series <em>Circles of Life</em>, you will enjoy an immersive experience of canvases, colours and materials, creating a unique artwork to take home with you.</p>
@@ -916,7 +913,6 @@
             </div>
           </div>
           <div class="workshop__text" data-fade>
-            <img class="residency-circles" src="../img/cerchi-oro.webp" alt="" aria-hidden="true" width="900" height="900" loading="lazy" decoding="async" />
             <h3 class="workshop__subtitle">Art Residency</h3>
             <p class="workshop__lead"><strong>More than an artist residency. A place to create, share and belong.</strong></p>
             <p>Beatilla Art Residency was created to offer artists and creative professionals the time, space and peace needed to develop their artistic research. Immersed in the Mantuan countryside, it is a place where art, nature and eco-design live side by side, turning everyday life into a source of inspiration.</p>
@@ -927,29 +923,24 @@
 
         <div class="workshop__artist" data-fade>
           <p class="label">The artist</p>
-          <blockquote class="workshop__quote">&laquo;We often forget where <span class="tinted"><span>c</span><span>o</span><span>l</span><span>o</span><span>u</span><span>r</span><span>s</span></span> come from.&raquo;</blockquote>
+          <blockquote class="workshop__quote">&laquo;We often forget where colours come from.&raquo;</blockquote>
           <p>Luca Bornoffi (Mantua, 1980) is a contemporary artist whose research springs from a deep bond with nature. Raised in the countryside among horses and rural landscapes, he developed a particular sensitivity to colour as a source of harmony, energy and well-being.</p>
           <p>His artistic practice takes shape in the series <em>Circles of Life</em>: abstract compositions of circles, transparencies and colours evoking connections, encounters and the imperfect rhythm of life. For Bornoffi, colour is not merely visual — it is a language capable of transforming how we perceive spaces and emotions.</p>
           <p class="m-hide">After travelling to more than 60 countries, he created Beatilla Holiday Farm Eco Design, a place entirely decorated with his works and furnished with upcycled furniture. His works belong to collections and exhibitions worldwide and are featured on Artsy, Artnet and Artsper.</p>
-          <div class="img-slot workshop__artist-photo"><img src="../img/arte-artista.jpg" alt="Luca Bornoffi in his art studio at Beatilla, among canvases and colours" loading="lazy" decoding="async" width="1280" height="853" /></div>
-           sono esposti su Artsy, Artnet e Artsper.</p>
           <a class="link-more" href="https://www.lucabornoffi.com" target="_blank" rel="noopener">Discover his work <span>&rarr;</span></a>
         </div>
       </div>
-      <img class="olive olive--6" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     </section>
 
     <!-- ===================== 10. IMMAGINE FULL-BLEED ===================== -->
     <section class="video">
       <div class="img-slot">
-        <img src="../img/frammenti-reception.jpg" alt="A corner of Beatilla's courtyard, among plants and handmade details" data-img-parallax width="1200" height="1800" />
+        <img src="../img/arte-artista.jpg" alt="Luca Bornoffi at work in his art studio at Beatilla, among canvases and colours" data-img-parallax width="1280" height="853" />
       </div>
     </section>
 
     <!-- ===================== 11. TESTIMONIALS ===================== -->
     <section class="testi">
-      <img class="olive olive--12" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
-      <img class="olive olive--7" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
       <div class="container">
         <p class="label" data-fade>Guests</p>
         <div class="testi__viewport" id="testiViewport">
@@ -981,7 +972,6 @@
 
     <!-- ===================== 11d. COSA VISITARE ===================== -->
     <section class="visit" id="cosa-visitare">
-      <img class="olive olive--18" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
       <div class="container">
         <div class="visit__head">
           <p class="label" data-fade>The area</p>
@@ -1032,7 +1022,6 @@
 
     <!-- ===================== 12. PRENOTA / CONTATTI ===================== -->
     <section class="contact" id="prenota">
-      <div class="leaf-pile" aria-hidden="true"></div>
       <div class="contact__left">
         <p class="label" style="color:var(--accent)">Contacts</p>
         <h2>Come and visit us</h2>
@@ -1055,7 +1044,7 @@
           </div>
           <div class="contact__row">
             <span class="k">WhatsApp</span>
-            <a class="v contact__wa" href="https://wa.me/393478444484?text=Hi%21%20I%27m%20writing%20from%20your%20website%2C%20I%27d%20like%20some%20information." target="_blank" rel="noopener">
+            <a class="v contact__wa" href="https://wa.me/393478444484?text=Hi%21%20I%27d%20love%20to%20stay%20with%20you.%20May%20I%20ask%20you%20a%20few%20questions%3F" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm0 18.15h-.01c-1.52 0-3.02-.41-4.32-1.18l-.31-.18-3.21.84.86-3.13-.2-.32a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.234.54 0 8.23 3.69 8.24 8.23 0 4.54-3.7 8.24-8.24 8.24z"/></svg>Message us on WhatsApp
             </a>
           </div>
@@ -1106,7 +1095,6 @@
 
     <!-- ===================== 12b. COME RAGGIUNGERCI ===================== -->
     <section class="gethere" id="come-raggiungerci">
-      <img class="olive olive--20" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
       <div class="gethere__map">
         <iframe
           src="https://maps.google.com/maps?q=45.200963,10.761172&z=15&output=embed"
@@ -1220,14 +1208,11 @@
           <a class="link-more" href="tel:+393478444484">+39 347 844 4484 <span>&rarr;</span></a>
         </div>
       </div>
-      <img class="olive olive--8" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     </section>
   </main>
 
   <!-- ===================== 13. FOOTER ===================== -->
   <footer class="footer">
-    <img class="olive olive--9" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
-    <img class="olive olive--21" src="../branch.svg" alt="" aria-hidden="true" width="170" height="560" />
     <div class="footer__inner">
       <div class="footer__top">
         <div class="footer__col footer__col--marchio">
@@ -1261,8 +1246,8 @@
       </div>
 
       <div class="footer__bottom">
-        <span class="footer__meta">Beatilla Soc. Agricola S.S. &middot; P.IVA IT02135460208 &middot; &copy; 2026</span>
-        <span class="footer__legal"><a href="privacy.html">Privacy</a></span>
+        <span class="footer__meta">&copy; 2026 Agriturismo Beatilla &middot; Beatilla Soc. Agr. S.S. &middot; Tax Code &amp; VAT no. 02135460208 &middot; REA MN-227249 &middot; Registered with the Mantua Companies Register &middot; Registered office: Strada Mantova 21, Corte Barco, 46045 Marmirolo (MN), Italy &middot; CIN IT020033B58ABGALVM</span>
+        <span class="footer__legal"><a href="privacy.html">Privacy Policy</a><a href="cookie.html">Cookie Policy</a></span>
         <span class="footer__credit">Website by <a href="https://lucsal.it" target="_blank" rel="noopener">lucsal</a></span>
       </div>
     </div>
@@ -1274,7 +1259,7 @@
   <!-- Lenis servito in locale: nessuna dipendenza da CDN esterni (ricordarsi di copiarlo nel repo al momento della pubblicazione) -->
   <script src="../lenis.min.js"></script>
 
-  <script src="../main.js?v=71"></script>
-  <a class="wa-fab" href="https://wa.me/393478444484?text=Hi%21%20I%27m%20writing%20from%20your%20website%2C%20I%27d%20like%20some%20information." target="_blank" rel="noopener" aria-label="Message us on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm0 18.15h-.01c-1.52 0-3.02-.41-4.32-1.18l-.31-.18-3.21.84.86-3.13-.2-.32a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.234.54 0 8.23 3.69 8.24 8.23 0 4.54-3.7 8.24-8.24 8.24z"/></svg></a>
+  <script src="../main.js?v=72"></script>
+  <a class="wa-fab" href="https://wa.me/393478444484?text=Hi%21%20I%27d%20love%20to%20stay%20with%20you.%20May%20I%20ask%20you%20a%20few%20questions%3F" target="_blank" rel="noopener" aria-label="Message us on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.48-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm0 18.15h-.01c-1.52 0-3.02-.41-4.32-1.18l-.31-.18-3.21.84.86-3.13-.2-.32a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.234.54 0 8.23 3.69 8.24 8.23 0 4.54-3.7 8.24-8.24 8.24z"/></svg></a>
 </body>
 </html>

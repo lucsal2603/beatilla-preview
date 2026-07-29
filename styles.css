@@ -124,7 +124,7 @@ body.caricamento { overflow: hidden; } /* niente scroll dietro la schermata */
   --img-1: #C8BFB0;       /* placeholder gradient light */
   --img-2: #9E9488;       /* placeholder gradient dark */
 
-  --serif: 'Young Serif', Georgia, serif;
+  --serif: 'Cormorant Garamond', Georgia, serif;
   --sans: 'Jost', system-ui, -apple-system, sans-serif;
 
   --label-size: 0.75rem;
@@ -599,6 +599,13 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 .link-more:hover span { transform: translateX(6px); }
 /* Pallini del rullino camere e sipario foto: esistono solo su telefono */
 .rooms__dots { display: none; }
+/* nota di chiusura della sezione alloggi (richiesta cliente) */
+.rooms__note {
+  margin-top: clamp(2.4rem, 5vh, 3.6rem);
+  max-width: 62ch; margin-inline: auto;
+  text-align: center; color: rgba(26,26,24,.62);
+  font-size: .95rem; line-height: 1.7;
+}
 .curtain { display: none; }
 
 /* ============================================================
@@ -616,6 +623,9 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 .gallery__item { flex: 0 0 auto; }
 .gallery__item .img-slot { height: min(600px, calc(100svh - 250px)); aspect-ratio: 2 / 3; width: auto; }
 .gallery__cap { margin-top: 1rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .22em; color: var(--accent); }
+/* la cascina inquadrata sulla scritta turchese del timpano: la scritta sta
+   al 37% della larghezza della foto, la finestra 2:3 mostra il 44% → 27% */
+.img-slot > img.gallery__img--cascina { object-position: 27% 50%; }
 /* Chiusura della striscia: dopo l'ultima foto, un invito al posto di un'immagine.
    È l'ultimo elemento, quindi la corsa orizzontale lo lascia centrato. */
 .gallery__item--fine { display: flex; align-items: center; }
@@ -653,25 +663,11 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 /* ============================================================
    8. STATS BAR
    ============================================================ */
-/* La fascia scura dei numeri è arcuata sopra e sotto: le curve sono i bordi
-   stessi della sezione, quindi non sporgono e non lasciano spazi. */
+/* Striscia dritta, come nella versione proposta al cliente. */
 .stats {
   position: relative;
   background: var(--text); color: var(--bg);
   padding-block: clamp(5rem, 12vh, 9rem);
-  /* bordo INFERIORE ad arco, un po' più pronunciato di prima */
-  border-radius: 0 0 50% 50% / 0 0 clamp(26px, 6.5vw, 56px) clamp(26px, 6.5vw, 56px);
-}
-/* Bordo SUPERIORE ad U, cioè curvato nello stesso verso di quello sotto:
-   non si può ottenere arrotondando gli angoli (curverebbe all'insù), quindi
-   ci appoggiamo sopra una forma del colore della carta che scava il nero. */
-.stats::before {
-  content: ""; position: absolute; z-index: 1;
-  top: -1px; left: -1px; right: -1px;
-  height: clamp(26px, 6.5vw, 56px);
-  background: var(--bg);
-  border-radius: 0 0 50% 50% / 0 0 100% 100%;
-  pointer-events: none;
 }
 .stats__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center; }
 .stat__num { font-family: var(--serif); font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 400; line-height: 1; }
@@ -689,8 +685,7 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 .exp__card { will-change: transform, opacity; }
 .exp__card .img-slot { width: 100%; aspect-ratio: 3 / 4; margin-bottom: 1.6rem; }
 .exp__card .cat { display: block; margin-bottom: 1rem; }
-.exp__card h3 { font-size: 1.8rem; margin-top: 0; line-height: 1.2; transition: color .3s var(--ease); }
-.exp__card:hover h3 { color: var(--accent); }
+.exp__card h3 { font-size: 1.8rem; margin-top: 0; line-height: 1.2; }
 
 .services { padding-block: var(--section-y); background: var(--bg); }
 .services__head { text-align: center; margin-bottom: clamp(3rem, 7vh, 5rem); }
@@ -743,6 +738,8 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 .workshop__cta:hover { background: var(--accent); color: var(--white); }
 .workshop__cta span { transition: transform .35s var(--ease); }
 .workshop__cta:hover span { transform: translateX(5px); }
+/* respiro tra il pulsante e la nota dei contatti sotto */
+.workshop__cta + .workshop__note { margin-top: 1.4rem; }
 /* Presentazione dell'artista Luca Bornoffi sotto il workshop */
 .workshop__artist {
   margin-top: clamp(3rem, 7vh, 5.5rem);
@@ -751,33 +748,12 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   max-width: 64ch; margin-inline: auto; text-align: center;
   position: relative; z-index: 0;
 }
-/* schizzo acquerello (i "Circles of Life" di Bornoffi) dietro tutto il
-   blocco dell'artista: titoletto, citazione, descrizione e link */
-.workshop__artist::before {
-  content: "";
-  position: absolute; z-index: -1;
-  /* ancorato in alto: copre il titolo L'ARTISTA e tutta la descrizione */
-  left: 50%; top: 0; transform: translate(-50%, -2%);
-  width: min(145%, 680px); aspect-ratio: 760 / 950;
-  background: url("sketch-artist.png") center/contain no-repeat;
-  opacity: .5; pointer-events: none;
-}
 .workshop__artist .label { justify-content: center; }
 .workshop__quote {
   font-family: var(--serif); font-style: italic;
   font-size: clamp(1.6rem, 3.4vw, 2.4rem); line-height: 1.3;
   color: var(--text); margin: 1.1rem 0 1.8rem;
 }
-/* "colori": ogni lettera un colore diverso — gamma analoga calda
-   (terracotta → ambra → ocra → oliva → salvia), non arcobaleno */
-.tinted span { font-weight: 400; }
-.tinted span:nth-child(1) { color: #9E5A3C; }
-.tinted span:nth-child(2) { color: #B26E38; }
-.tinted span:nth-child(3) { color: #C08A3A; }
-.tinted span:nth-child(4) { color: #AE9440; }
-.tinted span:nth-child(5) { color: #8F9150; }
-.tinted span:nth-child(6) { color: #6E8A5A; }
-.tinted span:nth-child(7) { color: #5C7A4E; } /* la settima lettera di "colours" */
 .workshop__artist p { color: rgba(26,26,24,.72); line-height: 1.75; margin-bottom: 1.2rem; }
 .workshop__artist .link-more { margin-top: .4rem; }
 
@@ -876,17 +852,7 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
    (lo scivolamento delle colonne è solo orizzontale, già bloccato da html).
    z-index:1 crea il contesto: così il mucchio (z -1) resta DIETRO al blocco
    nero, che gli copre la parte bassa — il nero comanda sul bordo. */
-.contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 70; /* sopra le foglie (60): le inghiotte quando ci passano dietro */ }
-/* il cespuglio è pensato per lo schermo stretto del telefono: sui monitor
-   larghi resterebbe un francobollo in mezzo al bordo, quindi non c'è */
-@media (min-width: 769px) { .leaf-pile { display: none; } }
-.leaf-pile {
-  position: absolute; left: 50%; top: 0;
-  transform: translate(-50%, -55%); /* il 45% inferiore affonda dietro il nero */
-  width: min(400px, 74vw); aspect-ratio: 760 / 298;
-  background: url("img/mucchio-foglie.webp") center bottom / contain no-repeat;
-  pointer-events: none; z-index: -1;
-}
+.contact { display: grid; grid-template-columns: 1fr 1fr; position: relative; z-index: 70; }
 .contact__left { background: var(--text); color: var(--bg); padding: clamp(3.5rem, 8vw, 7rem) clamp(2rem, 5vw, 5rem); will-change: transform; }
 .contact__left h2 { font-size: clamp(2.6rem, 5vw, 4.2rem); margin: 1.2rem 0 2.4rem; }
 .contact__info { display: flex; flex-direction: column; gap: 1.4rem; }
@@ -1407,15 +1373,6 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   .gallery__track { animation: none !important; transform: none !important; overflow-x: auto; -webkit-overflow-scrolling: touch; flex: none; padding-bottom: 2rem; }
 }
 
-/* ============================================================
-   RAMOSCELLI D'ULIVO — decorazioni sparse per tutto il sito
-   ============================================================ */
-.olive {
-  position: absolute;
-  pointer-events: none;
-  user-select: none;
-  z-index: 1;
-}
 /* il clip sul body pittura ma non impedisce lo scroll orizzontale del viewport
    (clip non crea scroll container); serve anche sull'<html> per bloccarlo.
    Verificato: non aggiunge spazio verticale sotto il footer. */
@@ -1423,63 +1380,7 @@ html { overflow-x: clip; }
 .intro, .rooms, .dining, .stats, .services, .workshop, .testi, .faq, .footer { position: relative; }
 .break, .rooms, .gallery, .exp, .services, .workshop, .video, .testi, .visit { z-index: 2; }
 
-/* Chi siamo: pende dall'angolo alto-sinistro */
-.olive--1 { top: -30px; left: -30px; width: 96px; rotate: 205deg; opacity: .8; }
-/* Camere: fa capolino dal bordo destro, all'altezza del titolo */
-.olive--2 { top: 96px; right: -30px; width: 88px; rotate: -145deg; opacity: .75; }
-/* Ristorante: sale dall'angolo basso-sinistro */
-.olive--3 { bottom: -34px; left: -26px; width: 92px; rotate: 28deg; opacity: .8; }
-/* Numeri (fondo scuro): pende dal bordo alto, sul nero risalta */
-.olive--4 { top: -22px; right: 30px; width: 84px; rotate: 168deg; opacity: .9; }
-/* Servizi: spunta dal bordo sinistro a metà sezione */
-.olive--5 { top: 44%; left: -30px; width: 86px; rotate: 115deg; opacity: .7; }
-/* Art Workshop: angolo alto-destro */
-.olive--6 { top: 20px; right: -28px; width: 90px; rotate: -160deg; opacity: .75; }
-/* Ospiti: rametto disteso, da parte a parte sopra il titoletto */
-.olive--7 { top: -96px; left: 8%; width: 54px; height: auto; rotate: 78deg; opacity: .65; } /* height:auto: senza, l'attributo height=560 la rendeva una sbarra attraverso il testo */
-/* FAQ: sale dall'angolo basso-destro */
-.olive--8 { bottom: -28px; right: -26px; width: 84px; rotate: -32deg; opacity: .7; }
-/* Footer (scuro): bordo sinistro — ancorato in basso (come olive--21) così
-   cresce verso l'alto e non sporge sotto il footer allungando la pagina */
-.olive--9 { bottom: 8px; left: -22px; width: 76px; rotate: 152deg; opacity: .85; }
-
-@media (max-width: 768px) {
-  .olive--1 { width: 62px; top: -20px; left: -20px; }
-  .olive--2 { width: 58px; top: 78px; right: -20px; }
-  .olive--3 { width: 60px; bottom: -24px; left: -18px; }
-  .olive--4 { width: 56px; right: 14px; top: -16px; }
-  .olive--5, .olive--8 { display: none; } /* su telefono lì ci sono già gli schizzi */
-  .olive--6 { width: 60px; right: -18px; top: 14px; }
-  .olive--7 { width: 40px; top: -74px; left: 4%; }
-  .olive--9 { width: 52px; }
-}
-
-/* --- seconda ondata di ramoscelli --- */
 .exp, .visit, .press, .gethere { position: relative; } /* .hero no: è sticky (vedi sopra), qui verrebbe sovrascritta */
-.olive--10 { top: 84px; right: 18px; width: 92px; rotate: -150deg; opacity: .8; z-index: 4; }
-.olive--11 { bottom: 22px; right: 20px; width: 86px; rotate: -25deg; opacity: .85; z-index: 3; }
-.olive--12 { bottom: -26px; left: -28px; width: 84px; rotate: 40deg; opacity: .7; }
-.olive--13 { bottom: 60px; right: -30px; width: 88px; rotate: -118deg; opacity: .75; }
-.olive--14 { bottom: -26px; right: -26px; width: 82px; rotate: -38deg; opacity: .7; }
-.olive--15 { top: 24px; right: -28px; width: 88px; rotate: -160deg; opacity: .75; }
-.olive--16 { top: 30%; left: -30px; width: 86px; rotate: 120deg; opacity: .7; }
-.olive--17 { bottom: -26px; right: -24px; width: 88px; rotate: -30deg; opacity: .75; }
-.olive--18 { top: 18px; left: -28px; width: 88px; rotate: 155deg; opacity: .75; }
-.olive--19 { top: 46%; right: -30px; width: 84px; rotate: -115deg; opacity: .7; }
-.olive--20 { top: 47%; right: -24px; width: 86px; rotate: -140deg; opacity: .75; z-index: 3; }
-.olive--21 { bottom: 12px; right: -22px; width: 74px; rotate: -152deg; opacity: .85; }
-
-@media (max-width: 768px) {
-  .olive--10, .olive--16, .olive--17, .olive--19 { display: none; }
-  .olive--11 { width: 58px; bottom: 14px; right: 12px; }
-  .olive--12 { width: 46px; height: auto; bottom: -14px; left: -30px; rotate: 24deg; }
-  .olive--13 { width: 58px; bottom: -14px; right: -20px; }
-  .olive--14 { width: 54px; bottom: -18px; right: -18px; }
-  .olive--15 { width: 58px; top: 16px; right: -18px; }
-  .olive--18 { width: 58px; top: 12px; left: -18px; }
-  .olive--20 { width: 56px; top: 44%; right: -16px; }
-  .olive--21 { width: 50px; }
-}
 
 /* testo solo per screen reader e motori (nessun impatto visivo) */
 .sr-only {
@@ -1501,7 +1402,6 @@ html { overflow-x: clip; }
 .img-slot--empty::after { display: block !important; }
 .rooms .room__media .img-slot--empty { aspect-ratio: 4 / 3 !important; }
 .workshop__media .img-slot--empty { aspect-ratio: 16 / 10 !important; }
-.workshop__artist-photo { aspect-ratio: 16 / 9; margin-top: 2.4rem; }
 
 /* Art Studio: sottotitoli dei blocchi Workshop/Residency */
 .workshop__subtitle { font-family: var(--serif); font-size: clamp(1.5rem, 2.6vw, 2rem); margin-bottom: 1.2rem; }
@@ -1514,54 +1414,10 @@ html { overflow-x: clip; }
 /* Il nome della casa nel testo: bronzo caldo del sito, non corsivo */
 .nome { color: var(--accent); font-style: normal; font-weight: 500; }
 
-/* Foglie che cadono: il contenitore copre TUTTO il documento, le foglie
-   viaggiano in coordinate di pagina (si staccano dalla cima del sito,
-   non dalla parte visibile) e passano sopra i contenuti ma sotto navbar
-   e bottone Prenota */
-.leaves { position: absolute; top: 0; left: 0; width: 100%; height: 0; pointer-events: none; z-index: 60; }
-.leaves img {
-  position: absolute; top: 0; left: 0; will-change: transform;
-  /* si possono afferrare al volo: il contenitore resta trasparente ai clic,
-     solo la foglia risponde */
-  /* niente pointer-events: la presa avviene per prossimità (vedi main.js),
-     così le foglie non si mettono mai davanti a link e bottoni */
-  pointer-events: none;
-}
-.leaves img.presa { touch-action: none; }
-/* Mentre si trascina una foglia il testo sotto non si evidenzia e non compare
-   il menu di selezione: le foglie lasciano passare il tocco, quindi il blocco
-   va messo sul documento. */
-body.trascino, body.trascino * {
-  user-select: none !important; -webkit-user-select: none !important;
-  -webkit-touch-callout: none !important;
-}
-
-/* Titolo Art Studio: la pennellata blu lo evidenzia da dietro,
-   ancorata a sinistra e distesa su tutta la larghezza del titolo */
-.workshop__title-row { position: relative; display: block; width: fit-content; margin-inline: auto; }
+/* Titolo Art Studio centrato, pulito (niente effetti dietro) */
+.workshop__title-row { display: block; width: fit-content; margin-inline: auto; }
 /* l'etichetta sopra il titolo segue il titolo centrato, su tutti gli schermi */
 .workshop__grid:first-of-type .workshop__text > .label { display: block; width: fit-content; margin-inline: auto; text-align: center; justify-content: center; }
-.workshop__title-row h2 {
-  position: relative; z-index: 1;
-  /* nero pieno: stacca sia sul blu carico della pennellata sia sulla carta */
-  color: var(--text);
-}
-.workshop__stroke {
-  position: absolute; left: -7%; top: 50%; transform: translateY(-50%);
-  opacity: .45; /* una mano più leggera: il titolo resta il protagonista */
-  width: 116%; max-width: none; height: 140%;
-  object-fit: fill; /* si adagia sulla riga come una passata di evidenziatore */
-  pointer-events: none; z-index: 0;
-}
-
-/* Art Residency: i cerchi dorati di Bornoffi dietro tutto il testo */
-.workshop__grid--reverse .workshop__text { position: relative; }
-.workshop__grid--reverse .workshop__text > :not(.residency-circles) { position: relative; z-index: 1; }
-.residency-circles {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(115%, 620px); height: auto;
-  opacity: .4; pointer-events: none; z-index: 0;
-}
 
 /* Esperienze: 4 card */
 @media (min-width: 981px) {

@@ -878,28 +878,6 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 .contact__phones { display: flex; flex-direction: column; gap: .4rem; }
 
 /* ============================================================
-   12b. COME RAGGIUNGERCI / MAPPA
-   ============================================================ */
-.gethere { background: var(--bg); }
-.gethere__map { width: 100%; height: clamp(320px, 45vh, 520px); position: relative; overflow: hidden; }
-.gethere__map iframe { width: 100%; height: 100%; border: 0; display: block; filter: grayscale(1) contrast(1.04); transition: filter .6s var(--ease); }
-.gethere__map:hover iframe { filter: grayscale(0); }
-.gethere__content { padding-block: var(--section-y); }
-.gethere__head { margin-bottom: clamp(2.5rem, 6vh, 4rem); }
-.gethere__head h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-top: 1rem; }
-.gethere__grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(2.5rem, 6vw, 6rem); align-items: start; }
-.route { margin-bottom: 2rem; }
-.route:last-child { margin-bottom: 0; }
-.route__from { font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--accent); margin-bottom: .5rem; }
-.route__desc { color: rgba(26,26,24,.72); line-height: 1.65; max-width: 54ch; }
-.gethere__tip { margin-top: 2.2rem; padding: 1rem 1.4rem; border-left: 2px solid var(--accent); background: rgba(122,106,82,.06); font-size: .95rem; color: rgba(26,26,24,.82); }
-.distances__title { font-family: var(--serif); font-size: 1.5rem; margin-bottom: 1.4rem; }
-.distances__list { border-top: 1px solid rgba(26,26,24,.14); }
-.distances__item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid rgba(26,26,24,.14); }
-.distances__place { font-size: 1.02rem; }
-.distances__val { font-family: var(--serif); font-style: italic; color: var(--accent); white-space: nowrap; }
-
-/* ============================================================
    12b. FAQ
    ============================================================ */
 .faq { padding-block: var(--section-y); }
@@ -1025,7 +1003,6 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   .dining__grid { grid-template-columns: 1fr; }
   .dining__media { order: -1; }
   .contact { grid-template-columns: 1fr; }
-  .gethere__grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .services__grid { grid-template-columns: repeat(2, 1fr); }
   .workshop__grid { grid-template-columns: 1fr; }
   .workshop__media { order: -1; }
@@ -1136,7 +1113,7 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
 
   /* Titoli di sezione: più compatti su schermo piccolo */
   .rooms__head h2, .exp__head h2, .services__head h2, .press__head h2,
-  .visit__head h2, .faq__head h2, .gallery__head h2, .gethere__head h2,
+  .visit__head h2, .faq__head h2, .gallery__head h2,
   .dining__text h2, .workshop__text h2, .contact__left h2 {
     font-size: clamp(1.9rem, 8vw, 2.5rem);
   }
@@ -1252,8 +1229,6 @@ body.menu-open .nav__overlay { transition-delay: 0s; }
   .field { margin-bottom: 1.2rem; }
 
   /* Come raggiungerci */
-  .route__desc { font-size: .92rem; line-height: 1.6; }
-  .gethere__tip { font-size: .9rem; }
 
   /* Footer centrato e ordinato */
   .footer__inner { flex-direction: column; text-align: center; gap: .9rem; }
@@ -1280,7 +1255,7 @@ html { overflow-x: clip; }
 .intro, .rooms, .dining, .stats, .services, .workshop, .testi, .faq, .footer { position: relative; }
 .break, .rooms, .gallery, .exp, .services, .workshop, .video, .testi, .visit { z-index: 2; }
 
-.exp, .visit, .press, .gethere { position: relative; } /* .hero no: è sticky (vedi sopra), qui verrebbe sovrascritta */
+.exp, .visit, .press { position: relative; } /* .hero no: è sticky (vedi sopra), qui verrebbe sovrascritta */
 
 /* testo solo per screen reader e motori (nessun impatto visivo) */
 .sr-only {

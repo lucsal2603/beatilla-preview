@@ -7,11 +7,11 @@
     const isMobile = () => (window.innerWidth || screen.width || 1024) <= 768;
 
     /* ---------- SCHERMATA DI CARICAMENTO ----------
-       Resta finché non sono pronti il video e le immagini che si vedono
-       subito. NON aspettiamo le immagini in fondo alla pagina: quelle si
-       caricano solo avvicinandosi, quindi il caricamento non finirebbe mai.
-       C'è comunque un tetto di 9 secondi: su una rete lenta si entra lo
-       stesso, invece di restare bloccati davanti a una schermata ferma. */
+       Resta finché TUTTO il sito è pronto: ogni immagine della pagina, il
+       video, i caratteri. Le immagini differite non partirebbero da sole
+       finché non ci si avvicina, quindi le precarichiamo qui: finiscono in
+       cache e la barra misura l'avanzamento vero. Tetto di sicurezza a 30
+       secondi solo per reti rotte: non si resta chiusi fuori per sempre. */
     const loader = document.getElementById('loader');
     const barra = document.getElementById('loaderBar');
     let viaLoader = () => {};
@@ -48,19 +48,30 @@
       };
 
       document.body.classList.add('caricamento');
-      setTimeout(finito, 9000); /* tetto di sicurezza: su rete lenta si entra comunque */
+      setTimeout(finito, 30000); /* tetto di sicurezza: solo contro richieste rimaste appese */
 
-      /* immagini della prima schermata (non differite) */
-      document.querySelectorAll('img:not([loading="lazy"])').forEach((img) => {
+      /* TUTTE le immagini della pagina, comprese quelle differite: un
+         precaricatore per ciascuna le porta in cache mentre la barra
+         avanza; quando poi si scorre, compaiono già pronte. */
+      const registrateSrc = new Set();
+      document.querySelectorAll('img[src]').forEach((img) => {
+        const src = img.currentSrc || img.src;
+        if (!src || src.indexOf('data:') === 0 || registrateSrc.has(src)) return;
+        registrateSrc.add(src);
         aspetta((pronto) => {
-          if (img.complete) return pronto();
-          img.addEventListener('load', pronto, { once: true });
-          img.addEventListener('error', pronto, { once: true });
+          if (img.complete && img.naturalWidth) return pronto();
+          const pre = new Image();
+          pre.addEventListener('load', pronto, { once: true });
+          pre.addEventListener('error', pronto, { once: true });
+          pre.src = src;
+          if (pre.complete && pre.naturalWidth) pronto();
         });
       });
-      /* il video della home */
+      /* il video della home — solo se verrà davvero caricato: con "riduci
+         movimento" resta il poster e non va atteso, altrimenti si resterebbe
+         fermi fino al tetto di sicurezza */
       const vid = document.querySelector('.hero__video video');
-      if (vid) aspetta((pronto) => {
+      if (vid && !prefersReduced && (vid.getAttribute('src') || vid.dataset.src)) aspetta((pronto) => {
         if (vid.readyState >= 3) return pronto();
         vid.addEventListener('canplaythrough', pronto, { once: true });
         vid.addEventListener('loadeddata', pronto, { once: true });
@@ -745,27 +756,6 @@
       onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out', stagger: 0.07, overwrite: true })
     });
 
-    /* ---------- COME RAGGIUNGERCI: mappa svelata, percorsi e distanze in sequenza ---------- */
-    gsap.from('.gethere__map', {
-      clipPath: prefersReduced ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)',
-      duration: 1.2, ease: 'power4.inOut',
-      scrollTrigger: { trigger: '.gethere__map', start: 'top 85%' }
-    });
-    gsap.set('.route, .gethere__tip', { y: 30, opacity: 0 });
-    ScrollTrigger.batch('.route, .gethere__tip', {
-      start: 'top 90%',
-      onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.75, ease: 'power2.out', stagger: 0.1, overwrite: true })
-    });
-    gsap.from('.distances__title', {
-      y: 22, opacity: 0, duration: 0.7, ease: 'power2.out',
-      scrollTrigger: { trigger: '.distances', start: 'top 90%' }
-    });
-    gsap.set('.distances__item', { x: 28, opacity: 0 });
-    ScrollTrigger.batch('.distances__item', {
-      start: 'top 94%',
-      onEnter: (batch) => gsap.to(batch, { x: 0, opacity: 1, duration: 0.6, ease: 'power2.out', stagger: 0.07, overwrite: true })
-    });
-
     /* ---------- TESTIMONIANZE: il blocco sale dolcemente ---------- */
     gsap.from('.testi__viewport, .testi__dots', {
       y: 30, opacity: 0, duration: 0.9, ease: 'power2.out', stagger: 0.15,
@@ -987,7 +977,7 @@
 
       /* Titoli di sezione: salgono piano mentre la sezione attraversa lo
          schermo. Movimento continuo, non un'apparizione. */
-      gsap.utils.toArray('.exp__head, .visit__head, .services__head, .gethere__head, .faq__head')
+      gsap.utils.toArray('.exp__head, .visit__head, .services__head, .faq__head')
         .forEach((testa) => {
           gsap.fromTo(testa, { y: 34 }, {
             y: -26, ease: 'none',

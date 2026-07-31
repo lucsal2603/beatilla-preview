@@ -1037,6 +1037,20 @@
         });
       });
 
+      /* Le due diagonali si allungano dai numeri in alto verso quello in
+         basso quando la fascia entra in scena. Facciamo crescere il punto
+         di arrivo del segmento invece di usare i trattini: il riquadro del
+         disegno è stirato in larghezza, e un tratteggio ne uscirebbe
+         deformato (a spezzoni) sugli schermi larghi. */
+      gsap.utils.toArray('.stats__linee line').forEach((l, i) => {
+        const x1 = l.getAttribute('x1'), y1 = l.getAttribute('y1');
+        gsap.from(l, {
+          attr: { x2: x1, y2: y1 },
+          duration: .9, ease: 'power2.inOut', delay: i * .12,
+          scrollTrigger: { trigger: '.stats__grid', start: 'top 80%', once: true }
+        });
+      });
+
       /* Camere: la velatura del colore della stanza NON è legata allo scroll.
          Aspetta che il titolo sia arrivato e fermo, poi parte da sola e lo
          evidenzia con una pennellata da sinistra. */
